@@ -1,0 +1,16 @@
+from pywinauto import Application
+from pywinauto.timings import wait_until_passes
+
+app = Application(backend="uia").connect(title_re="Your App")
+dlg = app.top_window()
+
+# 1. click main button
+dlg.child_window(title="Delete", control_type="Button").click_input()
+
+# 2. wait for popup
+popup = app.window(auto_id="frmKB_GiayPhep", control_type="Window")
+
+popup.wait("exists enabled visible ready", timeout=10)
+
+# 3. click button inside popup
+popup.child_window(title="OK", control_type="Button").click_input()
