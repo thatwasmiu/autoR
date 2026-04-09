@@ -35,8 +35,14 @@ def get_data(daily_invoice_folder):
     declareCode = pick_value(declare_codes, folder)
     typeCode = pick_value(type_codes, folder)
     routeType = pick_value(route_types, folder)
-
-    return nvlCode, bill, invoice, declareCode, routeType
+    # print(route_types)
+    return {
+        "nvlCode": nvlCode,
+        "bill": bill,
+        "invoice": invoice,
+        "declareCode": declareCode,
+        "routeType": routeType
+    }
 
 def pick_value(values, folder):
     if not values:

@@ -1,19 +1,24 @@
 from openpyxl import load_workbook
 
-def write_daily_report(template, nvlCode, bill, invoice, declareCode, routeType):
-    # 1. load template
+def write_daily_report(template, data_list):
     wb = load_workbook(template)
     ws = wb.active
 
+    # Start index based on existing rows (excluding header)
+    start_index = ws.max_row  # assumes row 1 is header
 
-    print(nvlCode, bill, invoice, declareCode, routeType)
-    last_row = ws.max_row + 1
+    for i, data in enumerate(data_list, start=1):
+        print(data)
+        ws.append([
+            start_index + i,   # Column A: index
+            None,              # Column B (skip if unused)
+            data.get("nvlCode"),
+            None,
+            None,
+            data.get("bill"),
+            data.get("invoice"),
+            data.get("declareCode"),
+            data.get("routeType"),
+        ])
 
-    ws.cell(row=last_row, column=1, value=nvlCode)
-    ws.cell(row=last_row, column=3, value=bill)
-    ws.cell(row=last_row, column=4, value=invoice)
-    ws.cell(row=last_row, column=5, value=declareCode)
-    ws.cell(row=last_row, column=6, value=routeType)
-    # ws.append([declareCode, typeCode])
-
-    wb.save("output.xlsx")
+    return wb
