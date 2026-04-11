@@ -1,5 +1,12 @@
 from openpyxl import load_workbook
 
+
+switch = {
+    '1': "Xanh",
+    '2': "Đỏ",
+    '3': "Vàng"
+}
+
 def write_daily_report(template, data_list):
     wb = load_workbook(template)
     ws = wb.active
@@ -14,11 +21,15 @@ def write_daily_report(template, data_list):
             None,              # Column B (skip if unused)
             data.get("nvlCode"),
             None,
-            None,
+            None, #GC
+            None, # time
             data.get("bill"),
-            data.get("invoice"),
+            None, #HQ
             data.get("declareCode"),
-            data.get("routeType"),
+            switch.get(data.get("routeType"), ""),
+            None, #term
+            data.get("invoice"),
+            None, #TMS
         ])
 
     return wb

@@ -16,6 +16,10 @@ def create_report(root, status_label=None):
         f for f in root.iterdir()
         if f.is_dir() and f.name.lower() not in ignore_folders
     ]
+    folders = sorted(
+        folders,
+        key=lambda f: int(f.name.split(".",1)[0])
+    )
 
     data_list = []
 

@@ -18,37 +18,68 @@ def get_data(daily_invoice_folder):
     declare_codes = []
     type_codes = []
     route_types = []
+    terms = []
+    dates = []
 
     for f in files:
         ws = get_workbook(f)
         declareCode = find_value(ws, "Số tờ khai")
         typeCode = find_value(ws, "Mã loại hình", r"[A-Z0-9]+")
         routeType = find_value(ws, "Mã phân loại kiểm tra", r"\d")
+        term = find_value(ws, "Tổng trị giá hóa đơn")
+        date = find_value(ws, "Ngày đăng ký")
 
         if declareCode:
             declare_codes.append(str(declareCode))
         if typeCode:
             type_codes.append(str(typeCode))
         if routeType:
-            route_types.append(str(routeType))    
+            route_types.append(str(routeType))   
+        if term:
+            terms.append(str(term))  
+        if date: 
+            dates.append(str(date))    
 
     declareCode = pick_value(declare_codes, folder)
     typeCode = pick_value(type_codes, folder)
     routeType = pick_value(route_types, folder)
+    # print(terms)
+    # print(dates)
+    term = pick_value(terms, folder)
+    # date = pick_value(dates, folder)
+
     # print(route_types)
     return {
         "nvlCode": nvlCode,
         "bill": bill,
         "invoice": invoice,
         "declareCode": declareCode,
-        "routeType": routeType
+        "routeType": routeType,
+        "term": term,
+        "date": date
     }
 
-def pick_value(values, folder):
+def pick_value(values, folder, format_regex=None):
     if not values:
         return None
 
-    values = [v for v in values if is_normal(v)]    
+    # keep only normal values
+    values = [v for v in values if is_normal(v)]
+
+    # NEW: transform values using regex group(0)
+    if format_regex:
+        pattern = re.compile(format_regex)
+        new_values = []
+
+        for v in values:
+            m = pattern.search(str(v))
+            if m:
+                new_values.append(m.group(0))
+
+        values = new_values
+
+    if not values:
+        return None
 
     counter = Counter(values)
     most_common = counter.most_common()
@@ -57,11 +88,10 @@ def pick_value(values, folder):
     if most_common[0][1] > 1:
         return most_common[0][0]
 
-    # Find all values that appear in folder and are normal
-    matched = [v for v in values if v in folder] 
+    # Find all values that appear in folder
+    matched = [v for v in values if v in folder]
 
     if matched:
-        # join all matched values if multiple
         return ";".join(matched)
 
     # fallback → join all
