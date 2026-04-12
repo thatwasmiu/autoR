@@ -1,0 +1,132 @@
+import re
+from collections import Counter
+from modules import (
+    get_workbook,
+    find_values,
+    find_excel_files,
+    get_codes
+)
+
+patterns = {
+    "declareCode": ("Số tờ khai", None),
+    "typeCode": ("Mã loại hình", r"[A-Z0-9]+"),
+    "routeType": ("Mã phân loại kiểm tra", r"\d"),
+    "term": ("Tổng trị giá hóa đơn", None),
+    "date": ("Ngày đăng ký", None),
+}
+
+def get_data(daily_invoice_folder):
+    # folder = r"C:\Users\datnt4\Documents\06.04\1. NVL - 9365 - E20260403058  - LENOVOVN20260406003 - 6.4.2026 - GC - 2PK - E11- TRUCK"
+    folder = str(daily_invoice_folder)
+
+    nvlCode, bill, invoice = get_codes(daily_invoice_folder.name)
+    fromCode = get_form_code(daily_invoice_folder.name)
+    # print(nvlCode, bill, invoice)
+    # return
+
+    files = find_excel_files(folder)
+
+    declare_codes = []
+    type_codes = []
+    route_types = []
+    terms = []
+    dates = []
+    tmses = []
+
+    for f in files:
+        if "ToKhai" in f:
+            ws = get_workbook(f)
+            values = find_values(ws, patterns)
+
+            if values["declareCode"]:
+                declare_codes.append(values["declareCode"].strip())
+            if values["typeCode"]:
+                type_codes.append(values["typeCode"].strip())
+            if values["routeType"]:
+                route_types.append(values["routeType"].strip())
+            if values["term"]:
+                terms.append(values["term"].strip())
+            if values["date"]:
+                dates.append(values["date"].strip())
+        else:
+            tms = get_tms_code(f)
+            if tms:
+                tmses.append(tms)   
+
+    declareCode = pick_value(declare_codes, folder, r"[A-Za-z0-9]+")
+    typeCode = pick_value(type_codes, folder, r"[A-Za-z0-9]+")
+    routeType = pick_value(route_types, folder, r"[A-Za-z0-9]+")
+    term = pick_value(terms, folder, r'^\s*[^-]+\s*-\s*([^-]+)\s*-', 1)
+    date = pick_value(dates, folder, r'\b\d{1,2}/\d{1,2}/\d{4}\b')
+    tms = pick_value(tmses)
+
+    # print(route_types)
+    return {
+        "nvlCode": nvlCode,
+        "bill": bill,
+        "invoice": invoice,
+        "declareCode": declareCode,
+        "typeCode": typeCode,
+        "routeType": routeType,
+        "term": term,
+        "date": date,
+        "tms": tms,
+        "formCode": fromCode
+    }
+
+def get_form_code(folder_name): 
+    parts = [p.strip() for p in folder_name.split("-")]
+
+    for p in parts:
+        if p == "GC" or p == "CX":
+            return p
+    return None
+
+def get_tms_code(file_name):
+    m = re.search(r'(?<=合同_发票_箱单_)I\d+', file_name)
+
+    if m:
+        return m.group(0).strip()
+    return None
+
+def pick_value(values, folder=None, format_regex=None, group_index=0):
+    if not values:
+        return None
+
+    # NEW: transform values using regex group(0)
+    if format_regex:
+        pattern = re.compile(format_regex)
+        new_values = []
+
+        for v in values:
+            m = pattern.search(str(v))
+            if m:
+                new_values.append(m.group(group_index))
+
+        values = new_values
+
+    if not values:
+        return None
+
+    # keep only normal values
+    # values = [v for v in values if is_normal(v)]
+
+    counter = Counter(values)
+    most_common = counter.most_common()
+
+    # if top count > 1 → return most frequent
+    if most_common[0][1] > 1:
+        return most_common[0][0]
+
+    # Find all values that appear in 
+    if folder:
+        matched = [v for v in values if v in folder]
+        if matched:
+            return ";".join(matched)
+
+    # fallback → join all
+    return ";".join(values)
+
+# Filter out special characters (keep letters, numbers, maybe _)
+def is_normal(v):
+    return re.fullmatch(r"[A-Za-z0-9]+", v) is not None    

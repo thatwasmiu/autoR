@@ -6,7 +6,8 @@ import threading
 import win32com.client
 
 sys.path.insert(0, os.path.dirname(__file__))
-from modules import get_data, write_daily_report
+from modules import write_daily_report
+from daily_invoice import get_data
 
 ignore_folders = {"xml", "__pycache__"}
 
@@ -29,9 +30,10 @@ def create_report(root, status_label=None):
                 status_label.config(text=f"Processing ({i}/{len(folders)}): {folder.name}")
                 status_label.update_idletasks()
             else:
+                a = 1
                 print(f"Processing ({i}/{len(folders)}): {folder.name}")
 
-            data = get_data(str(folder))
+            data = get_data(folder)
             data_list.append(data)
 
         except Exception as e:
@@ -39,11 +41,11 @@ def create_report(root, status_label=None):
             print(e)
 
     print(data_list)
-    return
+    # return
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_file = root / f"report_{root.name}_{timestamp}.xlsx"
 
-    template_path = get_resource_path("daily_template.xlsx")
+    template_path = get_resource_path("./resources/daily_template.xlsx")
     wb = write_daily_report(template_path, data_list)
     wb.save(output_file)
 
@@ -54,6 +56,11 @@ def create_report(root, status_label=None):
 
     os.startfile(output_file)  
 
+
+def get_resource_path(filename):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, filename)
+    return os.path.join(os.path.abspath("."), filename)
 
 def choose_folder():
     shell = win32com.client.Dispatch("Shell.Application")
@@ -66,6 +73,6 @@ if __name__ == "__main__":
     # folder = choose_folder()
 
     # if folder:
-        create_report(Path(r"C:\Users\datnt4\works\autoR\06.04"))
+        create_report(Path(r"D:\daste\autoR\06.04"))
     # else:
         # print("No folder selected.")

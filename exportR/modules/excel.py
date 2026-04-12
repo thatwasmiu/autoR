@@ -1,26 +1,47 @@
 from openpyxl import load_workbook
 import re
 
-def find_value(ws, keyword, match=None):
-    pattern = re.compile(match, re.IGNORECASE) if match else None
+import re
+
+def find_values(ws, patterns):
+    compiled = {
+        k: (kw.lower(), re.compile(p, re.IGNORECASE) if p else None)
+        for k, (kw, p) in patterns.items()
+    }
+
+    results = {k: None for k in patterns}
 
     for row in ws.iter_rows():
         for cell in row:
-            if cell.value and keyword.lower() in str(cell.value).lower():
-                for col in range(cell.column + 1, cell.column + 8):
-                    val = ws.cell(row=cell.row, column=col).value
-                    if val:
-                        # if keyword in "Mã phân loại kiểm tra":
-                        #     print(val)
+            if not cell.value:
+                continue
+
+            text = str(cell.value).lower()
+
+            for key, (keyword, pattern) in compiled.items():
+                if results[key] is not None:
+                    continue
+
+                if keyword in text:
+                    for col in range(cell.column + 1, cell.column + 8):
+                        val = ws.cell(row=cell.row, column=col).value
+                        if not val:
+                            continue
+
                         if pattern:
                             m = pattern.search(str(val))
-                            # if keyword in "Mã phân loại kiểm tra":
-                            #     print(m.group(0))
                             if m:
-                                return m.group(0).strip()
+                                results[key] = m.group(0).strip()
+                                break
                         else:
-                            return str(val).strip()
-    return None
+                            results[key] = str(val).strip()
+                            break
+
+        # stop early if all found
+        if all(results.values()):
+            break
+
+    return results
 
 
 

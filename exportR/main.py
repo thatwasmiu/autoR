@@ -6,11 +6,11 @@ import tkinter as tk
 from tkinter import filedialog
 import threading
 
-from modules import get_data, write_daily_report
-
+from modules import write_daily_report
+from daily_invoice import get_data
 ignore_folders = {"xml", "__pycache__"}
 
-# pyinstaller --onefile --noconsole main.py --add-data "daily_template.xlsx;."
+# pyinstaller --clean --onefile --noconsole --name eportR --add-data "resources/daily_template.xlsx;resources" --icon=logo.ico main.py
 def create_report(root, status_label=None):
     folders = [
         f for f in root.iterdir()
@@ -31,17 +31,17 @@ def create_report(root, status_label=None):
             else:
                 print(f"Processing ({i}/{len(folders)}): {folder.name}")
 
-            data = get_data(str(folder))
+            data = get_data(folder)
             data_list.append(data)
 
         except Exception as e:
             print(f"Error with folder: {folder}")
             print(e)
-
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_file = root / f"report_{root.name}_{timestamp}.xlsx"
 
-    template_path = get_resource_path("daily_template.xlsx")
+    template_path = get_resource_path("resources/daily_template.xlsx")
+    status_label.config(text=f"Start printing!!!")
     wb = write_daily_report(template_path, data_list)
     wb.save(output_file)
 
