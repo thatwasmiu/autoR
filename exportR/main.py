@@ -5,12 +5,13 @@ from datetime import datetime
 import tkinter as tk
 from tkinter import filedialog
 import threading
+from collections import defaultdict
 
 from modules import write_daily_report
 from daily_invoice import get_data
 ignore_folders = {"xml", "__pycache__"}
 
-# pyinstaller --clean --onefile --noconsole --name eportR --add-data "resources/daily_template.xlsx;resources" --icon=logo.ico main.py
+# pyinstaller --clean --onefile --noconsole --name eportR --add-data "resources/daily_template.xlsx;resources" --add-data "resources/logo.ico;resources" --icon=resources/logo.ico main.py
 def create_report(root, status_label=None):
     folders = [
         f for f in root.iterdir()
@@ -20,29 +21,30 @@ def create_report(root, status_label=None):
         folders,
         key=lambda f: int(f.name.split(".",1)[0])
     )
-
-    data_list = []
+    
+    grouped = defaultdict(list)
 
     for i, folder in enumerate(folders, start=1):
-        try:
-            if status_label:
-                status_label.config(text=f"Processing ({i}/{len(folders)}): {folder.name}")
-                status_label.update_idletasks()
-            else:
-                print(f"Processing ({i}/{len(folders)}): {folder.name}")
+        # try:
+        if status_label:
+            status_label.config(text=f"Processing ({i}/{len(folders)}): {folder.name}")
+            status_label.update_idletasks()
+        else:
+            print(f"Processing ({i}/{len(folders)}): {folder.name}")
 
-            data = get_data(folder)
-            data_list.append(data)
+        data = get_data(folder)
+        method = (data.get("method") or "Khác").strip().lower()
+        grouped[method].append(data)
 
-        except Exception as e:
-            print(f"Error with folder: {folder}")
-            print(e)
+        # except Exception as e:
+        #     print(f"Error with folder: {folder}")
+        #     print(e)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_file = root / f"report_{root.name}_{timestamp}.xlsx"
 
     template_path = get_resource_path("resources/daily_template.xlsx")
     status_label.config(text=f"Start printing!!!")
-    wb = write_daily_report(template_path, data_list)
+    wb = write_daily_report(template_path, grouped)
     wb.save(output_file)
 
     if status_label:
@@ -62,6 +64,7 @@ def choose_folder(entry):
 
 def run_app():
     root = tk.Tk()
+    root.iconbitmap(get_resource_path("resources/logo.ico"))
     root.title("Daily Report Tool")
     root.geometry("900x250")
 

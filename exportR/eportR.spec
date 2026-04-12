@@ -5,7 +5,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('resources/daily_template.xlsx', 'resources')],
+    datas=[('resources/daily_template.xlsx', 'resources'), ('resources/logo.ico', 'resources')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -35,5 +35,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['logo.ico'],
+    icon=['resources\\logo.ico'],
 )

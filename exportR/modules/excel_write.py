@@ -8,9 +8,11 @@ switch = {
     '3': "Vàng"
 }
 
-def write_daily_report(template, data_list):
+def write_daily_report(template, grouped):
+    # print(grouped)
     wb = load_workbook(template)
-    ws = wb.active
+
+    template_ws = wb.active  # original styled sheet
 
     border = Border(
         left=Side(style='thin', color='000000'),
@@ -18,37 +20,49 @@ def write_daily_report(template, data_list):
         top=Side(style='thin', color='000000'),
         bottom=Side(style='thin', color='000000')
     )
-    # Start index based on existing rows (excluding header)
-    # start_index = 1 # assumes row 1 is header
 
-    for i, data in enumerate(data_list, start=1):
-        date_val = datetime.strptime(data.get("date"), "%d/%m/%Y") if data.get("date") else None
+    first = True
 
-        ws.append([
-            i + 1,   # A
-            None,              # B
-            data.get("nvlCode"),
-            None,
-            data.get("formCode"),              # GC
-            date_val,          # F
-            data.get("bill"),
-            "HQ TELECOM",      # HQ
-            data.get("declareCode"),
-            switch.get(data.get("routeType"), ""),
-            data.get("typeCode"),      # E11
-            data.get("term"),
-            data.get("invoice"),
-            data.get("tms"),
-        ])
+    for method, items in grouped.items():
 
-        row = ws.max_row
+        # ✅ Use template sheet for first group, copy for others
+        if first:
+            ws = wb.copy_worksheet(template_ws)
+            ws.title = str(method).upper()
+            first = False
+        else:
+            ws = wb.copy_worksheet(template_ws)
+            ws.title = str(method).upper()
 
-        # Excel date format d/m/yyyy
-        if date_val:
-            ws.cell(row=row, column=6).number_format = "D/M/YYYY"
+        # optional: clear existing data rows (keep header)
+        # ws.delete_rows(2, ws.max_row)
 
-        # apply border A -> N
-        for col in range(1, 15):
-            ws.cell(row=row, column=col).border = border
+        for i, data in enumerate(items, start=1):
+            date_val = datetime.strptime(data.get("date"), "%d/%m/%Y") if data.get("date") else None
 
+            ws.append([
+                i,
+                None,
+                data.get("nvlCode"),
+                None,
+                data.get("formCode"),
+                date_val,
+                data.get("bill"),
+                "HQ TELECOM",
+                data.get("declareCode"),
+                switch.get(data.get("routeType"), ""),
+                data.get("typeCode"),
+                data.get("term"),
+                data.get("invoice"),
+                data.get("tms"),
+            ])
+
+            row = ws.max_row
+
+            if date_val:
+                ws.cell(row=row, column=6).number_format = "D/M/YYYY"
+
+            for col in range(1, 15):
+                ws.cell(row=row, column=col).border = border
+    wb.remove(template_ws)
     return wb

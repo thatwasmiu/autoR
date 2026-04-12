@@ -19,37 +19,27 @@ def get_codes(text):
     try:
         i = next(i for i, p in enumerate(parts) if "NVL" in p)
     except StopIteration:
-        return None, None, None
+        return None, None
 
     # first
     first = f"NVL - {parts[i+1]}"
 
     # second
     if i + 2 >= len(parts):
-        return first, None, None
+        return first, None
     second = parts[i+2]
 
     # third
     if i + 3 >= len(parts):
-        return first, second, None
-
-    third = parts[i+3]
-
-    # stop if date
-    if re.match(r'\d{1,2}\.\d{1,2}\.\d{4}', third):
-        return first, second, None
-
-    # if third is numeric → belongs to previous
-    if re.fullmatch(r'\d+', third):
-        return first, second, f"{parts[i+2]}-{third}"
+        return first, second
 
     # special case: second contains split code
     if re.fullmatch(r'\d+', parts[i+3]):
-        return first, f"{second}-{parts[i+3]}", parts[i+4] if i+4 < len(parts) else None
+        return first, f"{second}-{parts[i+3]}"
 
-    return first, second, third
+    return first, second
 
-
+# print(get_codes("6. NVL - 9386 - E20260403054 - HPVN20260406006-1 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE"))
 #  def get_declaration_code(file_name):
 
 #     for text in texts:

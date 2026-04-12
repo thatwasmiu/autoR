@@ -8,18 +8,55 @@ from modules import (
 )
 
 patterns = {
-    "declareCode": ("Số tờ khai", None),
-    "typeCode": ("Mã loại hình", r"[A-Z0-9]+"),
-    "routeType": ("Mã phân loại kiểm tra", r"\d"),
-    "term": ("Tổng trị giá hóa đơn", None),
-    "date": ("Ngày đăng ký", None),
+    "declareCode": {
+        "kw": "Số tờ khai",
+        "regex": None,
+        "files": [r"ToKhai.*_\d+"],
+        "sheets": None
+    },
+    "typeCode": {
+        "kw": "Mã loại hình",
+        "regex": r"[A-Z0-9]+",
+        "files": [r"ToKhai.*_\d+"],
+        "sheets": None
+    },
+    "routeType": {
+        "kw": "Mã phân loại kiểm tra",
+        "regex": r"\d",
+        "files": [r"ToKhai.*_\d+"],
+        "sheets": None
+    },
+    "term": {
+        "kw": "Tổng trị giá hóa đơn",
+        "regex": None,
+        "files": [r"ToKhai.*_\d+"],
+        "sheets": None
+    },
+    "date": {
+        "kw": "Ngày đăng ký",
+        "regex": None,
+        "files": [r"ToKhai.*_\d+"],
+        "sheets": None
+    },
+    "invoice": {
+        "kw": "Số hóa đơn",
+        "regex": None,
+        "files": [r"ToKhai.*_\d+"],
+        "sheets": None
+    },
+    "method": {
+        "kw": "Method of Shipment:",
+        "regex": None,
+        "files": [r"合同_发票_箱单.*"],
+        "sheets": ['SHIPPING AGREEMENT']
+    },
 }
 
 def get_data(daily_invoice_folder):
     # folder = r"C:\Users\datnt4\Documents\06.04\1. NVL - 9365 - E20260403058  - LENOVOVN20260406003 - 6.4.2026 - GC - 2PK - E11- TRUCK"
     folder = str(daily_invoice_folder)
 
-    nvlCode, bill, invoice = get_codes(daily_invoice_folder.name)
+    nvlCode, bill = get_codes(daily_invoice_folder.name)
     fromCode = get_form_code(daily_invoice_folder.name)
     # print(nvlCode, bill, invoice)
     # return
@@ -32,23 +69,28 @@ def get_data(daily_invoice_folder):
     terms = []
     dates = []
     tmses = []
+    invoices = []
+    methods = []
 
     for f in files:
-        if "ToKhai" in f:
-            ws = get_workbook(f)
-            values = find_values(ws, patterns)
+        values = find_values(f, patterns)
 
-            if values["declareCode"]:
-                declare_codes.append(values["declareCode"].strip())
-            if values["typeCode"]:
-                type_codes.append(values["typeCode"].strip())
-            if values["routeType"]:
-                route_types.append(values["routeType"].strip())
-            if values["term"]:
-                terms.append(values["term"].strip())
-            if values["date"]:
-                dates.append(values["date"].strip())
-        else:
+        if values["declareCode"]:
+            declare_codes.append(values["declareCode"].strip())
+        if values["typeCode"]:
+            type_codes.append(values["typeCode"].strip())
+        if values["routeType"]:
+            route_types.append(values["routeType"].strip())
+        if values["term"]:
+            terms.append(values["term"].strip())
+        if values["date"]:
+            dates.append(values["date"].strip())
+        if values["invoice"]:
+            invoices.append(values["invoice"].strip())
+        if values["method"]:
+            methods.append(values["method"].strip().upper())
+
+        if "合同_发票_箱单" in f:
             tms = get_tms_code(f)
             if tms:
                 tmses.append(tms)   
@@ -59,8 +101,10 @@ def get_data(daily_invoice_folder):
     term = pick_value(terms, folder, r'^\s*[^-]+\s*-\s*([^-]+)\s*-', 1)
     date = pick_value(dates, folder, r'\b\d{1,2}/\d{1,2}/\d{4}\b')
     tms = pick_value(tmses)
+    invoice = pick_value(invoices, folder, r'^\s*[^-]+\s*-\s*(.*)', 1)
+    method = pick_value(methods, folder)
 
-    # print(route_types)
+    # print(method)
     return {
         "nvlCode": nvlCode,
         "bill": bill,
@@ -71,7 +115,8 @@ def get_data(daily_invoice_folder):
         "term": term,
         "date": date,
         "tms": tms,
-        "formCode": fromCode
+        "formCode": fromCode,
+        "method": method
     }
 
 def get_form_code(folder_name): 
