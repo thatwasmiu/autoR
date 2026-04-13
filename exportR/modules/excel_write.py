@@ -4,8 +4,8 @@ from openpyxl.styles import Border, Side
 
 switch = {
     '1': "Xanh",
-    '2': "Đỏ",
-    '3': "Vàng"
+    '2': "Vàng",
+    '3': "Đỏ"
 }
 
 def write_daily_report(template, grouped):
@@ -42,7 +42,7 @@ def write_daily_report(template, grouped):
 
             ws.append([
                 i,
-                None,
+                data.get("month"),
                 data.get("nvlCode"),
                 None,
                 data.get("formCode"),

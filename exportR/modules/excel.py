@@ -1,9 +1,5 @@
 from openpyxl import load_workbook
 import re
-
-import re
-
-import re
 import os
 
 def find_values(filename, patterns):

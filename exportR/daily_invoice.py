@@ -1,5 +1,6 @@
 import re
 from collections import Counter
+from datetime import datetime
 from modules import (
     get_workbook,
     find_values,
@@ -104,6 +105,10 @@ def get_data(daily_invoice_folder):
     invoice = pick_value(invoices, folder, r'^\s*[^-]+\s*-\s*(.*)', 1)
     method = pick_value(methods, folder)
 
+    month = None
+    if date:
+        month = datetime.strptime(date, "%d/%m/%Y").month
+
     # print(method)
     return {
         "nvlCode": nvlCode,
@@ -114,6 +119,7 @@ def get_data(daily_invoice_folder):
         "routeType": routeType,
         "term": term,
         "date": date,
+        "mont": month,
         "tms": tms,
         "formCode": fromCode,
         "method": method

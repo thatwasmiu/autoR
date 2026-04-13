@@ -39,8 +39,8 @@ def create_report(root, status_label=None):
         # except Exception as e:
         #     print(f"Error with folder: {folder}")
         #     print(e)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_file = root / f"report_{root.name}_{timestamp}.xlsx"
+    timestamp = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
+    output_file = root / f"BC_{timestamp}.xlsx"
 
     template_path = get_resource_path("resources/daily_template.xlsx")
     status_label.config(text=f"Start printing!!!")
