@@ -59,7 +59,6 @@ def write_daily_report(template, grouped):
                 None,
                 data.get("formCode"),
                 date_val,
-                time_str,
                 data.get("bill"),
                 "HQ TELECOM",
                 data.get("declareCode"),
@@ -68,6 +67,7 @@ def write_daily_report(template, grouped):
                 data.get("term"),
                 data.get("invoice"),
                 data.get("tms"),
+                time_str,
             ])
 
             row = ws.max_row
