@@ -209,6 +209,9 @@ def run_app():
         if not folder_path:
             return
 
+        if status_label:
+            status_label.config(text=f"Start printing ctu in folder {folder_path}")
+
         run_button.config(state="disabled")
         tree.delete(*tree.get_children())  # clear UI
         row_data.clear()
@@ -229,6 +232,8 @@ def run_app():
 
             run_button.config(state="normal")
 
+        if status_label:
+            status_label.config(text=f"Start worker thread!!!")
         threading.Thread(target=task, daemon=True).start()
 
     run_button.config(command=start_process)

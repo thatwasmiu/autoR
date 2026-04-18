@@ -21,6 +21,11 @@ def find_values(filename, patterns):
         }
 
     results = {k: None for k in patterns}
+    # if "合同_发票_箱单" in os.path.basename(filename):
+    #     print(kw)
+
+    # if kw == 'no.':
+    #     print(compiled)
 
     for ws in wb.worksheets:
         sheet_name = ws.title
@@ -34,7 +39,7 @@ def find_values(filename, patterns):
             if cfg["files"] is not None:
                 base = os.path.splitext(os.path.basename(filename))[0]
 
-                # if "合同_发票_箱单" in os.path.basename(filename) and cfg["keyword"]=="agreement no:":
+                # if "合同_发票_箱单" in os.path.basename(filename) and cfg["keyword"]=="no.":
                 #     print("BASE RAW:", base)
                 #     print("BASE REPR:", repr(base))
                 #     for p in cfg["files"]:
@@ -55,12 +60,16 @@ def find_values(filename, patterns):
             keyword = cfg["keyword"]
             pattern = cfg["pattern"]
 
+            # if (keyword == 'no.'):
+                # print(cfg["sheets"])
+
             for row in ws.iter_rows():
                 for cell in row:
                     if not cell.value:
                         continue
 
                     text = str(cell.value).lower()
+                    # print(text)
 
                     if keyword in text:
                         for col in range(cell.column + 1, cell.column + 8):
@@ -83,7 +92,8 @@ def find_values(filename, patterns):
         # stop early if all found
         if all(results.values()):
             break
-
+    # if "合同_发票_箱单" in os.path.basename(filename):        
+    #     print(results)
     return results
 
 

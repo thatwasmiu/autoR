@@ -40,16 +40,16 @@ patterns = {
         "sheets": None
     },
     "invoice": {
-        "kw": "Số hóa đơn",
-        "regex": None,
-        "files": [r"ToKhai.*_\d+"],
-        "sheets": None
-    },
-    "method": {
-        "kw": "Method of Shipment:",
+        "kw": "NO.",
         "regex": None,
         "files": [r"合同_发票_箱单.*"],
-        "sheets": ['SHIPPING AGREEMENT']
+        "sheets": ['INVForm']
+    },
+    "method": {
+        "kw": "Ship By:",
+        "regex": None,
+        "files": [r"合同_发票_箱单.*"],
+        "sheets": ['PackingList']
     },
 }
 
@@ -57,7 +57,6 @@ def get_data(daily_invoice_folder):
     # folder = r"C:\Users\datnt4\Documents\06.04\1. NVL - 9365 - E20260403058  - LENOVOVN20260406003 - 6.4.2026 - GC - 2PK - E11- TRUCK"
     folder = str(daily_invoice_folder)
 
-    nvlCode, bill = get_codes(daily_invoice_folder.name)
     fromCode = get_form_code(daily_invoice_folder.name)
     # print(nvlCode, bill, invoice)
     # return
@@ -100,14 +99,18 @@ def get_data(daily_invoice_folder):
     typeCode = pick_value(type_codes, folder, r"[A-Za-z0-9]+")
     routeType = pick_value(route_types, folder, r"[A-Za-z0-9]+")
     term = pick_value(terms, folder, r'^\s*[^-]+\s*-\s*([^-]+)\s*-', 1)
-    date = pick_value(dates, folder, r'\b\d{1,2}/\d{1,2}/\d{4}\b')
+    date = pick_value(dates, folder, r'\b(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4} ([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\b')
     tms = pick_value(tmses)
-    invoice = pick_value(invoices, folder, r'^\s*[^-]+\s*-\s*(.*)', 1)
+    invoice = pick_value(invoices, folder)
     method = pick_value(methods, folder)
 
+    nvlCode, bill = get_codes(daily_invoice_folder.name, invoice)
     month = None
     if date:
-        month = datetime.strptime(date, "%d/%m/%Y").month
+        try:
+            month = datetime.strptime(date, "%d/%m/%Y %H:%M:%S").month
+        except (ValueError, TypeError):
+            print("Error date: ", date)
 
     # print(method)
     return {
@@ -119,7 +122,7 @@ def get_data(daily_invoice_folder):
         "routeType": routeType,
         "term": term,
         "date": date,
-        "mont": month,
+        "month": month,
         "tms": tms,
         "formCode": fromCode,
         "method": method
@@ -131,7 +134,7 @@ def get_form_code(folder_name):
     for p in parts:
         if p == "GC" or p == "CX":
             return p
-    return None
+    return "GC"
 
 def get_tms_code(file_name):
     m = re.search(r'(?<=合同_发票_箱单_)I\d+', file_name)

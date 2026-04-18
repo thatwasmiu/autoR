@@ -11,7 +11,10 @@ def find_excel_files(folder, pattern=None):
                 files.append(os.path.join(root, f))
     return files
 
-def get_codes(text):
+def get_codes(text, invoice):
+
+    pattern = rf"-\s*{re.escape(invoice)}"
+    text = re.split(pattern, text, maxsplit=1)[0]
     # remove spaces around "-"
     parts = [p.strip() for p in re.split(r'-', text)]
 
@@ -22,20 +25,15 @@ def get_codes(text):
         return None, None
 
     # first
-    first = f"NVL - {parts[i+1]}"
+    if i + 1 >= len(parts):
+        return None, None
+    first = f"{parts[i]}-{parts[i+1]}"
 
-    # second
+    # second: aaa or aaa-01
     if i + 2 >= len(parts):
         return first, None
-    second = parts[i+2]
 
-    # third
-    if i + 3 >= len(parts):
-        return first, second
-
-    # special case: second contains split code
-    if re.fullmatch(r'\d+', parts[i+3]):
-        return first, f"{second}-{parts[i+3]}"
+    second = "-".join(parts[i+2:])
 
     return first, second
 

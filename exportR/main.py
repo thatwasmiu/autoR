@@ -25,21 +25,23 @@ def create_report(root, status_label=None):
     grouped = defaultdict(list)
 
     for i, folder in enumerate(folders, start=1):
-        # try:
-        if status_label:
-            status_label.config(text=f"Processing ({i}/{len(folders)}): {folder.name}")
-            status_label.update_idletasks()
-        else:
-            print(f"Processing ({i}/{len(folders)}): {folder.name}")
+        try:
+            if status_label:
+                status_label.config(text=f"Processing ({i}/{len(folders)}): {folder.name}")
+                status_label.update_idletasks()
+            else:
+                print(f"Processing ({i}/{len(folders)}): {folder.name}")
 
-        data = get_data(folder)
-        method = (data.get("method") or "Khác").strip().lower()
-        grouped[method].append(data)
+            data = get_data(folder)
 
-        # except Exception as e:
-        #     print(f"Error with folder: {folder}")
-        #     print(e)
-    timestamp = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
+            method = (data.get("method") or "Khác").strip().lower()
+
+            grouped[method].append(data)
+
+        except Exception as e:
+            print(f"❌ Error with folder: {folder}")
+            print(e)
+    timestamp = datetime.now().strftime("%d_%m_%Y_%H%M%S")
     output_file = root / f"BC_{timestamp}.xlsx"
 
     template_path = get_resource_path("resources/daily_template.xlsx")

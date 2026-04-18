@@ -1,6 +1,7 @@
 from openpyxl import load_workbook
 from datetime import datetime, time
 from openpyxl.styles import Border, Side
+from openpyxl.styles import Font
 
 switch = {
     '1': "Xanh",
@@ -20,6 +21,7 @@ def write_daily_report(template, grouped):
         top=Side(style='thin', color='000000'),
         bottom=Side(style='thin', color='000000')
     )
+    font_tnr = Font(name="Times New Roman", size=10)
 
     first = True
 
@@ -38,7 +40,17 @@ def write_daily_report(template, grouped):
         # ws.delete_rows(2, ws.max_row)
 
         for i, data in enumerate(items, start=1):
-            date_val = datetime.strptime(data.get("date"), "%d/%m/%Y") if data.get("date") else None
+            date_val = None
+            try:
+                date_str = data.get("date")
+                if date_str:
+                    date_val = datetime.strptime(date_str, "%d/%m/%Y %H:%M:%S")
+            except (ValueError, TypeError):
+                date_val = None
+
+            time_str = None
+            if date_val:
+                time_str = date_val.strftime("%I:%M %p")
 
             ws.append([
                 i,
@@ -47,6 +59,7 @@ def write_daily_report(template, grouped):
                 None,
                 data.get("formCode"),
                 date_val,
+                time_str,
                 data.get("bill"),
                 "HQ TELECOM",
                 data.get("declareCode"),
@@ -62,7 +75,9 @@ def write_daily_report(template, grouped):
             if date_val:
                 ws.cell(row=row, column=6).number_format = "D/M/YYYY"
 
-            for col in range(1, 15):
-                ws.cell(row=row, column=col).border = border
+            for col in range(1, 16):
+                cell = ws.cell(row=row, column=col)
+                cell.border = border
+                cell.font = font_tnr   # ✅ apply Times New Roman
     wb.remove(template_ws)
     return wb
