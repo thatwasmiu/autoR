@@ -27,7 +27,8 @@ def get_codes(text, invoice):
     # first
     if i + 1 >= len(parts):
         return None, None
-    first = f"{parts[i]}-{parts[i+1]}"
+#     first = f"{parts[i]}-{parts[i+1]}"
+    first = f"NVL - {parts[i+1]}"
 
     # second: aaa or aaa-01
     if i + 2 >= len(parts):

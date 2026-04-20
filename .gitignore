@@ -1,2 +1,4 @@
 exportR/dist/
 exportR/build/
+.idea/
+weekly/output.xlsx
