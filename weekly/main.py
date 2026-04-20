@@ -1,7 +1,7 @@
 import os
 from openpyxl import load_workbook
 
-ROOT_FOLDER = r"C:\Users\datnt4\Documents\week"
+ROOT_FOLDER = r"C:\Users\min\Documents\week"
 TEMPLATE_FILE = "template_weekly.xlsx"
 OUTPUT_FILE = "output.xlsx"
 
@@ -99,8 +99,53 @@ OUTPUT_COLUMN_MAP = {
     "nvlCode": 3,
     "bill": 4,
     "invoice": 5,
-    "routeType": 8
+    "time": 10, 
+    "routeType": 11,
 }
+
+KEY_FIELDS = ["nvlCode", "bill", "invoice"]
+
+
+def build_existing_index(sheet, start_row):
+    """
+    Build a map:
+    (nvlCode, bill, invoice) -> row_number
+    """
+    index = {}
+
+    for row in sheet.iter_rows(min_row=start_row, values_only=False):
+        row_idx = row[0].row
+
+        key = []
+        for field in KEY_FIELDS:
+            col_idx = OUTPUT_COLUMN_MAP[field]
+            val = sheet.cell(row=row_idx, column=col_idx).value
+            key.append(str(val).strip() if val else "")
+
+        key_tuple = tuple(key)
+
+        if any(key_tuple):  # ignore empty rows
+            index[key_tuple] = row_idx
+
+    return index
+
+from datetime import datetime
+
+def parse_date(value):
+    if not value:
+        return None
+
+    if isinstance(value, datetime):
+        return value
+
+    # try common formats
+    for fmt in ("%d/%m/%Y", "%Y-%m-%d", "%d-%m-%Y"):
+        try:
+            return datetime.strptime(str(value).strip(), fmt)
+        except:
+            continue
+
+    return None  # fallback
 
 def main():
     all_data = []
@@ -118,22 +163,65 @@ def main():
         print("⚠️ No data found")
         return
 
-    wb = load_workbook(TEMPLATE_FILE)  # use existing file
+    wb = load_workbook(TEMPLATE_FILE)
     sheet = wb.active
 
-    # 👉 append to last row
-    start_row = sheet.max_row + 1
+    # 🔍 find header row
+    header_row = find_header_row(sheet)
+    if not header_row:
+        raise Exception("❌ Cannot find header row (STT)")
 
-    for row_idx, row_dict in enumerate(all_data, start=start_row):
-        for key, col_idx in OUTPUT_COLUMN_MAP.items():
-            sheet.cell(
-                row=row_idx,
-                column=col_idx,
-                value=row_dict.get(key)
-            )
+    data_start_row = header_row + 1
+
+    # 🔧 build existing index
+    existing_index = build_existing_index(sheet, data_start_row)
+
+    append_row = sheet.max_row + 1
+    updated = 0
+    inserted = 0
+
+    for row_dict in all_data:
+        key = tuple(str(row_dict.get(f, "")).strip() for f in KEY_FIELDS)
+
+        if key in existing_index:
+            # 🔁 UPDATE existing row
+            row_idx = existing_index[key]
+
+            for k, col_idx in OUTPUT_COLUMN_MAP.items():
+                if k not in KEY_FIELDS:  # don't overwrite key fields
+                    value = row_dict.get(k)
+
+                    cell = sheet.cell(row=row_idx, column=col_idx)
+
+                    if k == "date":
+                        dt = parse_date(value)
+                        cell.value = dt
+                        if dt:
+                            cell.number_format = "D/M/YYYY"
+                    else:
+                        cell.value = value
+            updated += 1
+
+        else:
+            # ➕ INSERT new row
+            for k, col_idx in OUTPUT_COLUMN_MAP.items():
+                value = row_dict.get(k)
+
+                cell = sheet.cell(row=append_row, column=col_idx)
+
+                if k == "date":
+                    dt = parse_date(value)
+                    cell.value = dt
+                    if dt:
+                        cell.number_format = "D/M/YYYY"
+                else:
+                    cell.value = value
+
+            existing_index[key] = append_row
+            append_row += 1
+            inserted += 1
 
     wb.save(OUTPUT_FILE)
-    print(f"✅ Appended {len(all_data)} rows to {OUTPUT_FILE}")
 
 
 if __name__ == "__main__":
