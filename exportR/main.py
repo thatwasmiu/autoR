@@ -9,10 +9,11 @@ from collections import defaultdict
 
 from modules import write_daily_report
 from daily_invoice import get_data
+from weekly_report import create_weekly_report
 ignore_folders = {"xml", "__pycache__"}
 
 # pyinstaller --clean --onefile --noconsole --name eportR --add-data "resources/daily_template.xlsx;resources" --add-data "resources/logo.ico;resources" --icon=resources/logo.ico main.py
-def create_report(root, status_label=None):
+def create_daily_report(root, status_label=None):
     folders = [
         f for f in root.iterdir()
         if f.is_dir() and f.name.lower() not in ignore_folders
@@ -77,6 +78,17 @@ def run_app():
 
     tk.Button(root, text="Browse", command=lambda: choose_folder(folder_entry)).pack(pady=5)
 
+    # ✅ Report type selection
+    report_type = tk.StringVar(value="daily")  # default = daily
+
+    tk.Label(root, text="Select Report Type:").pack(pady=5)
+
+    frame = tk.Frame(root)
+    frame.pack()
+
+    tk.Radiobutton(frame, text="Daily", variable=report_type, value="daily").pack(side="left", padx=10)
+    tk.Radiobutton(frame, text="Weekly", variable=report_type, value="weekly").pack(side="left", padx=10)
+
     status_label = tk.Label(root, text="Status: Idle", fg="blue")
     status_label.pack(pady=10)
 
@@ -85,11 +97,18 @@ def run_app():
 
     def start_process():
         folder_path = folder_entry.get()
+        selected_type = report_type.get()  # ✅ get selected value
+        print(selected_type)
         if folder_path:
             run_button.config(state="disabled")
 
             def task():
-                create_report(Path(folder_path), status_label)
+                if selected_type == "daily":
+                    create_daily_report(Path(folder_path), status_label)
+                    pass
+                elif selected_type == "weekly":
+                    create_weekly_report(Path(folder_path), status_label)
+                    pass
                 run_button.config(state="normal")
 
             threading.Thread(target=task, daemon=True).start()
