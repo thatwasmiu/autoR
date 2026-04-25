@@ -1,7 +1,9 @@
 import os
+import sys
 from openpyxl import load_workbook
 from openpyxl.styles import Border, Side
 from openpyxl.styles import Font
+import re
 
 TEMPLATE_FILE = "resources/template_weekly.xlsx"
 OUTPUT_FILE = "output.xlsx"
@@ -78,20 +80,19 @@ def extract_data_from_sheet(sheet, method):
 
     return data
 
-def extract_data_from_file(filepath):
+def extract_data_from_file(filepath, status_label):
     wb = load_workbook(filepath, data_only=True)
     all_data = []
 
     for sheet_name in wb.sheetnames:
         sheet = wb[sheet_name]
-        print(f"   ➜ Sheet: {sheet_name}")
 
         sheet_data = extract_data_from_sheet(sheet, sheet_name)
 
         if sheet_data:
             all_data.extend(sheet_data)
         else:
-            print(f"      ⚠️ No STT found")
+            status_label.config(text="Cannot find the label STT")
 
     return all_data
 
@@ -149,24 +150,50 @@ def parse_date(value):
 
     return None  # fallback
 
-def create_weekly_report(root_folder, status_label=None):
+def parse_folder_date(name, year):
+    match = re.match(r"(\d{1,2})\.(\d{1,2})", name)
+    if not match:
+        return None
+    d, m = map(int, match.groups())
+    try:
+        return datetime(year, m, d)
+    except:
+        return None
+
+def create_weekly_report(root_folder, from_date, to_date, status_label):
     all_data = []
 
-    for root, dirs, files in os.walk(root_folder):
-        for file in files:
-            if file.endswith(".xlsx") and "BC_" in file:
-                full_path = os.path.join(root, file)
-                print(f"📄 Processing: {full_path}")
+    # user selected range
+    from_dt = datetime.strptime(from_date, "%d/%m/%Y")
+    to_dt = datetime.strptime(to_date, "%d/%m/%Y")
 
-                data = extract_data_from_file(full_path)
-                all_data.extend(data)
+    current_year = from_dt.year  # assume same year
+
+    for root, dirs, files in os.walk(root_folder):
+        data = None
+        for d in dirs:
+            # match folder like "21.04"
+            folder_date = parse_folder_date(d, current_year)
+            if folder_date:
+                # ✅ filter by range
+                if from_dt <= folder_date <= to_dt:
+                    folder_path = os.path.join(root, d)
+
+                    for file in os.listdir(folder_path):
+                        if file.endswith(".xlsx") and "BC_" in file:
+                            full_path = os.path.join(folder_path, file)
+                            status_label.config(text=f"📄 Processing: {full_path}")
+                            data = extract_data_from_file(full_path, status_label)
+                            all_data.extend(data)
 
     if not all_data:
-        print("⚠️ No data found")
+        status_label.config(text="⚠️ No data found")
         return
 
-    wb = load_workbook(TEMPLATE_FILE)
+    wb = load_workbook(get_resource_path(TEMPLATE_FILE))
     sheet = wb.active
+    now = datetime.today()
+    sheet.title = f"T{now.month}.{now.year}"
 
     # 🔍 find header row
     header_row = find_header_row(sheet)
@@ -174,7 +201,7 @@ def create_weekly_report(root_folder, status_label=None):
         raise Exception("❌ Cannot find header row (STT)")
 
     data_start_row = header_row + 1
-
+    status_label.config(text=f"Start printing!!!")
     # 🔧 build existing index
     existing_index = build_existing_index(sheet, data_start_row)
 
@@ -210,6 +237,8 @@ def create_weekly_report(root_folder, status_label=None):
                         cell.value = dt
                         if dt:
                             cell.number_format = "D/M/YYYY"
+                    if k == "method" and value != None and value.upper() == "TRUCK":      
+                        cell.value = ""        
                     else:
                         cell.value = value
             updated += 1
@@ -229,6 +258,8 @@ def create_weekly_report(root_folder, status_label=None):
                     cell.value = dt
                     if dt:
                         cell.number_format = "D/M/YYYY"
+                if k == "method" and value != None and value.upper() == "TRUCK":      
+                    cell.value = ""
                 else:
                     cell.value = value
 
@@ -241,5 +272,13 @@ def create_weekly_report(root_folder, status_label=None):
             cell.border = border
             cell.font = font_tnr   # ✅ apply Times New Roman
     now = datetime.now()
-    timestamp = f"W{now.isocalendar().week:02d}_{now.strftime('%Y')}"
-    wb.save(root_folder / f"BC_{timestamp}.xlsx")
+    timestamp = f"T{now.isocalendar().week:02d}_{now.strftime('%Y')}"
+    output_file = root_folder / f"BC_{timestamp}_{now.strftime("%H%M%S")}.xlsx"
+    status_label.config(text=f"✅ Done! Saved: {str(output_file)}")
+    wb.save(output_file)
+    os.startfile(output_file)
+
+def get_resource_path(filename):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, filename)
+    return os.path.join(os.path.abspath("."), filename)    

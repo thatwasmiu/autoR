@@ -5,7 +5,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('resources/daily_template.xlsx', 'resources'), ('resources/logo.ico', 'resources')],
+    datas=[('resources/daily_template.xlsx', 'resources'), ('resources/logo.ico', 'resources'), ('resources/template_weekly.xlsx', 'resources')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
