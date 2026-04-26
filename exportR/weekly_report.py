@@ -273,7 +273,7 @@ def create_weekly_report(root_folder, from_date, to_date, status_label):
             cell.font = font_tnr   # ✅ apply Times New Roman
     now = datetime.now()
     timestamp = f"T{now.isocalendar().week:02d}_{now.strftime('%Y')}"
-    output_file = root_folder / f"BC_{timestamp}_{now.strftime("%H%M%S")}.xlsx"
+    output_file = root_folder / f"BC_{timestamp}_{now.strftime('%H%M%S')}.xlsx"
     status_label.config(text=f"✅ Done! Saved: {str(output_file)}")
     wb.save(output_file)
     os.startfile(output_file)

@@ -2,3 +2,11 @@ exportR/dist/
 exportR/build/
 .idea/
 weekly/output.xlsx
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.spec
+dist/
+build/
+.data/
