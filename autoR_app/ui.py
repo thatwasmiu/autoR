@@ -7,20 +7,22 @@ from typing import Callable
 
 from .db import GridSize
 
+GRID_INDEX_LABELS: list[str] = [
+    "STT",
+    "NVL",
+    "bill",
+    "Invoice",
+]
 
 GRID_LABELS: list[str] = [
-    "STT",
     "Loại hàng",
-    "NVL",
     "Tiến độ",
     "Phân loại",
-    "ngày",
-    "bill",
+    "Ngày",
     "Số TK",
     "Luồng",
     "Loại TK",
     "TERM",
-    "Invoice",
     "TMS",
     "Giờ nhận Mail",
     "Giờ TMS",
@@ -29,6 +31,12 @@ GRID_LABELS: list[str] = [
     "Giờ truyền chính thức",
     "Giờ mail thông quan",
 ]
+
+# Default pinned (frozen) columns, in the order they should appear.
+GRID_FROZEN_LABELS: list[str] = GRID_INDEX_LABELS.copy()
+
+# Full logical column order in the grid.
+GRID_ALL_LABELS: list[str] = GRID_INDEX_LABELS + GRID_LABELS
 
 
 def col_name(idx: int) -> str:
@@ -63,10 +71,12 @@ class GridFrame(ttk.Frame):
 
         self._time_col_start = self._find_time_col_start()
         self._time_col_vars: list[tk.BooleanVar] = []
+        self._col_vis_vars: list[tk.BooleanVar] = []
 
         self._columns = [self._actions_key] + [col_name(c) for c in range(size.cols)]
-        self._nvl_col_idx = self._find_col_idx("NVL")
         self._progress_col_idx = self._find_col_idx("Tiến độ")
+        self._frozen_data_idxs = [i for i in (self._find_col_idx(l) for l in GRID_FROZEN_LABELS) if i >= 0]
+        self._nvl_idx = self._find_col_idx("NVL")
 
         topbar = ttk.Frame(self)
         topbar.pack(side="top", fill="x")
@@ -83,10 +93,12 @@ class GridFrame(ttk.Frame):
         style.configure("Grid.Treeview", borderwidth=1, relief="solid", rowheight=22)
         style.configure("Grid.Treeview.Heading", borderwidth=1, relief="raised")
 
-        # Frozen-left tree: actions + NVL (sticky when horizontal scrolling).
+        # Frozen-left tree: actions + chosen business columns (sticky when horizontal scrolling).
         self._frozen_columns = [self._actions_key]
-        if self._nvl_col_idx >= 0:
-            self._frozen_columns.append(self._columns[self._nvl_col_idx + 1])
+        for idx in self._frozen_data_idxs:
+            col_id = self._columns[idx + 1]
+            if col_id not in self._frozen_columns:
+                self._frozen_columns.append(col_id)
         self._main_columns = [c for c in self._columns if c not in set(self._frozen_columns)]
 
         frozen_wrap = ttk.Frame(table)
@@ -145,30 +157,43 @@ class GridFrame(ttk.Frame):
         self._init_columns()
         self._init_column_menu()
         self._init_rows()
+        self._syncing_selection = False  # guard flag
 
     def _yview_both(self, *args: str) -> None:
         self._tree_frozen.yview(*args)
         self._tree_main.yview(*args)
 
     def _on_select(self, evt: tk.Event) -> None:
+        if self._syncing_selection:
+            return  # ignore recursive calls
+
         tree = evt.widget
         if tree not in (self._tree_frozen, self._tree_main):
             return
         other = self._tree_main if tree is self._tree_frozen else self._tree_frozen
         sel = tree.selection()
-        other.selection_set(sel)
-        if sel:
-            other.focus(sel[0])
+        try:
+            self._syncing_selection = True  # start guard
+
+            # Only update if different (avoids unnecessary events)
+            if other.selection() != sel:
+                other.selection_set(sel)
+
+            if sel:
+                other.focus(sel[0])
+
+        finally:
+            self._syncing_selection = False  # always release
 
     def _find_time_col_start(self) -> int:
         try:
-            return GRID_LABELS.index("Giờ nhận Mail")
+            return GRID_ALL_LABELS.index("Giờ nhận Mail")
         except ValueError:
             return -1
 
     def _find_col_idx(self, label: str) -> int:
         try:
-            return GRID_LABELS.index(label)
+            return GRID_ALL_LABELS.index(label)
         except ValueError:
             return -1
 
@@ -176,26 +201,59 @@ class GridFrame(ttk.Frame):
         self._tree_frozen.heading(self._actions_key, text="⋯")
         self._tree_frozen.column(self._actions_key, width=44, minwidth=44, stretch=False, anchor="center")
 
-        if self._nvl_col_idx >= 0:
-            nvl_id = self._columns[self._nvl_col_idx + 1]
-            if nvl_id in self._frozen_columns:
-                self._tree_frozen.heading(nvl_id, text="NVL")
-                self._tree_frozen.column(nvl_id, width=180, minwidth=120, stretch=False, anchor="w")
+        for idx in self._frozen_data_idxs:
+            col_id = self._columns[idx + 1]
+            label = GRID_ALL_LABELS[idx] if idx < len(GRID_ALL_LABELS) else col_id
+            self._tree_frozen.heading(col_id, text=label)
+            if label == "STT":
+                self._tree_frozen.column(col_id, width=60, minwidth=50, stretch=False, anchor="center")
+            elif label == "NVL":
+                self._tree_frozen.column(col_id, width=180, minwidth=120, stretch=False, anchor="w")
+            else:
+                self._tree_frozen.column(col_id, width=120, minwidth=80, stretch=False, anchor="w")
 
         for c in range(self._size.cols):
             col_id = self._columns[c + 1]
             if col_id in self._frozen_columns:
                 continue
-            label = GRID_LABELS[c] if c < len(GRID_LABELS) else col_id
+            label = GRID_ALL_LABELS[c] if c < len(GRID_ALL_LABELS) else col_id
             self._tree_main.heading(col_id, text=label)
             self._tree_main.column(col_id, width=120, minwidth=60, stretch=True, anchor="w")
 
     def _init_column_menu(self) -> None:
         self._cols_menu.delete(0, "end")
         self._time_col_vars.clear()
+        self._col_vis_vars.clear()
+
+        # Global show/hide (NVL is always visible)
+        self._cols_menu.add_command(label="Show all columns", command=self._show_all_columns)
+        self._cols_menu.add_command(label="Hide all (except NVL)", command=self._hide_all_except_nvl)
+        self._cols_menu.add_separator()
+
+        nvl_entry_index: int | None = None
+        for c in range(self._size.cols):
+            label = GRID_ALL_LABELS[c] if c < len(GRID_ALL_LABELS) else self._columns[c + 1]
+            is_nvl = c == self._nvl_idx
+            var = tk.BooleanVar(value=True)
+            self._col_vis_vars.append(var)
+            self._cols_menu.add_checkbutton(
+                label=f"Show: {label}",
+                variable=var,
+                command=self._apply_column_visibility,
+            )
+            if is_nvl:
+                nvl_entry_index = self._cols_menu.index("end")
+
+        if nvl_entry_index is not None:
+            # NVL must stay visible
+            self._col_vis_vars[self._nvl_idx].set(True)
+            self._cols_menu.entryconfigure(nvl_entry_index, state="disabled")
+
+        self._cols_menu.add_separator()
 
         if self._time_col_start < 0 or self._time_col_start >= self._size.cols:
             self._cols_btn.state(["disabled"])
+            self._apply_column_visibility()
             return
 
         self._cols_btn.state(["!disabled"])
@@ -205,7 +263,7 @@ class GridFrame(ttk.Frame):
 
         for c in range(self._time_col_start, self._size.cols):
             col_id = self._columns[c + 1]
-            label = GRID_LABELS[c] if c < len(GRID_LABELS) else col_id
+            label = GRID_ALL_LABELS[c] if c < len(GRID_ALL_LABELS) else col_id
             var = tk.BooleanVar(value=True)
             self._time_col_vars.append(var)
             self._cols_menu.add_checkbutton(
@@ -216,11 +274,34 @@ class GridFrame(ttk.Frame):
 
         self._apply_column_visibility()
 
+    def _show_all_columns(self) -> None:
+        for i, v in enumerate(self._col_vis_vars):
+            if i == self._nvl_idx:
+                v.set(True)
+            else:
+                v.set(True)
+        self._apply_column_visibility()
+
+    def _hide_all_except_nvl(self) -> None:
+        for i, v in enumerate(self._col_vis_vars):
+            v.set(i == self._nvl_idx)
+        self._apply_column_visibility()
+
     def _apply_column_visibility(self) -> None:
+        # Frozen tree (pinned columns) visibility
+        frozen_display: list[str] = [self._actions_key]
+        for idx in self._frozen_data_idxs:
+            if 0 <= idx < len(self._col_vis_vars) and self._col_vis_vars[idx].get():
+                frozen_display.append(self._columns[idx + 1])
+        self._tree_frozen.configure(displaycolumns=frozen_display)
+
+        # Main (scrollable) tree visibility
         display: list[str] = []
         for c in range(self._size.cols):
             col_id = self._columns[c + 1]
             if col_id in self._frozen_columns:
+                continue
+            if 0 <= c < len(self._col_vis_vars) and not self._col_vis_vars[c].get():
                 continue
             if c < self._time_col_start:
                 display.append(col_id)
@@ -243,9 +324,7 @@ class GridFrame(ttk.Frame):
     def _init_rows(self) -> None:
         for r in range(self._size.rows):
             tag = "even" if (r % 2) == 0 else "odd"
-            frozen_vals = ["⋯"]
-            if self._nvl_col_idx >= 0:
-                frozen_vals.append(self._get_value(r, self._nvl_col_idx))
+            frozen_vals = ["⋯"] + [self._get_value(r, c) for c in self._frozen_data_idxs]
 
             main_vals: list[str] = []
             for c in range(self._size.cols):
@@ -260,9 +339,7 @@ class GridFrame(ttk.Frame):
     def refresh_all(self) -> None:
         for r in range(self._size.rows):
             tag = "even" if (r % 2) == 0 else "odd"
-            frozen_vals = ["⋯"]
-            if self._nvl_col_idx >= 0:
-                frozen_vals.append(self._get_value(r, self._nvl_col_idx))
+            frozen_vals = ["⋯"] + [self._get_value(r, c) for c in self._frozen_data_idxs]
 
             main_vals: list[str] = []
             for c in range(self._size.cols):
@@ -280,11 +357,13 @@ class GridFrame(ttk.Frame):
         self._size = size
         if cols_changed:
             self._columns = [self._actions_key] + [col_name(c) for c in range(size.cols)]
-            self._nvl_col_idx = self._find_col_idx("NVL")
-            self._progress_col_idx = self._find_col_idx("Tiến độ")
+            # self._progress_col_idx = self._find_col_idx("Tiến độ")
+            self._frozen_data_idxs = [i for i in (self._find_col_idx(l) for l in GRID_FROZEN_LABELS) if i >= 0]
             self._frozen_columns = [self._actions_key]
-            if self._nvl_col_idx >= 0:
-                self._frozen_columns.append(self._columns[self._nvl_col_idx + 1])
+            for idx in self._frozen_data_idxs:
+                col_id = self._columns[idx + 1]
+                if col_id not in self._frozen_columns:
+                    self._frozen_columns.append(col_id)
             self._main_columns = [c for c in self._columns if c not in set(self._frozen_columns)]
 
             self._tree_frozen.configure(columns=self._frozen_columns)
@@ -398,16 +477,24 @@ class GridFrame(ttk.Frame):
 
     def _data_col_index(self, tree: ttk.Treeview, col_id: str) -> int:
         if tree is self._tree_frozen:
-            if col_id == "#2" and self._nvl_col_idx >= 0:
-                return self._nvl_col_idx
+            # "#1" is actions; "#2" maps to first frozen data col, etc.
+            if col_id == "#1":
+                return -1
+            try:
+                pos = int(col_id.lstrip("#")) - 2
+            except Exception:
+                return -1
+            if 0 <= pos < len(self._frozen_data_idxs):
+                return self._frozen_data_idxs[pos]
             return -1
         try:
             idx = int(col_id.lstrip("#")) - 1
         except Exception:
             return -1
         display_cols = list(tree.cget("displaycolumns"))
-        if not display_cols:
-            display_cols = self._main_columns
+        # Tk returns "#all" when all columns are displayed.
+        if not display_cols or display_cols == ["#all"]:
+            display_cols = list(tree.cget("columns"))
         if idx < 0 or idx >= len(display_cols):
             return -1
         internal = display_cols[idx]
@@ -433,22 +520,16 @@ class GridFrame(ttk.Frame):
 
         if commit:
             self._set_value(r, c, new_val)
-            if c == self._nvl_col_idx:
-                cur_f = list(self._tree_frozen.item(item, "values"))
-                if len(cur_f) >= 2:
-                    cur_f[1] = new_val
-                    self._tree_frozen.item(item, values=cur_f)
+            if c in self._frozen_data_idxs:
+                try:
+                    pos = self._frozen_data_idxs.index(c)
+                    frozen_col_id = self._frozen_columns[pos + 1]  # +1 skip actions
+                    self._tree_frozen.set(item, frozen_col_id, new_val)
+                except ValueError:
+                    pass
 
             internal = self._columns[c + 1]
             if internal in self._main_columns:
-                cur_m = list(self._tree_main.item(item, "values"))
-                display_cols = list(self._tree_main.cget("displaycolumns"))
-                if not display_cols:
-                    display_cols = self._main_columns
-                try:
-                    pos = display_cols.index(internal)
-                    cur_m[pos] = new_val
-                    self._tree_main.item(item, values=cur_m)
-                except ValueError:
-                    pass
+                # Update by column id (independent of displaycolumns order/hidden cols)
+                self._tree_main.set(item, internal, new_val)
 

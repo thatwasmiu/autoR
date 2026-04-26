@@ -10,7 +10,7 @@ import re
 import threading
 
 from .db import GridSize, clear_cells, connect, delete_row, get_cells, get_grid_size, init_db, insert_row, set_cell
-from .ui import GRID_LABELS, GridFrame
+from .ui import GRID_ALL_LABELS, GridFrame
 
 
 APP_NAME = "autoR"
@@ -31,7 +31,7 @@ class App(ttk.Frame):
         self.db_path = db_path
 
         self.con = connect(db_path)
-        init_db(self.con, GridSize(rows=50, cols=len(GRID_LABELS)))
+        init_db(self.con, GridSize(rows=50, cols=len(GRID_ALL_LABELS)))
 
         self.size = get_grid_size(self.con)
         self._cells = get_cells(self.con)
@@ -110,7 +110,7 @@ class App(ttk.Frame):
         p = Path(path)
         try:
             con = connect(p)
-            init_db(con, GridSize(rows=50, cols=len(GRID_LABELS)))
+            init_db(con, GridSize(rows=50, cols=len(GRID_ALL_LABELS)))
             con.close()
         except Exception as e:
             messagebox.showerror("Error", str(e))
@@ -196,8 +196,8 @@ class App(ttk.Frame):
             w = csv.writer(f)
             header: list[str] = []
             for i in range(self.size.cols):
-                if i < len(GRID_LABELS):
-                    header.append(GRID_LABELS[i])
+                if i < len(GRID_ALL_LABELS):
+                    header.append(GRID_ALL_LABELS[i])
                 else:
                     header.append(chr(ord("A") + (i % 26)))
             w.writerow(header)
