@@ -64,12 +64,12 @@ class App(ttk.Frame):
         self._db_label = ttk.Label(top, text=str(self.db_path))
         self._db_label.pack(side="left", padx=(6, 12))
 
-        ttk.Button(top, text="Save", command=self._save).pack(side="left", padx=(0, 6))
-        ttk.Button(top, text="Delete row", command=self._delete_selected_row).pack(side="left", padx=(0, 12))
+        # ttk.Button(top, text="Save", command=self._save).pack(side="left", padx=(0, 6))
+        # ttk.Button(top, text="Delete row", command=self._delete_selected_row).pack(side="left", padx=(0, 12))
 
-        ttk.Button(top, text="Resync", command=self._resync).pack(side="left", padx=(0, 12))
-        ttk.Button(top, text="Add row above", command=lambda: self._add_row(relative="above")).pack(side="left", padx=(0, 6))
-        ttk.Button(top, text="Add row below", command=lambda: self._add_row(relative="below")).pack(side="left", padx=(0, 12))
+        # ttk.Button(top, text="Resync", command=self._resync).pack(side="left", padx=(0, 12))
+        # ttk.Button(top, text="Add row above", command=lambda: self._add_row(relative="above")).pack(side="left", padx=(0, 6))
+        # ttk.Button(top, text="Add row below", command=lambda: self._add_row(relative="below")).pack(side="left", padx=(0, 12))
 
         ttk.Button(top, text="Open DB", command=self._open_db).pack(side="left")
         ttk.Button(top, text="New DB", command=self._new_db).pack(side="left", padx=(6, 0))
@@ -139,18 +139,22 @@ class App(ttk.Frame):
         self._grid.refresh_all()
 
     def _selected_row(self) -> int:
-        sel = self._grid._tree.selection()
-        if sel:
-            try:
-                return int(sel[0])
-            except Exception:
-                pass
-        focus = self._grid._tree.focus()
-        if focus:
-            try:
-                return int(focus)
-            except Exception:
-                pass
+        for tree in (self._tree_main, self._tree_frozen):
+            sel = tree.selection()
+            if sel:
+                try:
+                    return int(sel[0])
+                except Exception:
+                    pass
+
+        for tree in (self._tree_main, self._tree_frozen):
+            focus = tree.focus()
+            if focus:
+                try:
+                    return int(focus)
+                except Exception:
+                    pass
+
         return 0
 
     def _add_row(self, relative: str) -> None:

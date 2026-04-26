@@ -113,6 +113,7 @@ class GridFrame(ttk.Frame):
             selectmode="browse",
             style="Grid.Treeview",
         )
+        self._tree_frozen.bind("<ButtonRelease-1>", self._copy_cell)
         self._tree_main = ttk.Treeview(
             main_wrap,
             columns=self._main_columns,
@@ -120,6 +121,7 @@ class GridFrame(ttk.Frame):
             selectmode="browse",
             style="Grid.Treeview",
         )
+        self._tree_main.bind("<ButtonRelease-1>", self._copy_cell)
         self._tree_frozen.grid(row=0, column=0, sticky="nsew")
         self._tree_main.grid(row=0, column=0, sticky="nsew")
 
@@ -129,6 +131,16 @@ class GridFrame(ttk.Frame):
         self._tree_main.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
         vsb.grid(row=0, column=2, sticky="ns")
         hsb.grid(row=1, column=1, sticky="ew")
+
+        # Windows and macOS scrolled by mouse wheel without Ctrl, Linux usually requires Shift for horizontal scroll and no modifier for vertical scroll.
+        self._tree_main.bind("<MouseWheel>", self._on_mousewheel)
+        self._tree_frozen.bind("<MouseWheel>", self._on_mousewheel)
+
+        # Linux scroll events
+        self._tree_main.bind("<Button-4>", self._on_mousewheel)
+        self._tree_main.bind("<Button-5>", self._on_mousewheel)
+        self._tree_frozen.bind("<Button-4>", self._on_mousewheel)
+        self._tree_frozen.bind("<Button-5>", self._on_mousewheel)
 
         frozen_wrap.rowconfigure(0, weight=1)
         frozen_wrap.columnconfigure(0, weight=1)
@@ -159,9 +171,29 @@ class GridFrame(ttk.Frame):
         self._init_rows()
         self._syncing_selection = False  # guard flag
 
-    def _yview_both(self, *args: str) -> None:
-        self._tree_frozen.yview(*args)
-        self._tree_main.yview(*args)
+    def _yview_both(self, *args):
+        # args examples:
+        # ("scroll", 1, "units")
+        # ("scroll", -3, "units")
+        # ("moveto", "0.42")
+
+        if args[0] == "scroll":
+            count = int(args[1])
+            what = args[2]
+
+            # convert unit scroll to pixel scroll
+            if what == "units":
+                self._tree_main.yview_scroll(count, "pixels")
+                self._tree_frozen.yview_scroll(count, "pixels")
+            else:
+                # pages or anything else
+                self._tree_main.yview_scroll(count, what)
+                self._tree_frozen.yview_scroll(count, what)
+
+        elif args[0] == "moveto":
+            fraction = args[1]
+            self._tree_main.yview_moveto(fraction)
+            self._tree_frozen.yview_moveto(fraction)
 
     def _on_select(self, evt: tk.Event) -> None:
         if self._syncing_selection:
@@ -533,3 +565,46 @@ class GridFrame(ttk.Frame):
                 # Update by column id (independent of displaycolumns order/hidden cols)
                 self._tree_main.set(item, internal, new_val)
 
+    def _copy_cell(self, event):
+        tree = event.widget
+
+        if tree not in (self._tree_frozen, self._tree_main):
+            return
+
+        row_id = tree.identify_row(event.y)
+        col_id = tree.identify_column(event.x)
+
+        if not row_id or not col_id:
+            return
+
+        col_index = int(col_id.replace("#", "")) - 1
+
+        # Get values depending on which tree was clicked
+        if tree is self._tree_frozen:
+            values = self._tree_frozen.item(row_id, "values")
+            value = values[col_index] if col_index < len(values) else ""
+        else:
+            values = self._tree_main.item(row_id, "values")
+            value = values[col_index] if col_index < len(values) else ""
+
+        # Copy to clipboard
+        tree.clipboard_clear()
+        tree.clipboard_append(value)
+        tree.update()
+
+
+    def _on_mousewheel(self, event):
+        if event.num == 4:
+            delta = -20   # tweak for speed
+        elif event.num == 5:
+            delta = 20
+        else:
+            delta = int(-event.delta / 120) * 20  # pixel step
+
+
+        self._tree_main.yview_scroll(delta, "units")
+        self._tree_frozen.yview_scroll(delta, "units")
+        # self._tree_main.yview_scroll(delta, "pixels")
+        # self._tree_frozen.yview_scroll(delta, "pixels")
+
+        return "break"  # prevent default scrolling
