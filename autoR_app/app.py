@@ -9,12 +9,13 @@ import csv
 import re
 import threading
 
-from .db import GridSize, clear_cells, connect, delete_row, get_cells, get_grid_size, init_db, insert_row, set_cell
-from .ui import GRID_ALL_LABELS, GridFrame
-
+from .db import DeclareForm, connect, init_db, get_active_folder, get_declare_forms, save_cell, save_declare_forms, sync_data_folder
+from .sync_data import open_sync_modal
+from .sheet_ui import DeclareFormSheet
+from typing import List
+from dataclasses import asdict
 
 APP_NAME = "autoR"
-
 
 def default_db_path() -> Path:
     if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
@@ -23,7 +24,6 @@ def default_db_path() -> Path:
         base = Path.cwd() / ".data"
     return base / "grid.sqlite3"
 
-
 class App(ttk.Frame):
     def __init__(self, master: tk.Tk, db_path: Path) -> None:
         super().__init__(master)
@@ -31,10 +31,7 @@ class App(ttk.Frame):
         self.db_path = db_path
 
         self.con = connect(db_path)
-        init_db(self.con, GridSize(rows=50, cols=len(GRID_ALL_LABELS)))
-
-        self.size = get_grid_size(self.con)
-        self._cells = get_cells(self.con)
+        init_db(self.con)
 
         self._build_menu()
         self._build_ui()
@@ -42,8 +39,8 @@ class App(ttk.Frame):
     def _build_menu(self) -> None:
         menubar = tk.Menu(self.master)
         filem = tk.Menu(menubar, tearoff=False)
-        filem.add_command(label="Open DB...", command=self._open_db)
-        filem.add_command(label="New DB...", command=self._new_db)
+        # filem.add_command(label="Open DB...", command=self._open_db)
+        # filem.add_command(label="New DB...", command=self._new_db)
         filem.add_separator()
         filem.add_command(label="Export CSV...", command=self._export_csv)
         filem.add_separator()
@@ -52,6 +49,10 @@ class App(ttk.Frame):
         self.master.config(menu=menubar)
 
     def _build_ui(self) -> None:
+        self._filter = {}
+        self._records = []
+        self._folder_map = None
+
         self.pack(fill="both", expand=True)
 
         top = ttk.Frame(self)
@@ -64,129 +65,101 @@ class App(ttk.Frame):
         self._db_label = ttk.Label(top, text=str(self.db_path))
         self._db_label.pack(side="left", padx=(6, 12))
 
-        # ttk.Button(top, text="Save", command=self._save).pack(side="left", padx=(0, 6))
-        # ttk.Button(top, text="Delete row", command=self._delete_selected_row).pack(side="left", padx=(0, 12))
+        # Load folders
+        self._selected_folder = tk.StringVar()
+        self._folder_combobox = ttk.Combobox(
+            top,
+            textvariable=self._selected_folder,
+            # values=list(self._folder_map.keys()),
+            state="readonly",
+            width=25
+        )
+        self._folder_combobox.pack(side="left", padx=(0, 6))
+        # Trigger when selection changes
+        self._folder_combobox.bind("<<ComboboxSelected>>", self._on_folder_selected)
 
-        # ttk.Button(top, text="Resync", command=self._resync).pack(side="left", padx=(0, 12))
-        # ttk.Button(top, text="Add row above", command=lambda: self._add_row(relative="above")).pack(side="left", padx=(0, 6))
-        # ttk.Button(top, text="Add row below", command=lambda: self._add_row(relative="below")).pack(side="left", padx=(0, 12))
+        # Search / Load button
+        ttk.Button(
+            top,
+            text="Search",
+            command=self._filter_data
+        ).pack(side="left", padx=(0, 10))
 
-        ttk.Button(top, text="Open DB", command=self._open_db).pack(side="left")
-        ttk.Button(top, text="New DB", command=self._new_db).pack(side="left", padx=(6, 0))
-
-        self._grid = GridFrame(
+        self._sheet = DeclareFormSheet(
             self,
-            size=self.size,
-            get_value=self._get_value,
-            set_value=self._set_value,
-            on_row_action=self._row_action,
+            headers=[
+                "NVL",
+                "bill",
+                "Invoice",
+                "Loại hàng",
+                "Tiến độ",
+                "Phân loại",
+                "Ngày",
+                "Số TK",
+                "Luồng",
+                "Loại TK",
+                "TERM",
+                "TMS",
+                "Giờ nhận Mail",
+                "Giờ TMS",
+                "Giờ gửi nháp",
+                "Giờ xác nhận TK",
+                "Giờ truyền chính thức",
+                "Giờ mail thông quan",
+                ],
+            records=self._records,
+            skip_headers={"id", "folder_id"},
+            on_edit_callback=self._save_cell
+            )
+        self._sheet.pack(fill="both", expand=True, padx=10, pady=(0, 10))
+        self.set_folders()
+
+    def set_folders(self):
+        # Folder selector
+        # Build lookup: folder name -> id
+        self._active_folders = get_active_folder(self.con)
+        self._folder_map = {
+            folder["name"]: folder["id"]
+            for folder in self._active_folders
+        }
+
+        if not self._active_folders:
+            self._open_folder_selection_modal()
+            self._active_folders = get_active_folder(self.con)
+        
+        if self._active_folders:
+            folder_id = self._active_folders[0]["id"]
+            self._records = get_declare_forms(self.con, folder_id) 
+            self._sheet.set_sheet_data(self._records)
+            self._folder_combobox.config(values=list(self._folder_map.keys()))    
+            self._folder_combobox.current(0)
+            
+    def _on_folder_selected(self, event=None):
+        selected_name = self._selected_folder.get()
+        folder_id = self._folder_map.get(selected_name)
+
+        if folder_id is not None:
+            self._filter["folder_id"] = folder_id
+
+    def _save_cell(self, row, column, value, headers, records):
+        column_name = headers[column]
+        # Get original database row ID
+        record_id = records[row]["id"]
+        save_cell(self.con, column_name, record_id, value)
+        print(f"Saved row {record_id}, column {column_name} = {value}")   
+
+    def _open_folder_selection_modal(self) -> None:
+        messagebox.showinfo(
+            "No active folder",
+            "No active folder found in the database. Please select a folder to sync data from."
         )
-        self._grid.pack(fill="both", expand=True, padx=10, pady=(0, 10))
-
-    def _get_value(self, r: int, c: int) -> str:
-        return self._cells.get((r, c), "")
-
-    def _set_value(self, r: int, c: int, v: str) -> None:
-        self._cells[(r, c)] = v
-        set_cell(self.con, r, c, v)
-
-    def _open_db(self) -> None:
-        path = filedialog.askopenfilename(
-            title="Open SQLite DB",
-            filetypes=[("SQLite DB", "*.sqlite3 *.db *.sqlite"), ("All files", "*.*")],
-        )
-        if not path:
-            return
-        self._switch_db(Path(path))
-
-    def _new_db(self) -> None:
-        path = filedialog.asksaveasfilename(
-            title="Create SQLite DB",
-            defaultextension=".sqlite3",
-            filetypes=[("SQLite DB", "*.sqlite3"), ("All files", "*.*")],
-        )
-        if not path:
-            return
-        p = Path(path)
-        try:
-            con = connect(p)
-            init_db(con, GridSize(rows=50, cols=len(GRID_ALL_LABELS)))
-            con.close()
-        except Exception as e:
-            messagebox.showerror("Error", str(e))
-            return
-        self._switch_db(p)
-
-    def _switch_db(self, new_path: Path) -> None:
-        try:
-            self.con.close()
-        except Exception:
-            pass
-
-        self.db_path = new_path
-        self.con = connect(new_path)
-        init_db(self.con, GridSize(rows=self.size.rows, cols=self.size.cols))
-        self._cells = get_cells(self.con)
-
-        self._db_label.config(text=str(self.db_path))
-        self._grid.rebuild(self.size)
-
-    def _save(self) -> None:
-        self.con.commit()
-
-    def _resync(self) -> None:
-        self._cells = get_cells(self.con)
-        self._grid.refresh_all()
-
-    def _selected_row(self) -> int:
-        for tree in (self._tree_main, self._tree_frozen):
-            sel = tree.selection()
-            if sel:
-                try:
-                    return int(sel[0])
-                except Exception:
-                    pass
-
-        for tree in (self._tree_main, self._tree_frozen):
-            focus = tree.focus()
-            if focus:
-                try:
-                    return int(focus)
-                except Exception:
-                    pass
-
-        return 0
-
-    def _add_row(self, relative: str) -> None:
-        row = self._selected_row()
-        at = row if relative == "above" else row + 1
-        insert_row(self.con, at)
-        self.size = get_grid_size(self.con)
-        self._cells = get_cells(self.con)
-        self._grid.rebuild(self.size)
-
-    def _delete_selected_row(self) -> None:
-        row = self._selected_row()
-        delete_row(self.con, row)
-        self.size = get_grid_size(self.con)
-        self._cells = get_cells(self.con)
-        self._grid.rebuild(self.size)
+        self._open_sync_modal()
 
     def _row_action(self, action: str, row_idx: int) -> None:
         if action == "save":
             self._save()
         elif action == "resync":
             self._resync()
-        elif action == "add_above":
-            insert_row(self.con, row_idx)
-            self.size = get_grid_size(self.con)
-            self._cells = get_cells(self.con)
-            self._grid.rebuild(self.size)
-        elif action == "add_below":
-            insert_row(self.con, row_idx + 1)
-            self.size = get_grid_size(self.con)
-            self._cells = get_cells(self.con)
-            self._grid.rebuild(self.size)
 
     def _export_csv(self) -> None:
         path = filedialog.asksaveasfilename(
@@ -196,98 +169,28 @@ class App(ttk.Frame):
         )
         if not path:
             return
-        with open(path, "w", newline="", encoding="utf-8") as f:
-            w = csv.writer(f)
-            header: list[str] = []
-            for i in range(self.size.cols):
-                if i < len(GRID_ALL_LABELS):
-                    header.append(GRID_ALL_LABELS[i])
-                else:
-                    header.append(chr(ord("A") + (i % 26)))
-            w.writerow(header)
-            for r in range(self.size.rows):
-                w.writerow([self._get_value(r, c) for c in range(self.size.cols)])
+        return
+
+    def _save_form_call_back(self, form_data: dict) -> None:
+        save_declare_forms(self.con, self._active_folder["id"], [form_data])
+
+    def _filter_data(self) -> None:
+        # self._filter.update(kwargs)
+        self._records = get_declare_forms(self.con, self._filter.get("folder_id"))
+        self._sheet.set_sheet_data(self._records)
+
+    def sync_folder(self, folder_path, list_data: List[DeclareForm]):
+        print("Call sync_folder with path:", folder_path)
+        con = connect(default_db_path())
+        try:
+            sync_data_folder(con, list_data, folder_path)
+        except Exception as e:
+            print("❌ EXECUTEMANY ERROR:", e)
+            raise
+        con.close()
 
     def _open_sync_modal(self) -> None:
-        modal = tk.Toplevel(self.master)
-        modal.title("Sync from folder")
-        modal.geometry("900x260")
-        modal.transient(self.master)
-        modal.grab_set()
-
-        tk.Label(modal, text="Selected Folder:").pack(pady=6)
-
-        folder_entry = tk.Entry(modal, width=90)
-        folder_entry.pack(pady=5)
-
-        def choose_folder() -> None:
-            folder = filedialog.askdirectory(parent=modal)
-            if folder:
-                folder_entry.delete(0, tk.END)
-                folder_entry.insert(0, folder)
-
-        tk.Button(modal, text="Browse", command=choose_folder).pack(pady=5)
-
-        status_label = tk.Label(modal, text="Status: Idle", fg="blue")
-        status_label.pack(pady=10)
-
-        run_button = tk.Button(modal, text="Sync")
-        run_button.pack(pady=10)
-
-        ignore_folders = {"xml", "__pycache__"}
-
-        def folder_sort_key(name: str) -> int:
-            m = re.match(r"\d+", name)
-            return int(m.group(0)) if m else 10**9
-
-        def task(folder_path: str) -> None:
-            try:
-                root = Path(folder_path)
-                if not root.exists():
-                    status_label.config(text="Folder not found", fg="red")
-                    return
-
-                folders = [p for p in root.iterdir() if p.is_dir() and p.name.lower() not in ignore_folders]
-                folders = sorted(folders, key=lambda p: folder_sort_key(p.name))
-
-                status_label.config(text=f"Found {len(folders)} folders", fg="blue")
-                status_label.update_idletasks()
-
-                clear_cells(self.con)
-                self._cells = {}
-
-                max_rows_needed = max(self.size.rows, len(folders))
-                if max_rows_needed != self.size.rows:
-                    init_db(self.con, GridSize(rows=max_rows_needed, cols=self.size.cols))
-                    self.size = get_grid_size(self.con)
-
-                for i, folder in enumerate(folders):
-                    status_label.config(text=f"Processing ({i+1}/{len(folders)}): {folder.name}", fg="blue")
-                    status_label.update_idletasks()
-
-                    excel_count = len([f for f in folder.iterdir() if f.is_file() and f.suffix.lower() in (".xlsx", ".xlsm")])
-                    self._set_value(i, 0, folder.name)
-                    if self.size.cols > 1:
-                        self._set_value(i, 1, str(excel_count))
-                    if self.size.cols > 2:
-                        self._set_value(i, 2, str(folder))
-
-                status_label.config(text="✅ Sync done", fg="green")
-            except Exception as e:
-                status_label.config(text=str(e), fg="red")
-            finally:
-                self._resync()
-                run_button.config(state="normal")
-
-        def start_sync() -> None:
-            folder_path = folder_entry.get().strip()
-            if not folder_path:
-                status_label.config(text="Please select a folder!", fg="red")
-                return
-            run_button.config(state="disabled")
-            threading.Thread(target=lambda: task(folder_path), daemon=True).start()
-
-        run_button.config(command=start_sync)
+        open_sync_modal(self)
 
 
 def run() -> None:
