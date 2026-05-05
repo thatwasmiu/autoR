@@ -2,124 +2,150 @@ Sub FindReportEmailsAllFolders_Sorted()
 
     Dim ns As Outlook.NameSpace
     Dim rootFolder As Outlook.MAPIFolder
-    Dim keyword As String
     Dim startDateStr As String, endDateStr As String
     Dim startDate As Date, endDate As Date
-    Dim allMails As Collection
     Dim newMail As Outlook.MailItem
     
-    ' Ask user for keyword
-    keyword = InputBox("Enter keyword to search:", "Search", "")
-    If keyword = "" Then Exit Sub
+    Dim keywordInput As String
+    Dim keywords() As String
+    Dim i As Long, r As Long
     
-    ' Ask user for date range
+    keywordInput = InputBox("Enter keywords (separate by ,):", "Search", "")
+    If keywordInput = "" Then Exit Sub
+    keywords = Split(keywordInput, ",")
+    
     startDateStr = InputBox("Nhap ngay bat dau :", "Tu ngay", Format(Date, "yyyy-mm-dd"))
     If startDateStr = "" Then Exit Sub
     endDateStr = InputBox("Nhap ngay ket thuc :", "Toi ngay", Format(Date, "yyyy-mm-dd"))
     If endDateStr = "" Then Exit Sub
     
-    ' Convert to Date type
     startDate = CDate(startDateStr)
-    endDate = CDate(endDateStr) + 1 - TimeSerial(0, 0, 1) ' include full end day
+    endDate = CDate(endDateStr) + 1 - TimeSerial(0, 0, 1)
     
     Set ns = Application.GetNamespace("MAPI")
-    Set rootFolder = ns.GetDefaultFolder(olFolderInbox).Parent ' mailbox root
-    Set allMails = New Collection
+    Set rootFolder = ns.GetDefaultFolder(olFolderInbox).Parent
     
-    ' Recursively collect matched mails
-    Call CollectMails(rootFolder, keyword, startDate, endDate, allMails)
+    ' Store results per keyword
+    Dim results() As Variant
+    ReDim results(LBound(keywords) To UBound(keywords))
     
-    If allMails.Count = 0 Then
-    MsgBox "No mails found!!!", vbInformation
-        Exit Sub
-    End If
+    Dim maxRows As Long: maxRows = 0
     
-    ' Sort mails by ReceivedTime descending
-    Dim sortedMails() As Object
-    sortedMails = SortMailsByDate(allMails)
+    ' Collect per keyword
+    For i = LBound(keywords) To UBound(keywords)
+        
+        Dim allMails As Collection
+        Set allMails = New Collection
+        
+        Dim singleKeyword(0 To 0) As String
+        singleKeyword(0) = Trim(keywords(i))
+        
+        Call CollectMails(rootFolder, singleKeyword, startDate, endDate, allMails)
+        
+        If allMails.Count > 0 Then
+            results(i) = SortMailsByDate(allMails)
+            If UBound(results(i)) > maxRows Then maxRows = UBound(results(i))
+        Else
+            results(i) = Empty
+        End If
+        
+    Next i
     
-    ' Build HTML table with each email as a column
+    ' Build HTML
     Dim result As String
-    Dim i As Long
-    
-    result = "<h3>Search Results for '" & keyword & "' from " & Format(startDate, "yyyy-mm-dd") & " to " & Format(endDate, "yyyy-mm-dd") & "</h3>"
+    result = "<h3>Search Results for '" & keywordInput & "'</h3>"
     result = result & "<table border='1' cellpadding='4' cellspacing='0' style='border-collapse:collapse;'>"
-    
-    ' First row: field names
-    result = result & "<tr style='background-color:#f2f2f2;'>"
-    result = result & "<th>Field</th>"
-    For i = LBound(sortedMails) To UBound(sortedMails)
-        result = result & "<th>Email " & i & "</th>"
-    Next i
-    result = result & "</tr>"
-    
-    ' Rows: Subject, Sender, Date, Time, Folder
-    Dim fields As Variant
-    fields = Array("Subject", "Time")
-    
-    Dim f As Long
-    For f = LBound(fields) To UBound(fields)
-        result = result & "<tr>"
-        result = result & "<td style='background-color:#f9f9f9;'><b>" & fields(f) & "</b></td>"
+    result = result & "<tr style='background-color:#f2f2f2;'><th>Keyword</th><th>Time</th><th>Mail</th></tr>"
+
+    Dim idx As Long, k As Variant
+
+    ' Loop keywords IN INPUT ORDER
+    For i = LBound(keywords) To UBound(keywords)
         
-        For i = LBound(sortedMails) To UBound(sortedMails)
-            Dim mail As Outlook.MailItem
-            Set mail = sortedMails(i)
+        k = Trim(keywords(i))
+        If k = "" Then GoTo NextK
+        
+        Dim hasResult As Boolean
+        hasResult = False
+        
+        ' Check results for THIS keyword
+        If Not IsEmpty(results(i)) Then
             
-            Select Case fields(f)
-                Case "Subject"
-                    result = result & "<td><a href='outlook:" & mail.EntryID & "'>" & mail.Subject & "</a></td>"
-                Case "Time"
-                    result = result & "<td>" & Format(mail.ReceivedTime, "HH:nn AM/PM") & "</td>"
-            End Select
-        Next i
+            For idx = LBound(results(i)) To UBound(results(i))
+                
+                Dim email As Outlook.MailItem
+                Set email = results(i)(idx)
+                
+                hasResult = True
+                
+                result = result & "<tr>"
+                result = result & "<td>" & k & "</td>"
+                
+                result = result & "<td>" & Format(email.ReceivedTime, "hh:nn AM/PM") & "</td>"
+                result = result & "<td>" & Format(email.ReceivedTime, "yyyy-mm-dd") & "<br/>"
+                result = result & "<a href='outlook:" & email.EntryID & "'>" & email.Subject & "</a><br/>"
+                result = result & "Sender: " & email.SenderName & "<br/>"
+                result = result & "To: " & email.To & "<br/>"
+                result = result & "CC: " & email.CC & "<br/>"
+                result = result & "Folder: <b>" & email.Parent.FolderPath & "</b></td>"
+                result = result & "CC: " & email.Body & "<br/>"
+                result = result & "</tr>"
+                
+            Next idx
+            
+        End If
         
-        result = result & "</tr>"
-    Next f
-    
-    result = result & "</table>"
-    
-    ' Build HTML table
-    result = result & "<br />"
-    result = result & "<table border='1' cellpadding='4' cellspacing='0' style='border-collapse:collapse;'>"
-    result = result & "<tr style='background-color:#f2f2f2;'><th>STT</th><th>Subject</th><th>Sender</th><th>Date</th><th>Time</th><th>Folder</th></tr>"
-    For i = LBound(sortedMails) To UBound(sortedMails)
-      Dim email As Outlook.MailItem
-      Set email = sortedMails(i)
-      result = result & "<tr>"
-      result = result & "<td>" & i & "</td>"
-      result = result & "<td><a href='outlook:" & mail.EntryID & "'>" & email.Subject & "</a></td>"
-      result = result & "<td>" & email.SenderName & "</td>"
-      result = result & "<td>" & Format(email.ReceivedTime, "yyyy-mm-dd") & "</td>"
-      result = result & "<td>" & Format(email.ReceivedTime, "HH:nn AM/PM") & "</td>"
-      result = result & "<td>" & email.Parent.FolderPath & "</td>"
-      result = result & "</tr>"
+        ' No result for this keyword
+        If Not hasResult Then
+            result = result & "<tr>"
+            result = result & "<td>" & k & "</td>"
+            result = result & "<td colspan='2'>Not found: " & k & "</td>"
+            result = result & "</tr>"
+        End If
+
+NextK:
     Next i
+
     result = result & "</table>"
-        ' Create new mail with results
-        Set newMail = Application.CreateItem(olMailItem)
-        newMail.Subject = "Search Result: " & keyword
-        newMail.HTMLBody = result
-        newMail.Display
+    
+    Set newMail = Application.CreateItem(olMailItem)
+    newMail.Subject = "Search Result: " & keywordInput
+    newMail.HTMLBody = result
+    newMail.Display
 
 End Sub
 
 '--- Collect matched mails into a collection
-Sub CollectMails(f As Outlook.MAPIFolder, keyword As String, startDate As Date, endDate As Date, allMails As Collection)
+Sub CollectMails(f As Outlook.MAPIFolder, keywords() As String, startDate As Date, endDate As Date, allMails As Collection)
     Dim mail As Object
     Dim subF As Outlook.MAPIFolder
     
     ' Skip Junk and Deleted Items
     If f.DefaultItemType = olMailItem Then
-        If f.Name = "Junk E-mail" Or f.Name = "Deleted Items" Then Exit Sub
+        If f.Name = "Junk Email" Or f.Name = "Drafts" Or f.Name = "Deleted Items" Then Exit Sub
     End If
     
     ' Collect mails in this folder
     For Each mail In f.Items
         If TypeOf mail Is Outlook.MailItem Then
-            If (InStr(1, LCase(mail.Subject), LCase(keyword)) > 0 _
-            Or InStr(1, LCase(mail.Body), LCase(keyword)) > 0 _
-            Or InStr(1, LCase(mail.SenderName), LCase(keyword)) > 0) _
+            Dim k As Variant
+            Dim found As Boolean
+            found = False
+            
+            For Each k In keywords
+                k = Trim(LCase(k))
+                
+                If k <> "" Then
+                    If InStr(1, LCase(mail.Subject), k) > 0 _
+                    Or InStr(1, LCase(mail.Body), k) > 0 _
+                    Or InStr(1, LCase(mail.SenderName), k) > 0 Then
+                        found = True
+                        Exit For
+                    End If
+                End If
+            Next
+            
+            If found _
             And mail.ReceivedTime >= startDate And mail.ReceivedTime <= endDate Then
                 
                 allMails.Add mail
@@ -129,7 +155,7 @@ Sub CollectMails(f As Outlook.MAPIFolder, keyword As String, startDate As Date, 
     
     ' Recurse into subfolders
     For Each subF In f.Folders
-        Call CollectMails(subF, keyword, startDate, endDate, allMails)
+        Call CollectMails(subF, keywords, startDate, endDate, allMails)
     Next subF
 End Sub
 
@@ -159,6 +185,3 @@ Function SortMailsByDate(mails As Collection) As Variant
     
     SortMailsByDate = arr
 End Function
-
-
-

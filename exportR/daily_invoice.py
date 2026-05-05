@@ -47,9 +47,9 @@ patterns = {
     },
     "method": {
         "kw": "Ship By:",
-        "regex": None,
+        "regex": r"(?i)(air|truck|sea)",
         "files": [r"合同_发票_箱单.*"],
-        "sheets": ['PackingList']
+        "sheets": None
     },
 }
 
@@ -73,8 +73,12 @@ def get_data(daily_invoice_folder):
     methods = []
 
     for f in files:
-        values = find_values(f, patterns)
-
+        try:
+            values = find_values(f, patterns)
+        except:
+            print(f"Error with file: {f}")
+            continue
+            
         if values["declareCode"]:
             declare_codes.append(values["declareCode"].strip())
         if values["typeCode"]:

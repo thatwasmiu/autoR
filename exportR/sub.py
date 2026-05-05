@@ -4,6 +4,8 @@ from pathlib import Path
 from datetime import datetime
 import threading
 import win32com.client
+from collections import defaultdict
+
 
 sys.path.insert(0, os.path.dirname(__file__))
 from modules import write_daily_report
@@ -23,9 +25,10 @@ def create_report(root, status_label=None):
     )
 
     data_list = []
+    grouped = defaultdict(list)
 
     for i, folder in enumerate(folders, start=1):
-        try:
+        # try:
             if status_label:
                 status_label.config(text=f"Processing ({i}/{len(folders)}): {folder.name}")
                 status_label.update_idletasks()
@@ -34,11 +37,11 @@ def create_report(root, status_label=None):
                 print(f"Processing ({i}/{len(folders)}): {folder.name}")
 
             data = get_data(folder)
-            data_list.append(data)
-
-        except Exception as e:
-            print(f"Error with folder: {folder}")
-            print(e)
+            method = (data.get("method") or "Khác").strip().lower()
+            grouped[method].append(data)
+        # except Exception as e:
+        #     print(f"Error with folder: {folder}")
+        #     print(e)
 
     print(data_list)
     # return
@@ -46,7 +49,7 @@ def create_report(root, status_label=None):
     output_file = root / f"report_{root.name}_{timestamp}.xlsx"
 
     template_path = get_resource_path("./resources/daily_template.xlsx")
-    wb = write_daily_report(template_path, data_list)
+    wb = write_daily_report(template_path, grouped)
     wb.save(output_file)
 
     if status_label:
@@ -73,6 +76,6 @@ if __name__ == "__main__":
     # folder = choose_folder()
 
     # if folder:
-        create_report(Path(r"D:\daste\autoR\06.04"))
+        create_report(Path(r"C:\Users\DatNT4\Downloads\2.5"))
     # else:
         # print("No folder selected.")
