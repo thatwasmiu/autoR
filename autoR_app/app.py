@@ -17,6 +17,29 @@ from dataclasses import asdict
 
 APP_NAME = "autoR"
 
+MAP_LABELS = {
+    "id": "id",
+    "folder_id": "Folder ID",
+    "nvl_code": "NVL",
+    "bill": "bill",
+    "invoice": "Invoice",
+    "type": "Loại hìng",
+    "progress": "Tiến độ",
+    "route_type": "Phân loại",
+    "date": "Ngày",
+    "declare_code": "Số TK",
+    "route_type": "Luồng",
+    "form_code": "Loại TK",
+    "term": "TERM",
+    "tms": "TMS",
+    "mail_time": "Giờ nhận Mail",
+    "tms_time": "Giờ TMS",
+    "draft_time": "Giờ gửi nháp",
+    "confirm_time": "Giờ xác nhận TK",
+    "official_time": "Giờ truyền chính thức",
+    "passed_time": "Giờ mail thông quan",
+}
+
 def default_db_path() -> Path:
     if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
         base = Path.home() / "AppData" / "Local" / APP_NAME
@@ -87,32 +110,42 @@ class App(ttk.Frame):
 
         self._sheet = DeclareFormSheet(
             self,
-            headers=[
-                "NVL",
-                "bill",
-                "Invoice",
-                "Loại hàng",
-                "Tiến độ",
-                "Phân loại",
-                "Ngày",
-                "Số TK",
-                "Luồng",
-                "Loại TK",
-                "TERM",
-                "TMS",
-                "Giờ nhận Mail",
-                "Giờ TMS",
-                "Giờ gửi nháp",
-                "Giờ xác nhận TK",
-                "Giờ truyền chính thức",
-                "Giờ mail thông quan",
-                ],
+            MAP_LABELS,
             records=self._records,
-            skip_headers={"id", "folder_id"},
+            metadata_headers={"id", "folder_id"},
             on_edit_callback=self._save_cell
             )
         self._sheet.pack(fill="both", expand=True, padx=10, pady=(0, 10))
+        self.master.bind("<Control-s>", self._save_sheet)
+        self.master.bind("<Control-S>", self._save_sheet)
+        self.master.protocol("WM_DELETE_WINDOW", self._on_close)
         self.set_folders()
+
+    def _on_close(self, event=None):
+        if not self._sheet.is_modified:
+            self.master.destroy()
+            return
+
+        result = messagebox.askyesnocancel(
+            "Unsaved changes",
+            "You have unsaved changes. Save before exiting?"
+        )
+
+        if result is None:
+            # Cancel close
+            return
+
+        if result:
+            self._save_sheet()
+            # optionally re-check if save failed
+        self.master.destroy()
+
+    def _save_sheet(self):
+        if self._sheet.is_modified:
+            data = self._sheet.get_sheet_data()
+            save_declare_forms(self.con, self._active_folder["id"], data)
+            self._sheet.modified_data_idx = []
+            self._sheet.is_modified = False
 
     def set_folders(self):
         # Folder selector

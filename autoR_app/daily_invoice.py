@@ -50,6 +50,12 @@ patterns = {
     },
 }
 
+switch = {
+    '1': "Xanh",
+    '2': "Vàng",
+    '3': "Đỏ"
+}
+
 def get_data(daily_invoice_folder):
     # folder = r"C:\Users\datnt4\Documents\06.04\1. NVL - 9365 - E20260403058  - LENOVOVN20260406003 - 6.4.2026 - GC - 2PK - E11- TRUCK"
     folder = str(daily_invoice_folder)
@@ -113,7 +119,7 @@ def get_data(daily_invoice_folder):
         invoice=invoice,
         declare_code=declare_code,
         type_code=type_code,
-        route_type=route_type,
+        route_type=switch.get(route_type, ""),
         term=term,
         date=date,
         month=month,
