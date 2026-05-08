@@ -8,6 +8,13 @@ from modules import (
     get_codes
 )
 
+switch = {
+    '1': "AIR",
+    '2': "SEA",
+    '3': "SEA",
+    '4': "TRUCK"
+}
+
 patterns = {
     "declareCode": {
         "kw": "Số tờ khai",
@@ -17,7 +24,8 @@ patterns = {
     },
     "typeCode": {
         "kw": "Mã loại hình",
-        "regex": r"[A-Z0-9]+",
+        # "regex": r"[A-Z0-9]+",
+        "regex": None,
         "files": [r"ToKhai.*_\d+"],
         "sheets": None
     },
@@ -106,7 +114,8 @@ def get_data(daily_invoice_folder):
     date = pick_value(dates, folder, r'\b(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4} ([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\b')
     tms = pick_value(tmses)
     invoice = pick_value(invoices, folder)
-    method = pick_value(methods, folder)
+    method = pick_value(type_codes, folder, r'(\d+)\s*(?=\[)', 1)
+    method_str = pick_value(methods, folder)
 
     nvlCode, bill = get_codes(daily_invoice_folder.name, invoice)
     month = None
@@ -116,7 +125,11 @@ def get_data(daily_invoice_folder):
         except (ValueError, TypeError):
             print("Error date: ", date)
 
-    # print(method)
+    print("method ", method, method_str)
+    if method:
+        method = switch.get(method.strip(), method_str)  # map to AIR/SEA/TRUCK or keep original if not in switch
+
+    print(method)
     return {
         "nvlCode": nvlCode,
         "bill": bill,

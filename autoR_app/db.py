@@ -20,6 +20,7 @@ class DeclareForm:
     tms: Optional[str] = None
     form_code: Optional[str] = None
     method: Optional[str] = None
+    time: Optional[str] = None
 
 def connect(db_path: Path) -> sqlite3.Connection:
     db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -57,6 +58,13 @@ def init_db(con: sqlite3.Connection) -> None:
             tms VARCHAR(20),
             form_code VARCHAR(20),
             method VARCHAR(20),
+            progress VARCHAR(20),
+            mail_time VARCHAR(20),
+            tms_time VaRCHAR(20),
+            draft_time VARCHAR(20),
+            tk_time VARCHAR(20),
+            official_time VARCHAR(20),
+            passed_time VARCHAR(20),
             FOREIGN KEY (folder_id) REFERENCES folder(id),
             UNIQUE(folder_id, nvl_code)
         );
@@ -86,60 +94,74 @@ def get_declare_forms(con, folder_id=None):
     print("Getting declare forms for folder_id:", folder_id)
     try:
         cur = con.cursor()
-
+        con.row_factory = sqlite3.Row
         if folder_id:
             cur.execute(
-                "SELECT * FROM declare_form WHERE folder_id = ?",
+                """SELECT 
+                    id, folder_id,
+                    nvl_code, 
+                    bill, 
+                    invoice, 
+                    type_code,
+                    progress, 
+
+                    date,
+                    declare_code,
+                    route_type,
+                    form_code,
+                    term,  
+                    tms,  
+                    mail_time,
+                    tms_time,
+                    draft_time,
+                    tk_time,
+                    official_time,
+                    passed_time,
+                    method
+                FROM declare_form WHERE folder_id = ?
+
+                """,
                 (folder_id,)
             )
         else:
             return None
-
         rows = cur.fetchall()
-
         return [dict(row) for row in rows]
     except Exception as e:
         print("❌ EXECUTEMANY ERROR:", e)
         raise
 
-def save_declare_forms(con, folder_id, records):
-    sql = """
-        INSERT INTO declare_form (
-            folder_id,
-            nvl_code,
-            bill,
-            invoice,
-            declare_code,
-            type_code,
-            route_type,
-            term,
-            date,
-            tms,
-            form_code,
-            method
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+def save_declare_forms(con, records: list[list], fields: list[str]):
+    """
+    Save declare forms using list-based records and dynamic fields.
     """
 
-    values = []
+    # Build update fields (exclude folder_id + nvl_code)
+    update_fields = [
+        f"{field} = excluded.{field}"
+        for field in fields
+        if field not in ("id", "folder_id")
+    ]
 
-    for record in records:
-        values.append((
-            folder_id,
-            record["nvl_code"],
-            record["bill"],
-            record["invoice"],
-            record["declare_code"],
-            record["type_code"],
-            record["route_type"],
-            record["term"],
-            record["date"],
-            record["tms"],
-            record["form_code"],
-            record["method"],
-        ))
+    field_sql = ",\n                ".join(fields)
+    update_sql = ",\n                ".join(update_fields)
 
-    con.executemany(sql, values)
+    # Build placeholders
+    placeholders = ", ".join(["?"] * len(fields))
+    sql = f"""
+        INSERT INTO declare_form (
+                {field_sql}
+        ) VALUES ({placeholders})
+        ON CONFLICT(id, folder_id)
+        DO UPDATE SET
+                {update_sql}
+    """
+
+    print("Executing SQL:")
+    print(sql)
+    print("Values:", records)
+
+    con.executemany(sql, records)
     con.commit()
 
 def folder_to_date(folder_name: str) -> datetime:
@@ -180,8 +202,8 @@ def sync_data_folder(
             INSERT INTO declare_form (
                 folder_id,
                 nvl_code, bill, invoice, declare_code, type_code,
-                route_type, term, date, tms, form_code, method
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                route_type, term, date, tms, form_code, method, official_time
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(folder_id, nvl_code)
             DO UPDATE SET
                 bill = excluded.bill,
@@ -193,7 +215,8 @@ def sync_data_folder(
                 date = excluded.date,
                 tms = excluded.tms,
                 form_code = excluded.form_code,
-                method = excluded.method
+                method = excluded.method,
+                official_time = excluded.official_time
         """, [
             (
                 folder_id,
@@ -207,7 +230,8 @@ def sync_data_folder(
                 item.date,
                 item.tms,
                 item.form_code,
-                item.method
+                item.method,
+                item.time
             )
             for item in data_list
         ])
@@ -217,14 +241,6 @@ def sync_data_folder(
 
     conn.commit()
     return folder_id
-
-def set_cell(con: sqlite3.Connection, r: int, c: int, v: str) -> None:
-    con.execute(
-        "INSERT INTO cell (r, c, v) VALUES (?, ?, ?) "
-        "ON CONFLICT(r, c) DO UPDATE SET v=excluded.v;",
-        (r, c, v),
-    )
-    con.commit()
 
 
 def get_cells(con: sqlite3.Connection) -> dict[tuple[int, int], str]:

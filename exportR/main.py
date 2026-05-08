@@ -35,6 +35,8 @@ def create_daily_report(root, status_label=None):
 
             data = get_data(folder)
 
+            if data.get("declareCode") is None:
+                continue
             method = (data.get("method") or "Khác").strip().lower()
 
             grouped[method].append(data)

@@ -19,25 +19,27 @@ APP_NAME = "autoR"
 
 MAP_LABELS = {
     "id": "id",
-    "folder_id": "Folder ID",
+    "folder_id": "folder_id",
     "nvl_code": "NVL",
-    "bill": "bill",
+    "bill": "Bill",
     "invoice": "Invoice",
-    "type": "Loại hìng",
+    "type_code": "Loại hình",
     "progress": "Tiến độ",
-    "route_type": "Phân loại",
+    
     "date": "Ngày",
     "declare_code": "Số TK",
     "route_type": "Luồng",
     "form_code": "Loại TK",
     "term": "TERM",
     "tms": "TMS",
+
     "mail_time": "Giờ nhận Mail",
     "tms_time": "Giờ TMS",
     "draft_time": "Giờ gửi nháp",
-    "confirm_time": "Giờ xác nhận TK",
+    "tk_time": "Giờ xác nhận TK",
     "official_time": "Giờ truyền chính thức",
     "passed_time": "Giờ mail thông quan",
+    "method": "Note"
 }
 
 def default_db_path() -> Path:
@@ -75,6 +77,7 @@ class App(ttk.Frame):
         self._filter = {}
         self._records = []
         self._folder_map = None
+        self._selected_folder = None
 
         self.pack(fill="both", expand=True)
 
@@ -110,9 +113,9 @@ class App(ttk.Frame):
 
         self._sheet = DeclareFormSheet(
             self,
-            MAP_LABELS,
+            list(MAP_LABELS.values()),
             records=self._records,
-            metadata_headers={"id", "folder_id"},
+            metadata_headers=["id", "folder_id"],
             on_edit_callback=self._save_cell
             )
         self._sheet.pack(fill="both", expand=True, padx=10, pady=(0, 10))
@@ -143,7 +146,7 @@ class App(ttk.Frame):
     def _save_sheet(self):
         if self._sheet.is_modified:
             data = self._sheet.get_sheet_data()
-            save_declare_forms(self.con, self._active_folder["id"], data)
+            save_declare_forms(self.con, data, list(MAP_LABELS.keys()))
             self._sheet.modified_data_idx = []
             self._sheet.is_modified = False
 
@@ -160,13 +163,24 @@ class App(ttk.Frame):
             self._open_folder_selection_modal()
             self._active_folders = get_active_folder(self.con)
         
+        self._get_active_folder_data(self.con)
+
+    def reload(self):
+        self._active_folders = get_active_folder(self.con)
+        self._folder_map = {
+            folder["name"]: folder["id"]
+            for folder in self._active_folders
+        }
+        self._get_active_folder_data(self.con)    
+
+    def _get_active_folder_data(self, con):
         if self._active_folders:
-            folder_id = self._active_folders[0]["id"]
-            self._records = get_declare_forms(self.con, folder_id) 
+            self._selected_folder = self._active_folders[0]["id"]
+            self._records = get_declare_forms(con, self._selected_folder) 
             self._sheet.set_sheet_data(self._records)
             self._folder_combobox.config(values=list(self._folder_map.keys()))    
-            self._folder_combobox.current(0)
-            
+            self._folder_combobox.current(0)  
+
     def _on_folder_selected(self, event=None):
         selected_name = self._selected_folder.get()
         folder_id = self._folder_map.get(selected_name)

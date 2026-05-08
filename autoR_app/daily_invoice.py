@@ -46,7 +46,7 @@ patterns = {
         "kw": "Ship By:",
         "regex": None,
         "files": [r"合同_发票_箱单.*"],
-        "sheets": ['PackingList']
+        "sheets": None
     },
 }
 
@@ -74,7 +74,12 @@ def get_data(daily_invoice_folder):
     invoices = []
     methods = []
     for f in files:
-        values = find_values(f, patterns)
+        try:
+            values = find_values(f, patterns)
+        except Exception as e:
+            print(f"Error processing files {f}: {e}")
+            continue
+
         if values["declare_code"]:
             declare_codes.append(values["declare_code"].strip())
         if values["type_code"]:
@@ -102,17 +107,24 @@ def get_data(daily_invoice_folder):
     date = pick_value(dates, folder, r'\b(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4} ([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\b')
     tms = pick_value(tmses)
     invoice = pick_value(invoices, folder)
-    method = pick_value(methods, folder)
 
     nvl_code, bill = get_codes(daily_invoice_folder.name, invoice)
     month = None
+    time = None
+
     if date:
         try:
-            month = datetime.strptime(date, "%d/%m/%Y %H:%M:%S").month
+            parsed_date = datetime.strptime(date, "%d/%m/%Y %H:%M:%S")
+            month = parsed_date.month
+            time = parsed_date.strftime("%I:%M %p")
         except (ValueError, TypeError):
-            print("Error date: ", date)
+            print("Error date:", date)
 
-    # print(method)
+    method = pick_value(type_codes, folder, r'(\d+)\s*(?=\[)', 1)
+    method_str = pick_value(methods, folder)
+    if method:
+        method = switch.get(method.strip(), method_str)  # map to AIR/SEA/TRUCK or keep original if not in switch
+
     return DeclareForm(
         nvl_code=nvl_code,
         bill=bill,
@@ -125,7 +137,8 @@ def get_data(daily_invoice_folder):
         month=month,
         tms=tms,
         form_code=form_code,
-        method=method
+        method=method,
+        time=time
     )
 
 def get_form_code(folder_name): 

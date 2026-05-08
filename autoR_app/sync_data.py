@@ -9,11 +9,19 @@ import re
 from .daily_invoice import get_data
 
 def open_sync_modal(self) -> None:
+
         modal = tk.Toplevel(self.master)
         modal.title("Sync from folder")
         modal.geometry("900x260")
         modal.transient(self.master)
         modal.grab_set()
+
+        def on_modal_close():
+            print("Modal hidden/closed")
+            self.reload()
+            modal.destroy()       
+
+        modal.protocol("WM_DELETE_WINDOW", on_modal_close)
 
         tk.Label(modal, text="Selected Folder:").pack(pady=6)
 
@@ -60,8 +68,11 @@ def open_sync_modal(self) -> None:
                     # print(f"Processing folder: {folder}")
                     status_label.config(text=f"Processing ({i+1}/{len(folders)}): {folder.name}", fg="blue")
                     status_label.update_idletasks()
-
-                    data = get_data(folder)
+                    try:
+                        data = get_data(folder)
+                    except Exception as e:
+                        print(f"Error processing folderff {folder}: {e}")
+                        continue    
                     datas.append(data)
                 self.sync_folder(folder_path, datas)
                 # status_label.config(text="✅ Sync done", fg="green")
@@ -70,7 +81,7 @@ def open_sync_modal(self) -> None:
             finally:
                 # self._resync()
                 run_button.config(state="normal")
-
+                
         def run_tasks(folder_paths: list[str]) -> None:
             """
             Run task processing in background thread.
@@ -153,10 +164,12 @@ def open_sync_modal(self) -> None:
             status_label.config(text="Starting sync...", fg="blue")
 
             # Run in background thread
-            threading.Thread(
+            thread = threading.Thread(
                 target=run_tasks,
                 args=(folder_paths,),
                 daemon=True
-            ).start()
+            )
+            thread.start()
 
         run_button.config(command=start_sync)
+        

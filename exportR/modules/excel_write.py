@@ -40,6 +40,8 @@ def write_daily_report(template, grouped):
         # ws.delete_rows(2, ws.max_row)
 
         for i, data in enumerate(items, start=1):
+            if data.get("declareCode") == None:
+                continue
             date_val = None
             try:
                 date_str = data.get("date")
