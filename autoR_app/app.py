@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 import tkinter as tk
@@ -13,7 +14,7 @@ from .db import DeclareForm, connect, init_db, get_active_folder, get_declare_fo
 from .sync_data import open_sync_modal
 from .sheet_ui import DeclareFormSheet
 from typing import List
-from dataclasses import asdict
+from excel_write import write_daily_report
 
 APP_NAME = "autoR"
 
@@ -67,7 +68,7 @@ class App(ttk.Frame):
         # filem.add_command(label="Open DB...", command=self._open_db)
         # filem.add_command(label="New DB...", command=self._new_db)
         filem.add_separator()
-        filem.add_command(label="Export CSV...", command=self._export_csv)
+        filem.add_command(label="Xuất báo cáo", command=self._export_modal)
         filem.add_separator()
         filem.add_command(label="Exit", command=self.master.destroy)
         menubar.add_cascade(label="File", menu=filem)
@@ -84,7 +85,7 @@ class App(ttk.Frame):
         top = ttk.Frame(self)
         top.pack(fill="x", padx=10, pady=8)
 
-        ttk.Button(top, text="Export", command=self._export_csv).pack(side="left", padx=(0, 6))
+        ttk.Button(top, text="Xuất báo cáo", command=self._export_modal).pack(side="left", padx=(0, 6))
         ttk.Button(top, text="Sync", command=self._open_sync_modal).pack(side="left", padx=(0, 14))
 
         ttk.Label(top, text="DB:").pack(side="left")
@@ -208,12 +209,8 @@ class App(ttk.Frame):
         elif action == "resync":
             self._resync()
 
-    def _export_csv(self) -> None:
-        path = filedialog.asksaveasfilename(
-            title="Export to CSV",
-            defaultextension=".csv",
-            filetypes=[("CSV", "*.csv"), ("All files", "*.*")],
-        )
+    def _export_modal(self) -> None:
+        
         if not path:
             return
         return
@@ -243,6 +240,7 @@ class App(ttk.Frame):
 def run() -> None:
     root = tk.Tk()
     root.title(APP_NAME)
+    root.iconbitmap(get_resource_path("resources/logo.ico"))
     root.geometry("1100x650")
     try:
         root.state("zoomed")
@@ -252,4 +250,9 @@ def run() -> None:
     ttk.Style().theme_use("clam")
     App(root, default_db_path())
     root.mainloop()
+
+def get_resource_path(filename):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, filename)
+    return os.path.join(os.path.abspath("."), filename)
 

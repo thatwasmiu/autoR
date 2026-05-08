@@ -39,9 +39,19 @@ def get_matching_emails():
 # for e in emails[:10]:
 #     print(e)
 
+def print_folders(folder, indent=0):
+    print("  " * indent + folder.Name)
+
+    for i in range(folder.Folders.Count):
+        subfolder = folder.Folders.Item(i + 1)
+        print_folders(subfolder, indent + 1)
 
 def get_mail_times_from_inbox():
     outlook = win32com.client.Dispatch("Outlook.Application").GetNamespace("MAPI")
+
+    for i in range(outlook.Folders.Count):
+        root = outlook.Folders.Item(i + 1)
+        print_folders(root)
     
     inbox = outlook.GetDefaultFolder(6)  # 6 = Inbox
     messages = inbox.Items
