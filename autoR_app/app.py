@@ -11,6 +11,8 @@ import csv
 import re
 import threading
 
+from autoR_app.filter_modal import FilterModal
+
 from .db import DeclareForm, connect, init_db, get_active_folder, get_declare_forms, save_cell, save_declare_forms, sync_data_folder, delete_columns, delete_empty_folder, get_folder_by_id, get_declare_forms_by_date_range
 from .sync_data import open_sync_modal
 from .report_modal import open_modal
@@ -85,7 +87,7 @@ class App(ttk.Frame):
         top.pack(fill="x", padx=10, pady=8)
 
         
-        # ttk.Button(top, text="Import dữ liệu", command=import_data).pack(side="left", padx=(0, 6))
+        
         ttk.Button(top, text="Đồng bộ dữ liệu", command=self._open_sync_modal).pack(side="left", padx=(0, 14))
         ttk.Button(top, text="Xuất báo cáo", command=self._export_modal).pack(side="left", padx=(0, 6))
         ttk.Button(top, text="CTU", command=self._open_ctu_modal).pack(side="left", padx=(0, 14))
@@ -124,6 +126,7 @@ class App(ttk.Frame):
             text="Search",
             command=self._filter_data
         ).pack(side="left", padx=(0, 10))
+        ttk.Button(top, text="Outlook", command=self._open_out_look_modal).pack(side="left", padx=(0, 6))
 
         self._sheet = DeclareFormSheet(
             self,
@@ -267,6 +270,9 @@ class App(ttk.Frame):
 
     def _open_ctu_modal(self) -> None:
         open_ctu_modal(self)
+
+    def _open_out_look_modal(self) -> None:
+        FilterModal(self)  
 
 
 def run() -> None:

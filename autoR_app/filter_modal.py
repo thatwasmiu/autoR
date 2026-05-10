@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from .helpers import get_resource_path
 
 
 class FilterForm(ttk.LabelFrame):
@@ -143,80 +144,87 @@ class FilterForm(ttk.LabelFrame):
 # =========================================================
 # Example App
 # =========================================================
+    
+class FilterModal(tk.Toplevel):
+    def __init__(self, master):
+        super().__init__(master)
+        self.master = master
 
-root = tk.Tk()
-root.title("Mail Filters")
-root.geometry("1200x700")
+        self.iconbitmap(get_resource_path("resources/poppo.ico"))
+        self.title("Xuất báo cáo!!")
+        self.geometry("900x350")
+        self.transient(master)   # Keep on top of parent
+        self.grab_set()          # Make modal (block parent interaction)
 
-descriptions = [
-    "Find RSA-2103 Jira mails",
-    "Find RSA-2129 deployment mails",
-    "Find UAT notification mails",
-]
+        descriptions = [
+            "Find RSA-2103 Jira mails",
+            "Find RSA-2129 deployment mails",
+            "Find UAT notification mails",
+        ]
 
-keyword_options = [
-    "RSA-2103",
-    "RSA-2129",
-    "UAT",
-    "PROD",
-    "SIT",
-    "Deploy",
-]
+        keyword_options = [
+            "RSA-2103",
+            "RSA-2129",
+            "UAT",
+            "PROD",
+            "SIT",
+            "Deploy",
+        ]
 
-people_options = [
-    "jira@vetc.com.vn",
-    "devops@vetc.com.vn",
-    "boss@vetc.com.vn",
-]
+        people_options = [
+            "jira@vetc.com.vn",
+            "devops@vetc.com.vn",
+            "boss@vetc.com.vn",
+        ]
 
-folder_options = [
-    "Inbox",
-    "Archive",
-    "Projects",
-    "Important",
-]
+        folder_options = [
+            "Inbox",
+            "Archive",
+            "Projects",
+            "Important",
+        ]
 
-forms = []
+        forms = []
 
-container = ttk.Frame(root, padding=10)
-container.pack(fill="both", expand=True)
+        container = ttk.Frame(self, padding=10)
+        container.pack(fill="both", expand=True)
 
-for desc in descriptions:
-    form = FilterForm(
-        container,
-        title=desc,
-        keyword_options=keyword_options,
-        people_options=people_options,
-        folder_options=folder_options
-    )
+        for desc in descriptions:
+            form = FilterForm(
+                container,
+                title=desc,
+                keyword_options=keyword_options,
+                people_options=people_options,
+                folder_options=folder_options
+            )
 
-    form.pack(
-        fill="x",
-        pady=10
-    )
+            form.pack(
+                fill="x",
+                pady=10
+            )
 
-    forms.append(form)
-
-
-def submit():
-    filters = []
-
-    for form in forms:
-        filters.append(form.get_data())
-
-    print("=" * 50)
-
-    for idx, f in enumerate(filters):
-        print(f"Filter {idx + 1}")
-        print(f)
+            forms.append(form)
 
 
-submit_btn = ttk.Button(
-    root,
-    text="Submit",
-    command=submit
-)
+        def submit():
+            filters = []
 
-submit_btn.pack(pady=10)
+            for form in forms:
+                filters.append(form.get_data())
 
-root.mainloop()
+            print("=" * 50)
+
+            for idx, f in enumerate(filters):
+                print(f"Filter {idx + 1}")
+                print(f)
+
+
+        submit_btn = ttk.Button(
+            self,
+            text="Submit",
+            command=submit
+        )
+
+        submit_btn.pack(pady=10)
+
+        self.mainloop()
