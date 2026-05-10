@@ -10,7 +10,7 @@ switch = {
 }
 
 def write_daily_report(template, grouped):
-    # print(grouped)
+    print(grouped)
     wb = load_workbook(template)
 
     template_ws = wb.active  # original styled sheet
@@ -54,16 +54,16 @@ def write_daily_report(template, grouped):
 
             ws.append([
                 i,
-                data.get("month"),
-                data.get("nvlCode"),
+                date_val.month,
+                data.get("nvl_code"),
                 None,
-                data.get("formCode"),
+                data.get("form_code"),
                 date_val,
                 data.get("bill"),
                 "HQ TELECOM",
-                data.get("declareCode"),
-                switch.get(data.get("routeType"), ""),
-                data.get("typeCode"),
+                data.get("declare_code"),
+                switch.get(data.get("route_type"), ""),
+                data.get("type_code"),
                 data.get("term"),
                 data.get("invoice"),
                 data.get("tms"),

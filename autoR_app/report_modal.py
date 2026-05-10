@@ -9,54 +9,24 @@ from tkcalendar import DateEntry
 import threading
 from collections import defaultdict
 
-from report_daily_excel import write_daily_report
-from daily_invoice import get_data
-from report_weekly_excel import create_weekly_report
+from .report_daily_excel import write_daily_report
+from .daily_invoice import get_data
+from .report_weekly_excel import create_weekly_report
 ignore_folders = {"xml", "__pycache__"}
 from tkinter import ttk
 
-def create_daily_report(root, status_label=None):
-    grouped = defaultdict(list)
-
-    timestamp = datetime.now().strftime("%H%M%S")
-    output_file = root / f"BC_{root.name}_{timestamp}.xlsx"
-
-    template_path = get_resource_path("resources/daily_template.xlsx")
-    status_label.config(text=f"Start printing!!!")
-    wb = write_daily_report(template_path, grouped)
-    wb.save(output_file)
-
-    if status_label:
-        status_label.config(text=f"✅ Done! Saved: {str(output_file)}")
-    else:
-        print(f"Done! Saved: {output_file}")
-
-    os.startfile(output_file)    
-
-def folder_sort_key(f):
-    match = re.match(r"\d+", f.name)
-    if match:
-        return int(match.group())
-    return float('inf')
-
-def choose_folder(entry):
-    folder = filedialog.askdirectory()
-    if folder:
-        entry.delete(0, tk.END)
-        entry.insert(0, folder)
-
-
-def open_modal(self):
+def open_modal(self, datas, folder=None, fitler_by_date_call_back=None):
     modal = tk.Toplevel(self.master)
-    modal.iconbitmap(get_resource_path("resources/logo.ico"))
+    modal.iconbitmap(get_resource_path("resources/poppo.ico"))
     modal.title("Xuất báo cáo!!")
     modal.geometry("900x350")
     modal.transient(self.master)
     modal.grab_set()
 
-    tk.Label(modal, text="Selected Folder:").pack(pady=5)
-
+    tk.Label(modal, text="Chọn Folder để lưu báo cáo ý nhé!!!").pack(pady=5)
     folder_entry = tk.Entry(modal, width=80)
+    # print(folder)
+    folder_entry.insert(0,folder.get("origin_path") if folder else None)
     folder_entry.pack(pady=5)
 
     tk.Button(modal, text="Browse", command=lambda: choose_folder(folder_entry)).pack(pady=5)
@@ -64,12 +34,14 @@ def open_modal(self):
     # ✅ Report type selection
     report_type = tk.StringVar(value="daily")
 
-    tk.Label(modal, text="Select Report Type:").pack(pady=5)
+    tk.Label(modal, text="Chọn báo cáo Ngày/Tuần!!!").pack(pady=5)
 
     frame = tk.Frame(modal)
     frame.pack()
 
     # ✅ Get current week range (Mon → Sun)
+    # Current local date/time
+    
     today = datetime.today()
     start_of_week = today - timedelta(days=today.weekday())   # Monday
     end_of_week = start_of_week + timedelta(days=6)           # Sunday
@@ -96,20 +68,23 @@ def open_modal(self):
 
     def on_type_change():
         if report_type.get() == "weekly":
+            folder_entry.delete(0, tk.END)
             week_frame.pack(before=status_label, pady=5)  # ✅ force position above button
         else:
+            folder_entry.delete(0, tk.END)
+            folder_entry.insert(0,folder.get("origin_path") if folder else None)
             week_frame.pack_forget()
             
-    tk.Radiobutton(frame, text="Daily", variable=report_type, value="daily",
+    tk.Radiobutton(frame, text="Ngày", variable=report_type, value="daily",
                    command=on_type_change).pack(side="left", padx=10)
 
-    tk.Radiobutton(frame, text="Weekly", variable=report_type, value="weekly",
+    tk.Radiobutton(frame, text="Tuần", variable=report_type, value="weekly",
                    command=on_type_change).pack(side="left", padx=10)
 
     status_label = tk.Label(modal, text="Status: Idle", fg="blue")
     status_label.pack(pady=10)
 
-    run_button = tk.Button(modal, text="Run Report")
+    run_button = tk.Button(modal, text="Xuất báo cáo", width=20)
     run_button.pack(pady=10)
 
     def start_process():
@@ -121,13 +96,14 @@ def open_modal(self):
 
             def task():
                 if selected_type == "daily":
-                    create_daily_report(Path(folder_path), status_label)
+                    create_daily_report(datas, Path(folder_path), status_label)
                 elif selected_type == "weekly":
                     from_date = from_entry.get()
                     to_date = to_entry.get()
-                    print(from_date, to_date)
                     if (validate_date(from_date, to_date, status_label, run_button)):
-                        create_weekly_report(Path(folder_path), from_date, to_date, status_label)
+                        from_date_eproch = int(datetime.combine(from_entry.get_date(), datetime.min.time()).timestamp())
+                        to_date_eproch = int(datetime.combine(to_entry.get_date(), datetime.min.time()).timestamp())
+                        create_weekly_report(Path(folder_path), fitler_by_date_call_back(from_date_eproch, to_date_eproch), status_label)
 
                 run_button.config(state="normal")
 
@@ -144,14 +120,64 @@ def open_modal(self):
         except:
             pass
 
+    def is_child_of(widget, parent):
+        while widget:
+            if widget == parent:
+                return True
+            widget = widget.master
+        return False     
+           
     def on_click(event):
-        if event.widget not in (from_entry, to_entry):
-            close_picker(from_entry)
-            close_picker(to_entry)
+        clicked_widget = event.widget
+
+        # Keep open if click inside DateEntry widgets or their popup children
+        if (
+            is_child_of(clicked_widget, from_entry) or
+            is_child_of(clicked_widget, to_entry)
+        ):
+            return
+
+        close_picker(from_entry)
+        close_picker(to_entry)
+
 
     modal.bind_all("<Button-1>", on_click)
 
     modal.mainloop()
+
+def create_daily_report(datas, root, status_label=None):
+    grouped = defaultdict(list)
+
+    for data in datas:
+        if data.get("declare_code") is None:
+                continue
+        method = (data.get("method") or "Khác").strip().lower()
+        grouped[method].append(data) 
+
+    timestamp = datetime.now().strftime("%H%M%S")
+    output_file = root / f"BC_{root.name}_{timestamp}.xlsx"
+    status_label.config(text=f"Start printing!!!")
+    wb = write_daily_report(get_resource_path("resources/daily_template.xlsx"), grouped)
+    wb.save(output_file)
+
+    if status_label:
+        status_label.config(text=f"✅ Done! Saved: {str(output_file)}")
+    else:
+        print(f"Done! Saved: {output_file}")
+
+    os.startfile(output_file)    
+
+def folder_sort_key(f):
+    match = re.match(r"\d+", f.name)
+    if match:
+        return int(match.group())
+    return float('inf')
+
+def choose_folder(entry):
+    folder = filedialog.askdirectory()
+    if folder:
+        entry.delete(0, tk.END)
+        entry.insert(0, folder)
 
 def validate_date(from_date, to_date, status_label, run_button): 
         if not from_date or not to_date:

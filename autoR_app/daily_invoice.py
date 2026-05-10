@@ -14,7 +14,7 @@ patterns = {
     },
     "type_code": {
         "kw": "Mã loại hình",
-        "regex": r"[A-Z0-9]+",
+        "regex": r'[A-Z]+\d+\s+\d+\s+\[\s*\d+\s*\]',
         "files": [r"ToKhai.*_\d+"],
         "sheets": None
     },
@@ -50,10 +50,17 @@ patterns = {
     },
 }
 
-switch = {
+route_switch = {
     '1': "Xanh",
     '2': "Vàng",
     '3': "Đỏ"
+}
+
+method_switch = {
+    '1': "AIR",
+    '2': "SEA",
+    '3': "SEA",
+    '4': "TRUCK"
 }
 
 def get_data(daily_invoice_folder):
@@ -111,29 +118,32 @@ def get_data(daily_invoice_folder):
     nvl_code, bill = get_codes(daily_invoice_folder.name, invoice)
     month = None
     time = None
+    date_str = None
 
     if date:
         try:
             parsed_date = datetime.strptime(date, "%d/%m/%Y %H:%M:%S")
             month = parsed_date.month
             time = parsed_date.strftime("%I:%M %p")
+            date_str = parsed_date.strftime("%d/%m/%Y")
         except (ValueError, TypeError):
             print("Error date:", date)
 
     method = pick_value(type_codes, folder, r'(\d+)\s*(?=\[)', 1)
     method_str = pick_value(methods, folder)
     if method:
-        method = switch.get(method.strip(), method_str)  # map to AIR/SEA/TRUCK or keep original if not in switch
+        method = method_switch.get(method.strip(), method_str)  # map to AIR/SEA/TRUCK or keep original if not in switch
 
+    # print(method)
     return DeclareForm(
         nvl_code=nvl_code,
         bill=bill,
         invoice=invoice,
         declare_code=declare_code,
         type_code=type_code,
-        route_type=switch.get(route_type, ""),
+        route_type=route_switch.get(route_type, ""),
         term=term,
-        date=date,
+        date=date_str,
         month=month,
         tms=tms,
         form_code=form_code,

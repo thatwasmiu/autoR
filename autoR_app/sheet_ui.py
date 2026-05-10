@@ -4,15 +4,15 @@ import tkinter as tk
 
 
 class DeclareFormSheet(ttk.Frame):
-    def __init__(self, master, headers=[], records=[], metadata_headers=[], on_edit_callback=None):
+    def __init__(self, master, headers=[], records=[], metadata_headers=[], on_row_action_callback=None):
         super().__init__(master)
 
         self.records = records or []
         self.metadata_headers = metadata_headers
         self.master = master
-    
+        self.on_row_action_callback = on_row_action_callback
         self.data = []
-        self.modified_data_idx = []
+        self.modified_datas = {}
         self.headers = headers
         self.is_modified = False
         self._column_vars = {}
@@ -45,6 +45,10 @@ class DeclareFormSheet(ttk.Frame):
         self._hide_columns()
         
         self.sheet.enable_bindings((
+            "column_width_resize",
+            "row_width_resize",
+            # "move_rows",
+            "find",
             "single_select",
             "drag_select",
             "row_select",
@@ -57,14 +61,43 @@ class DeclareFormSheet(ttk.Frame):
             "undo",
             "redo",
             "arrowkeys",
-            "right_click_popup_menu",
             "rc_select",
-            "select_all"
+            "select_all",
+            # "right_click_popup_menu"
         ))
 
-        self.sheet.extra_bindings("end_edit_cell", self._on_cell_edited)
+        
+
         self.sheet.bind("end_insert_row", self._on_cell_inserted)
         self.sheet.bind("end_delete_row", self._on_cell_deleted)
+
+        self.sheet.extra_bindings([
+            ("end_edit_cell", self._on_cell_edited),          # cell edited
+            ("end_paste", self._on_cell_edited),              # paste completed
+            ("end_delete_key", self._on_cell_edited),         # delete key
+            ("end_cut", self._on_cell_edited),                # cut
+            ("end_undo", self._on_cell_edited),               # undo
+            ("end_redo", self._on_cell_edited),               # redo
+            ("end_insert_rows", self._on_cell_edited),        # rows inserted
+            ("end_delete_rows", self._on_cell_edited),        # rows deleted
+            ("end_insert_columns", self._on_cell_edited),     # columns inserted
+            ("end_delete_columns", self._on_cell_edited),     # columns deleted
+            ("end_move_rows", self._on_cell_edited),          # rows moved
+            ("end_move_columns", self._on_cell_edited),       # columns moved
+        ])
+
+        self.sheet.highlight_columns(
+            columns=[12],
+            bg="lightblue",   # background color
+            fg="black",       # text color
+            highlight_header=True
+        )
+        self.sheet.highlight_columns(
+            columns=[6],
+            bg="#FFEBEE",   # background color
+            fg="black",       # text color
+            highlight_header=True
+        )
         self.sheet.pack(fill="both", expand=True)
 
 
@@ -86,8 +119,21 @@ class DeclareFormSheet(ttk.Frame):
         self._cols_btn.pack(side="left", padx=6, pady=4)
         self._cols_menu = tk.Menu(self._cols_btn, tearoff=False)
         self._cols_btn.configure(menu=self._cols_menu)
-
         self._cols_menu.delete(0, "end")
+
+        self._delete_btn = ttk.Button(
+            topbar,
+            text="Xóa dòng đã chọn",
+            command=self._delete_selected_rows  # Replace with your delete handler
+        )
+        self._delete_btn.pack(side="left", padx=6, pady=4)     
+
+        # self._delete_btn = ttk.Button(
+        #     topbar,
+        #     text="Paste từ value",
+        #     command=self._delete_selected_rows  # Replace with your delete handler
+        # )
+        # self._delete_btn.pack(side="left", padx=6, pady=4)      
 
         # Global show/hide (NVL is always visible)
         self._cols_menu.add_command(label="<Hiện toàn bộ!!!>", command=self._show_all_columns)
@@ -141,21 +187,26 @@ class DeclareFormSheet(ttk.Frame):
         self._build_data(data)
         # print ("Updating sheet with data:", self.data)
         self.sheet.set_sheet_data(self.data, reset_col_positions=True, reset_row_positions=True)
-        column_index = 6  # replace with your target column index
+        pogress_index = 6  # replace with your target column index
+        route_type_index = 9
         for row in range(len(self.data)):
             # print(self.data[row][column_index])
             self.sheet.create_dropdown(
                 r=row,
-                c=column_index,   # replace with your target column index
+                c=pogress_index,   # replace with your target column index
                 values=["PENDING", "DONE"],
-                set_value=self.data[row][column_index] if self.data[row][column_index] else "PENDING"
+                set_value=self.data[row][pogress_index] if self.data[row][pogress_index] else "PENDING"
             )
+            self.sheet.create_dropdown(
+                r=row,
+                c=route_type_index,   # replace with your target column index
+                values=["Xanh", "Vàng", "Đỏ"],
+                set_value=self.data[row][route_type_index] if self.data[row][route_type_index] else ""
+            )
+
         self.sheet.set_all_column_widths()    
 
     def _show_all_columns(self):
-        """
-        Show every column except metadata columns.
-        """
         self.sheet.show_columns(columns=list(range(len(self.headers))))
 
         # Re-hide metadata columns
@@ -164,10 +215,6 @@ class DeclareFormSheet(ttk.Frame):
 
 
     def _toggle_detail_columns(self):
-        """
-        Hide detail columns between Invoice and TMS
-        and update _column_vars to False.
-        """
         headers = self.sheet.headers()
 
         try:
@@ -208,21 +255,64 @@ class DeclareFormSheet(ttk.Frame):
         self._toggle_column(None)  # Update column visibility based on _column_vars
 
     def _on_cell_inserted(self, event):
-        self.modified_data_idx.append(event.row)
+        row_data = self.sheet.get_row_data(event.row)
+        self.modified_datas[row_data[0]] = row_data
         self.is_modified = True
 
     def _on_cell_deleted(self, event):
-        self.modified_data_idx.remove(event.row)
+        row_data = self.sheet.get_row_data(event.row)
+        self.modified_datas[row_data[0]] = row_data
         self.is_modified = True
 
     def _on_cell_edited(self, event):
-        row = event.row
-        row_data = self.sheet.get_row_data(row)
-        self.modified_data_idx.append(row_data[0])
-        self.is_modified = True
+        # print("Event: ", event.data)
+        print("Event name: ", event.eventname)
+        # print("Event row: ", event)
+        if event.eventname in ("end_paste", "end_ctrl_v"):
+            for (row_idx, column_idx), value in event.data.items():
+                print("Row:", row_idx)
+                print("Column:", column_idx)
+                print("New Value:", value)
+
+                # Full row data
+                row_data = self.sheet.get_row_data(row_idx)
+
+                # Example save
+                self.modified_datas[row_data[0]] = row_data
+        elif event.eventname in ("end_ctrl_x", "end_cut"):
+            for (row_idx, column_idx), value in event.cells["table"].items():
+                # Full row data
+                row_data = self.sheet.get_row_data(row_idx)
+
+                # Example save
+                self.modified_datas[row_data[0]] = row_data
+
+                # print(f"Saved row {row_idx}: {row_data}")        
+        elif event.eventname in ("end_undo"):
+           datas = self.sheet.get_sheet_data()
+           for data in datas:
+            self.modified_datas[data[0]] = data   
+        else:
+            print("Cell edited at row:", event.row, "column:", event.column, " eventname:", event.eventname)
+            row_data = self.sheet.get_row_data(event.row)
+            self.modified_datas[row_data[0]] = row_data
+        self.is_modified = True    
 
     def get_sheet_data(self):
         return self.sheet.get_sheet_data()
+    
+    def get_modified_data(self):
+        return self.modified_datas
+    
+    def _delete_selected_rows(self):
+        selected_rows = self.sheet.get_selected_rows()
+        if selected_rows:
+            datas  = [
+                self.sheet.get_row_data(row_index)
+                for row_index in selected_rows
+            ]
+            self.on_row_action_callback("delete", datas)
+
 
     def refresh(self, records):
         self.records = records

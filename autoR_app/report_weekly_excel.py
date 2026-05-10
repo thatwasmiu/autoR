@@ -9,22 +9,13 @@ import re
 TEMPLATE_FILE = "resources/template_weekly.xlsx"
 OUTPUT_FILE = "output.xlsx"
 
-OUTPUT_COLUMN_MAP = {
-    "date": 2,
-    "nvlCode": 3,
-    "bill": 4,
-    "invoice": 5,
-    "time": 10, 
-    "routeType": 11,
-    "method": 13
-}
-
 def create_weekly_report(root_folder, all_data, status_label):
-    all_data = []
 
     if not all_data:
         status_label.config(text="⚠️ No data found")
         return
+    
+    print(all_data)
 
     wb = load_workbook(get_resource_path(TEMPLATE_FILE))
     sheet = wb.active
@@ -45,26 +36,41 @@ def create_weekly_report(root_folder, all_data, status_label):
         bottom=Side(style='thin', color='000000')
     )
     font_tnr = Font(name="Times New Roman", size=10) 
-    for row_dict in all_data:
-        for k, col_idx in OUTPUT_COLUMN_MAP.items():
-            value = row_dict.get(k)
+    
+    i = 1
+    for data in all_data:
+        date_val = None
+        try:
+            date_str = data.get("date")
+            if date_str:
+                date_val = datetime.strptime(date_str, "%d/%m/%Y %H:%M:%S")
+        except (ValueError, TypeError):
+            date_val = None
 
-            cell = sheet.cell(row=row, column=col_idx)
-
-            if k == "date":
-                dt = parse_date(value)
-                cell.value = dt
-                if dt:
-                    cell.number_format = "D/M/YYYY"
-            if k == "method" and value != None and value.upper() == "TRUCK":      
-                cell.value = ""
-            else:
-                cell.value = value
+        sheet.append([
+                    i,
+                    date_val,
+                    data.get("nvl_code"),
+                    data.get("bill"),
+                    data.get("invoice"),
+                    data.get("mail_time"),
+                    data.get("tms_time"),
+                    data.get("draft_time"),
+                    data.get("tk_time"),
+                    data.get("official_time"),
+                    data.get("passed_time"),
+                    data.get("route_type"),
+                    data.get("method") if (data.get("method") or "").lower() != "truck" else "",
+                ])
+        if date_val:
+            sheet.cell(row=row, column=2).number_format = "D/M/YYYY"
 
         for col in range(1, 14):
             cell = sheet.cell(row=row, column=col)
             cell.border = border
             cell.font = font_tnr   # ✅ apply Times New Roman
+        i += 1
+        row += 1
     now = datetime.now()
     timestamp = f"T{now.isocalendar().week:02d}_{now.strftime('%Y')}"
     output_file = root_folder / f"BC_{timestamp}_{now.strftime('%H%M%S')}.xlsx"

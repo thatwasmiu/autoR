@@ -66,6 +66,7 @@ def init_db(con: sqlite3.Connection) -> None:
             official_time VARCHAR(20),
             passed_time VARCHAR(20),
             FOREIGN KEY (folder_id) REFERENCES folder(id),
+            UNIQUE(id, folder_id),
             UNIQUE(folder_id, nvl_code)
         );
         """
@@ -140,7 +141,7 @@ def save_declare_forms(con, records: list[list], fields: list[str]):
     update_fields = [
         f"{field} = excluded.{field}"
         for field in fields
-        if field not in ("id", "folder_id")
+        if field not in ("id")
     ]
 
     field_sql = ",\n                ".join(fields)
@@ -152,7 +153,7 @@ def save_declare_forms(con, records: list[list], fields: list[str]):
         INSERT INTO declare_form (
                 {field_sql}
         ) VALUES ({placeholders})
-        ON CONFLICT(id, folder_id)
+        ON CONFLICT(id)
         DO UPDATE SET
                 {update_sql}
     """
@@ -241,6 +242,81 @@ def sync_data_folder(
 
     conn.commit()
     return folder_id
+
+def get_declare_forms_by_date_range(
+    con: sqlite3.Connection,
+    start_date: str,
+    end_date: str
+) -> list[dict]:
+    print("eprouch ", start_date, end_date)
+    rows = con.execute("""
+        SELECT
+            d.nvl_code,
+            d.bill,
+            d.invoice,
+            d.declare_code,
+            d.type_code,
+            d.route_type,
+            d.term,
+            d.date,
+            d.tms,
+            d.form_code,
+            d.method,
+            d.official_time,
+            mail_time,
+            tms_time,
+            draft_time,
+            tk_time,
+            official_time,
+            passed_time,
+            method
+        FROM declare_form d
+        JOIN folder f ON d.folder_id = f.id
+        WHERE f.date >= ? AND f.date <= ?
+    """, (start_date, end_date)).fetchall()
+
+    return [dict(row) for row in rows]
+
+def delete_columns(con: sqlite3.Connection, declare_id: int, folder_id: int) -> None:
+    # Delete the declare form row
+    con.execute("""
+        DELETE FROM declare_form
+        WHERE id = ? AND folder_id = ?
+    """, (declare_id, folder_id))
+
+    con.commit()
+
+def delete_empty_folder(con: sqlite3.Connection, folder_id: int) -> None:
+    cursor = con.cursor()
+
+    # Check if folder has any remaining declare forms
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM declare_form
+        WHERE folder_id = ?
+    """, (folder_id,))
+    
+    remaining = cursor.fetchone()[0]
+
+    # Delete folder if empty
+    if remaining == 0:
+        cursor.execute("""
+            DELETE FROM folder
+            WHERE id = ?
+        """, (folder_id,))
+
+    con.commit()  
+
+def get_folder_by_id(con: sqlite3.Connection, folder_id: int) -> dict | None:
+    row = con.execute(
+        "SELECT name, origin_path, date, id FROM folder WHERE id = ?",
+        (folder_id,)
+    ).fetchone()
+
+    if row is None:
+        return None
+
+    return dict(row)
 
 
 def get_cells(con: sqlite3.Connection) -> dict[tuple[int, int], str]:

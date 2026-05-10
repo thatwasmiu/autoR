@@ -5,16 +5,18 @@ import sys
 from pathlib import Path
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
+import shutil
 
 import csv
 import re
 import threading
 
-from .db import DeclareForm, connect, init_db, get_active_folder, get_declare_forms, save_cell, save_declare_forms, sync_data_folder
+from .db import DeclareForm, connect, init_db, get_active_folder, get_declare_forms, save_cell, save_declare_forms, sync_data_folder, delete_columns, delete_empty_folder, get_folder_by_id, get_declare_forms_by_date_range
 from .sync_data import open_sync_modal
+from .report_modal import open_modal
 from .sheet_ui import DeclareFormSheet
+from .ctu_modal import open_ctu_modal
 from typing import List
-from excel_write import write_daily_report
 
 APP_NAME = "autoR"
 
@@ -65,8 +67,6 @@ class App(ttk.Frame):
     def _build_menu(self) -> None:
         menubar = tk.Menu(self.master)
         filem = tk.Menu(menubar, tearoff=False)
-        # filem.add_command(label="Open DB...", command=self._open_db)
-        # filem.add_command(label="New DB...", command=self._new_db)
         filem.add_separator()
         filem.add_command(label="Xuất báo cáo", command=self._export_modal)
         filem.add_separator()
@@ -78,19 +78,32 @@ class App(ttk.Frame):
         self._filter = {}
         self._records = []
         self._folder_map = None
-        self._selected_folder = None
 
         self.pack(fill="both", expand=True)
 
         top = ttk.Frame(self)
         top.pack(fill="x", padx=10, pady=8)
 
+        
+        # ttk.Button(top, text="Import dữ liệu", command=import_data).pack(side="left", padx=(0, 6))
+        ttk.Button(top, text="Đồng bộ dữ liệu", command=self._open_sync_modal).pack(side="left", padx=(0, 14))
         ttk.Button(top, text="Xuất báo cáo", command=self._export_modal).pack(side="left", padx=(0, 6))
-        ttk.Button(top, text="Sync", command=self._open_sync_modal).pack(side="left", padx=(0, 14))
+        ttk.Button(top, text="CTU", command=self._open_ctu_modal).pack(side="left", padx=(0, 14))
 
-        ttk.Label(top, text="DB:").pack(side="left")
-        self._db_label = ttk.Label(top, text=str(self.db_path))
-        self._db_label.pack(side="left", padx=(6, 12))
+        ttk.Label(top, text="File giữ liệu:").pack(side="left")
+        self._db_label = ttk.Label(
+            top,
+            text=str(self.db_path),
+            foreground="blue",
+            cursor="hand2"
+        )
+        self._db_label.pack(side="left")
+
+        self._db_label.bind(
+            "<Button-1>",
+            lambda e: open_path(self.db_path)
+        )
+        self._db_label.configure(font=("Arial", 10, "underline"))
 
         # Load folders
         self._selected_folder = tk.StringVar()
@@ -117,43 +130,13 @@ class App(ttk.Frame):
             list(MAP_LABELS.values()),
             records=self._records,
             metadata_headers=["id", "folder_id"],
-            on_edit_callback=self._save_cell
+            on_row_action_callback=self._on_row_actions
             )
         self._sheet.pack(fill="both", expand=True, padx=10, pady=(0, 10))
         self.master.bind("<Control-s>", self._save_sheet)
         self.master.bind("<Control-S>", self._save_sheet)
         self.master.protocol("WM_DELETE_WINDOW", self._on_close)
-        self.set_folders()
-
-    def _on_close(self, event=None):
-        if not self._sheet.is_modified:
-            self.master.destroy()
-            return
-
-        result = messagebox.askyesnocancel(
-            "Unsaved changes",
-            "You have unsaved changes. Save before exiting?"
-        )
-
-        if result is None:
-            # Cancel close
-            return
-
-        if result:
-            self._save_sheet()
-            # optionally re-check if save failed
-        self.master.destroy()
-
-    def _save_sheet(self):
-        if self._sheet.is_modified:
-            data = self._sheet.get_sheet_data()
-            save_declare_forms(self.con, data, list(MAP_LABELS.keys()))
-            self._sheet.modified_data_idx = []
-            self._sheet.is_modified = False
-
-    def set_folders(self):
-        # Folder selector
-        # Build lookup: folder name -> id
+        
         self._active_folders = get_active_folder(self.con)
         self._folder_map = {
             folder["name"]: folder["id"]
@@ -163,8 +146,41 @@ class App(ttk.Frame):
         if not self._active_folders:
             self._open_folder_selection_modal()
             self._active_folders = get_active_folder(self.con)
-        
-        self._get_active_folder_data(self.con)
+        else:
+            self._get_active_folder_data(self.con)
+            self._folder_combobox.config(values=list(self._folder_map.keys()))    
+            self._folder_combobox.current(0)
+
+    def _on_close(self, event=None):
+        self._save_before_doing()
+        self.master.destroy()
+
+    def _save_before_doing(self):
+        self.master.focus_set()
+        self.master.update_idletasks()
+        self.master.update() # ensure all pending events are processed before checking modified state
+
+        if not self._sheet.is_modified:
+            return
+
+        result = messagebox.askyesnocancel(
+            "Có thay đổi chưa được lưu",
+            "Bạn có muốn lưu rồi làm tiếp?"
+        )
+
+        if result is None:
+            # Cancel close
+            return
+
+        if result:
+            self._save_sheet()
+
+    def _save_sheet(self, event=None):
+        if self._sheet.is_modified:
+            data = self._sheet.modified_datas
+            save_declare_forms(self.con, data.values(), list(MAP_LABELS.keys()))
+            self._sheet.modified_datas = {}
+            self._sheet.is_modified = False
 
     def reload(self):
         self._active_folders = get_active_folder(self.con)
@@ -172,15 +188,15 @@ class App(ttk.Frame):
             folder["name"]: folder["id"]
             for folder in self._active_folders
         }
-        self._get_active_folder_data(self.con)    
+        if self._active_folders:
+            self._get_active_folder_data(self.con)
+            self._folder_combobox.config(values=list(self._folder_map.keys()))    
+            self._folder_combobox.current(0)      
 
     def _get_active_folder_data(self, con):
-        if self._active_folders:
-            self._selected_folder = self._active_folders[0]["id"]
-            self._records = get_declare_forms(con, self._selected_folder) 
-            self._sheet.set_sheet_data(self._records)
-            self._folder_combobox.config(values=list(self._folder_map.keys()))    
-            self._folder_combobox.current(0)  
+        self._filter["folder_id"] = self._active_folders[0]["id"]
+        self._records = get_declare_forms(con, self._filter["folder_id"]) 
+        self._sheet.set_sheet_data(self._records)
 
     def _on_folder_selected(self, event=None):
         selected_name = self._selected_folder.get()
@@ -198,22 +214,34 @@ class App(ttk.Frame):
 
     def _open_folder_selection_modal(self) -> None:
         messagebox.showinfo(
-            "No active folder",
-            "No active folder found in the database. Please select a folder to sync data from."
+            "Không có dữ liệu trong hệ thống",
+            "Không có dữ liệu trong hệ thống. Hãy đồng bộ từ folder."
         )
         self._open_sync_modal()
 
-    def _row_action(self, action: str, row_idx: int) -> None:
-        if action == "save":
-            self._save()
-        elif action == "resync":
-            self._resync()
+
+    def _on_row_actions(self, action, row_datas):
+    
+        print("Row action:", action, row_datas)
+        folderSet = set()
+        for data in row_datas:
+            if action == "delete":
+                delete_columns(self.con, data[0], data[1])
+                folderSet.add(data[1])
+        for folder_id in folderSet:      
+            delete_empty_folder(self.con, folder_id)        
+        self._filter_data()        
 
     def _export_modal(self) -> None:
-        
-        if not path:
-            return
-        return
+        self._save_before_doing()
+        open_modal(self, get_declare_forms(self.con, self._filter["folder_id"]), get_folder_by_id(self.con, self._filter["folder_id"]), self.on_filter_by_date_range)
+
+    def on_filter_by_date_range(self, start_date, end_date):
+        con = connect(default_db_path())
+        print("Filtering by date range:", start_date, end_date)
+        records = get_declare_forms_by_date_range(con, start_date, end_date)
+        con.close()
+        return records
 
     def _save_form_call_back(self, form_data: dict) -> None:
         save_declare_forms(self.con, self._active_folder["id"], [form_data])
@@ -234,13 +262,17 @@ class App(ttk.Frame):
         con.close()
 
     def _open_sync_modal(self) -> None:
+        self._save_before_doing()
         open_sync_modal(self)
+
+    def _open_ctu_modal(self) -> None:
+        open_ctu_modal(self)
 
 
 def run() -> None:
     root = tk.Tk()
     root.title(APP_NAME)
-    root.iconbitmap(get_resource_path("resources/logo.ico"))
+    root.iconbitmap(get_resource_path(r"resources\rchan.ico"))
     root.geometry("1100x650")
     try:
         root.state("zoomed")
@@ -256,3 +288,76 @@ def get_resource_path(filename):
         return os.path.join(sys._MEIPASS, filename)
     return os.path.join(os.path.abspath("."), filename)
 
+
+def open_path(path):
+    if not path:
+        return
+
+    # If it's a file → get its folder
+    if os.path.isfile(path):
+        folder = os.path.dirname(path)
+        os.startfile(folder)
+
+    # If it's already a folder
+    elif os.path.isdir(path):
+        os.startfile(path)
+
+    else:
+        print("Path not found:", path)
+
+
+def copy_to_folder(file_path, target_folder):
+    if not file_path:
+        return
+
+    os.makedirs(target_folder, exist_ok=True)
+
+    filename = os.path.basename(file_path)
+    dest_path = os.path.join(target_folder, filename)
+
+    shutil.copy2(file_path, dest_path)
+
+    print("Copied to:", dest_path)
+    return dest_path
+
+def import_data(self):
+    root = tk.Toplevel(self.master)
+    root.title("Import data")
+    root.geometry("900x550")
+    root.transient(self.master)
+    root.grab_set()
+
+    tk.Label(root, text="Chọn file data cần import:").pack(pady=5)
+
+    folder_entry = tk.Entry(root, width=80)
+    folder_entry.pack(pady=5)
+
+    tk.Button(root, text="Browse", command=lambda: choose_folder(folder_entry)).pack(pady=5)
+
+    status_label = tk.Label(root, text="Status: Idle", fg="blue")
+    status_label.pack(pady=10)
+
+    run_button = tk.Button(root, text="Import")
+    run_button.pack(pady=10)
+    def start_process(): 
+        folder_path = folder_entry.get()
+        if not folder_path or not os.path.isfile(folder_path):
+            messagebox.showerror("Error", "Please select a valid folder.")
+            return
+
+        run_button.config(state="disabled")
+        status_label.config(text="Processing...", fg="orange")
+
+        def process():
+            copy_to_folder(default_db_path(), folder_path)
+            status_label.config(text="Import completed!", fg="green")
+
+        threading.Thread(target=process).start()
+    run_button.config(command=start_process)
+    
+
+def choose_folder(entry):
+    folder = filedialog.askdirectory()
+    if folder:
+        entry.delete(0, tk.END)
+        entry.insert(0, folder)    
