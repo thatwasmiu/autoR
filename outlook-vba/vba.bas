@@ -55,7 +55,7 @@ Sub FindReportEmailsAllFolders_Sorted()
     Dim result As String
     result = "<h3>Search Results for '" & keywordInput & "'</h3>"
     result = result & "<table border='1' cellpadding='4' cellspacing='0' style='border-collapse:collapse;'>"
-    result = result & "<tr style='background-color:#f2f2f2;'><th>Keyword</th><th>Time</th><th>Mail</th></tr>"
+    result = result & "<tr style='background-color:#f2f2f2;'><th>Keyword</th><th>Mail</th><th>Time</th></tr>"
 
     Dim idx As Long, k As Variant
 
@@ -81,14 +81,14 @@ Sub FindReportEmailsAllFolders_Sorted()
                 result = result & "<tr>"
                 result = result & "<td>" & k & "</td>"
                 
-                result = result & "<td>" & Format(email.ReceivedTime, "hh:nn AM/PM") & "</td>"
                 result = result & "<td>" & Format(email.ReceivedTime, "yyyy-mm-dd") & "<br/>"
                 result = result & "<a href='outlook:" & email.EntryID & "'>" & email.Subject & "</a><br/>"
                 result = result & "Sender: " & email.SenderName & "<br/>"
                 result = result & "To: " & email.To & "<br/>"
                 result = result & "CC: " & email.CC & "<br/>"
-                result = result & "Folder: <b>" & email.Parent.FolderPath & "</b></td>"
-                result = result & "CC: " & email.Body & "<br/>"
+                result = result & email.Parent.FolderPath & "</td>"
+                
+                result = result & "<td>" & Format(email.ReceivedTime, "hh:nn AM/PM") & "</td>"
                 result = result & "</tr>"
                 
             Next idx
@@ -103,7 +103,7 @@ Sub FindReportEmailsAllFolders_Sorted()
             result = result & "</tr>"
         End If
 
-NextK:
+    NextK:
     Next i
 
     result = result & "</table>"

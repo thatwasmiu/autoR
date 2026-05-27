@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>autoR Web</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 12px;
+        min-width: 220px;
+      }
+      label {
+        display: block;
+        font-size: 12px;
+        margin-bottom: 4px;
+        color: #333;
+      }
+      input {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 6px 8px;
+        margin-bottom: 10px;
+      }
+      button {
+        width: 100%;
+        padding: 8px 12px;
+        cursor: pointer;
+      }
+      #status {
+        margin-top: 8px;
+        font-size: 12px;
+        color: #444;
+      }
+      #status.error {
+        color: #b00020;
+      }
+      #birthday {
+        display: none;
+        margin-bottom: 10px;
+        padding: 8px;
+        text-align: center;
+        font-weight: 600;
+        color: #6b21a8;
+        background: #f3e8ff;
+        border-radius: 6px;
+      }
+      #birthday.visible {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <p id="birthday" role="status"></p>
+    <label for="invoice">Invoice number</label>
+    <input
+      id="invoice"
+      type="text"
+      value="4601609273"
+      autocomplete="off"
+      spellcheck="false"
+    />
+    <button id="run" type="button">Run autoR</button>
+    <p id="status"></p>
+    <script src="secrets.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "autoR Web",
+  "version": "1.0",
+  "description": "Auto-fill ADF form on demand",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Run autoR"
+  }
+}
