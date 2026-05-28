@@ -7,8 +7,8 @@
   const DELAY_AFTER_CLICK_MS = 1200;
   const DELAY_AFTER_NAV_MS = 1200;
   const DELAY_AFTER_FORM_FILL_MS = 500;
-  const DELAY_AFTER_AFTER_FILL_MS = 500;
-  const DELAY_AFTER_CLOSE_MS = 1000;
+  const DELAY_AFTER_AFTER_FILL_MS = 1200;
+  const DELAY_AFTER_CLOSE_MS = 1500;
   const invoiceNo =
     (typeof localStorage !== 'undefined' && localStorage.getItem('autoR_invoiceNo')?.trim()) ||
     window.__autoRConfig?.invoiceNo?.trim() ||
