@@ -1,11 +1,18 @@
 {
   "manifest_version": 3,
-  "name": "autoR Web",
+  "name": "R Web",
   "version": "1.0",
   "description": "Auto-fill ADF form on demand",
+  "icons": {
+    "16": "./rchan.png",
+    "32": "rchan.png",
+    "48": "rchan.png",
+    "128": "rchan.png"
+  },
   "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": ["https://script.google.com/*", "https://script.googleusercontent.com/*"],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Run autoR"
+    "default_title": "Run webR"
   }
 }

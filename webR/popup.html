@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>autoR Web</title>
+    <title>R Web Auto Clicker</title>
     <style>
       body {
         font-family: system-ui, sans-serif;
@@ -50,8 +50,17 @@
     </style>
   </head>
   <body>
+    <h3>Cấu hình</h3>
     <p id="birthday" role="status"></p>
-    <label for="invoice">Invoice number</label>
+    <label for="scriptUrl">Apps Script Web App URL</label>
+    <input
+      id="scriptUrl"
+      type="url"
+      value="https://script.google.com/macros/s/AKfycby_XxGnTT1NjgSS_rF27FIVZLSw9NHO2uihMrAqc-Kvoy-jBHSer-JEW0-HdlgXnR22Vg/exec"
+      autocomplete="off"
+      spellcheck="false"
+    />
+    <label for="invoice">Số định danh</label>
     <input
       id="invoice"
       type="text"
@@ -59,9 +68,23 @@
       autocomplete="off"
       spellcheck="false"
     />
-    <button id="run" type="button">Run autoR</button>
+    <label for="formConfigs">
+      <div>Configs:</div>
+      <div>target: 0 - XHK / 1 - KBC</div>
+      <div>type: 0 - Nhập khẩu / 1 - Xuất khẩu / 2 - Nội địa</div>
+      <div>runs: Số lần chạy</div>
+    </label>
+    <textarea
+      id="formConfigs"
+      rows="5"
+      spellcheck="false"
+      style="font-family: ui-monospace, monospace; font-size: 11px"
+    >[{"target":"0","type":"0","runs":3}]</textarea>
+    <button id="run" type="button">Run webR</button>
+    <button id="reset" type="button">Reset configs</button>
     <p id="status"></p>
     <script src="secrets.js"></script>
+    <script src="formConfig.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>
