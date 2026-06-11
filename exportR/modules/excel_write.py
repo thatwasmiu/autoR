@@ -58,7 +58,7 @@ def write_daily_report(template, grouped):
                 i,
                 data.get("month"),
                 data.get("nvlCode"),
-                None,
+                "DONE" if data.get("isDone") else "PENDING",
                 data.get("formCode"),
                 date_val,
                 data.get("bill"),

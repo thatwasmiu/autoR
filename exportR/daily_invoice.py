@@ -79,7 +79,7 @@ def get_data(daily_invoice_folder):
     tmses = []
     invoices = []
     methods = []
-
+    isDone = False
     for f in files:
         try:
             values = find_values(f, patterns)
@@ -101,6 +101,8 @@ def get_data(daily_invoice_folder):
             invoices.append(values["invoice"].strip())
         if values["method"]:
             methods.append(values["method"].strip().upper())
+        if "QDTQ" in f:
+            isDone = True
 
         if "合同_发票_箱单" in f:
             tms = get_tms_code(f)
@@ -142,7 +144,8 @@ def get_data(daily_invoice_folder):
         "month": month,
         "tms": tms,
         "formCode": fromCode,
-        "method": method
+        "method": method,
+        "isDone": isDone
     }
 
 def get_form_code(folder_name): 

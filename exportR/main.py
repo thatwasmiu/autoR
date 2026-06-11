@@ -22,7 +22,7 @@ def create_daily_report(root, status_label=None):
         if f.is_dir() and f.name.lower() not in ignore_folders
     ]
     folders = sorted(folders, key=folder_sort_key)
-    
+    folders = re_index_folder(folders)
     grouped = defaultdict(list)
 
     for i, folder in enumerate(folders, start=1):
@@ -57,7 +57,21 @@ def create_daily_report(root, status_label=None):
     else:
         print(f"Done! Saved: {output_file}")
 
-    os.startfile(output_file)    
+    os.startfile(output_file)
+
+def re_index_folder(folders):
+    updated = []
+
+    for i, folder in enumerate(folders, start=1):
+        base_name = re.sub(r'^\d+\.\s*', '', folder.name)
+        new_folder = folder.parent / f"{i}.{base_name}"
+
+        if folder != new_folder:
+            folder = folder.rename(new_folder)
+
+        updated.append(folder)
+
+    return updated
 
 def folder_sort_key(f):
     match = re.match(r"\d+", f.name)
