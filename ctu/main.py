@@ -21,7 +21,7 @@ def excel_to_pdf_batch(root, status_label=None, tree_insert_callback=None):
 
     files = [
         f for f in root.rglob("*.xls*")
-        if "合同_发票_箱单" in f.name and not f.name.startswith("~$")
+        if f.name.startswith("合同_发票_箱单")
     ]
 
     results = []  # store (excel_file, pdf_file)
@@ -34,14 +34,17 @@ def excel_to_pdf_batch(root, status_label=None, tree_insert_callback=None):
             status_label.update_idletasks()
 
         output_pdf = print_pdf(excel, file)
-        reader = PdfReader(output_pdf)
-        page_count = len(reader.pages)
-        status = f"OK Page: {page_count}"
-        results.append((str(file), str(output_pdf), status))
+        try:
+            reader = PdfReader(output_pdf)
+            page_count = len(reader.pages)
+            status = f"OK Page: {page_count}"
+            results.append((str(file), str(output_pdf), status))
+            # ✅ update UI table
+            if tree_insert_callback:
+                tree_insert_callback(str(file), str(output_pdf), status)
+        except Exception as e:
+            print(f"Failed to read PDF: {e}, file ")
 
-        # ✅ update UI table
-        if tree_insert_callback:
-            tree_insert_callback(str(file), str(output_pdf), status)
 
     excel.Quit()
 
@@ -187,12 +190,16 @@ def run_app():
                     tree.item(item_id, values=(os.path.basename(excel_path), pdf_path, "Cancelled"))
                     return
 
-            reader = PdfReader(output_pdf)
-            page_count = len(reader.pages)
-            status = f"Retry OK Page: {page_count}"
-            tree.item(item_id, values=(os.path.basename(excel_path), output_pdf, status))
-            row_data[item_id] = (excel_path, output_pdf)
-            excel.Quit()
+            try:
+                reader = PdfReader(output_pdf)
+                page_count = len(reader.pages)
+                status = f"Retry OK Page: {page_count}"
+                tree.item(item_id, values=(os.path.basename(excel_path), output_pdf, status))
+                row_data[item_id] = (excel_path, output_pdf)
+                excel.Quit()
+            except Exception as e:
+                print(f"Failed to read PDF: {e}")
+                print()
 
         except Exception as e:
             tree.item(item_id, values=(os.path.basename(excel_path), "", f"ERROR"))

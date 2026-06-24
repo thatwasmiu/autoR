@@ -33,10 +33,16 @@ def create_daily_report(root, status_label=None):
             else:
                 print(f"Processing ({i}/{len(folders)}): {folder.name}")
 
+            # data
+            # try:
             data = get_data(folder)
+            # except Exception as e:
+            #     print(f"Failed to read folder: {folder}")
+            #     continue
+            # # if data.get("declareCode") is None:
+            # #     print(data)
+            # #     continue
 
-            if data.get("declareCode") is None:
-                continue
             method = (data.get("method") or "Khác").strip().lower()
 
             grouped[method].append(data)

@@ -28,7 +28,17 @@ def get_codes(text, invoice):
     if i + 1 >= len(parts):
         return None, None
 #     first = f"{parts[i]}-{parts[i+1]}"
-    first = f"NVL - {parts[i+1]}"
+    words = parts[i + 1].split()
+    if not words:
+        return None, None
+
+    first = f"NVL - {words[0]}"
+
+
+    matchLTP = re.search(r'\b(LTP\S*)', text)
+   
+    if matchLTP:
+        return first, matchLTP.group(1)
 
     # second: aaa or aaa-01
     if i + 2 >= len(parts):

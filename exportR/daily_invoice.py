@@ -81,6 +81,7 @@ def get_data(daily_invoice_folder):
     methods = []
     isDone = False
     for f in files:
+        
         try:
             values = find_values(f, patterns)
         except:
@@ -109,7 +110,7 @@ def get_data(daily_invoice_folder):
             if tms:
                 tmses.append(tms)   
 
-    declareCode = pick_value(declare_codes, folder, r"[A-Za-z0-9]+")
+    declareCode = pick_value(filter_invoices(declare_codes), folder, r"[A-Za-z0-9]+")
     typeCode = pick_value(type_codes, folder, r"[A-Za-z0-9]+")
     routeType = pick_value(route_types, folder, r"[A-Za-z0-9]+")
     term = pick_value(terms, folder, r'^\s*[^-]+\s*-\s*([^-]+)\s*-', 1)
@@ -129,9 +130,12 @@ def get_data(daily_invoice_folder):
 
     print("method ", method, method_str)
     if method:
-        method = switch.get(method.strip(), method_str)  # map to AIR/SEA/TRUCK or keep original if not in switch
+        method = switch.get(method.strip(), method_str)
+    else:
+        method = method_str
 
     print(method)
+    print(declareCode, declare_codes)
     return {
         "nvlCode": nvlCode,
         "bill": bill,
@@ -147,6 +151,17 @@ def get_data(daily_invoice_folder):
         "method": method,
         "isDone": isDone
     }
+
+def filter_invoices(invoices):
+    print("invoices", invoices)
+    has_10 = any(inv.startswith("10") for inv in invoices)
+    has_30 = any(inv.startswith("30") for inv in invoices)
+
+    if len(invoices) >= 2 and has_10 and has_30:
+        print("invoices", [inv for inv in invoices if not inv.startswith("30")])
+        return [inv for inv in invoices if not inv.startswith("30")]
+
+    return invoices
 
 def get_form_code(folder_name): 
     parts = [p.strip() for p in folder_name.split("-")]
