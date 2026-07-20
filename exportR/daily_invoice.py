@@ -137,7 +137,7 @@ def get_data(daily_invoice_folder):
     print(method)
     print(declareCode, declare_codes)
     return {
-        "nvlCode": nvlCode,
+        "nvlCode": nvlCode.replace(" ", ""),
         "bill": bill,
         "invoice": invoice,
         "declareCode": declareCode,

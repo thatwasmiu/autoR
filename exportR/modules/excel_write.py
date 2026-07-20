@@ -54,6 +54,11 @@ def write_daily_report(template, grouped):
             if date_val:
                 time_str = date_val.strftime("%I:%M %p")
 
+            route_code = data.get("routeType")
+            route_label = switch.get(route_code, "")
+            if route_code in ("1", "2") and date_val and date_val.time() > time(17, 0):
+                route_label = f"{route_label} OT"
+
             ws.append([
                 i,
                 data.get("month"),
@@ -64,7 +69,7 @@ def write_daily_report(template, grouped):
                 data.get("bill"),
                 "HQ TELECOM",
                 data.get("declareCode"),
-                switch.get(data.get("routeType"), ""),
+                route_label,
                 data.get("typeCode"),
                 data.get("term"),
                 data.get("invoice"),
