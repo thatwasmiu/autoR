@@ -1,9 +1,12 @@
 import os
 import sys
+import logging
 from openpyxl import load_workbook
 from openpyxl.styles import Border, Side
 from openpyxl.styles import Font
 import re
+
+logger = logging.getLogger("exportR." + __name__)
 
 TEMPLATE_FILE = "resources/template_weekly.xlsx"
 OUTPUT_FILE = "output.xlsx"
@@ -62,7 +65,7 @@ def extract_data_from_sheet(sheet, method):
     # Check required columns exist
     missing = [k for k in normalized_mapping if k not in col_map]
     if missing:
-        print(f"⚠️ Missing columns {missing} in sheet {sheet.title}")
+        logger.warning(f"Sheet '{sheet.title}' is missing expected columns: {missing}")
         return []
 
     data = []
@@ -237,7 +240,7 @@ def create_weekly_report(root_folder, from_date, to_date, status_label):
                         cell.value = dt
                         if dt:
                             cell.number_format = "D/M/YYYY"
-                    if k == "method" and value != None and value.upper() == "TRUCK":      
+                    if k == "method" and value != None and value.upper().startswith("TRUCK"):
                         cell.value = ""        
                     else:
                         cell.value = value
@@ -258,7 +261,7 @@ def create_weekly_report(root_folder, from_date, to_date, status_label):
                     cell.value = dt
                     if dt:
                         cell.number_format = "D/M/YYYY"
-                if k == "method" and value != None and value.upper() == "TRUCK":      
+                if k == "method" and value != None and value.upper().startswith("TRUCK"):
                     cell.value = ""
                 else:
                     cell.value = value

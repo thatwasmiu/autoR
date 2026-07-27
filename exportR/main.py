@@ -1,12 +1,10 @@
 import re
 import sys
 import os
-import json
-import urllib.request
 from pathlib import Path
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, ttk
 from tkcalendar import DateEntry
 import threading
 from collections import defaultdict
@@ -14,36 +12,36 @@ from collections import defaultdict
 from modules import write_daily_report
 from daily_invoice import get_data
 from weekly_report import create_weekly_report
+from log_config import setup_logging
+
+logger = setup_logging()
 ignore_folders = {"xml", "__pycache__"}
-from tkinter import ttk
+
+ROUTE_LABELS = {'1': "Xanh", '2': "Vàng", '3': "Đỏ"}
+
+
+def format_route_type(route_code, date_str):
+    label = ROUTE_LABELS.get(route_code, route_code or "")
+    if route_code in ("1", "2") and date_str:
+        try:
+            date_val = datetime.strptime(date_str, "%d/%m/%Y %H:%M:%S")
+            if date_val.time() > time(17, 0):
+                label = f"{label} OT"
+        except (ValueError, TypeError):
+            pass
+    return label
+
+
+def format_date_only(date_str):
+    if not date_str:
+        return ""
+    try:
+        return datetime.strptime(date_str, "%d/%m/%Y %H:%M:%S").strftime("%d/%m/%Y")
+    except (ValueError, TypeError):
+        return date_str
 
 # pyinstaller --clean --onefile --noconsole --name eportR --add-data "resources/daily_template.xlsx;resources" --add-data "resources/logo.ico;resources" --icon=resources/logo.ico main.py
 
-GSHEET_CONFIG_KEYS = ["endpoint", "sheetLink", "editMode"]
-
-GSHEET_DEFAULT_CONFIG = {
-    "endpoint": "https://script.google.com/macros/s/AKfycbzGX6KIBVbCeULyUvtV-jXXyKJ9vrTffzCoQ_CTX_bZVI_3PwU8CO86elPLdT1tQ5vX/exec",
-    "sheetLink": "",
-    "editMode": "highlight",
-}
-
-def _config_path():
-    base = os.path.dirname(sys.executable if getattr(sys, "frozen", False) else os.path.abspath(__file__))
-    return os.path.join(base, "gsheet_config.json")
-
-def load_gsheet_config():
-    try:
-        with open(_config_path(), "r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception:
-        return {}
-
-def save_gsheet_config(data):
-    try:
-        with open(_config_path(), "w", encoding="utf-8") as f:
-            json.dump({k: data[k] for k in GSHEET_CONFIG_KEYS if k in data}, f, indent=2)
-    except Exception as exc:
-        print(f"Could not save config: {exc}")
 def collect_daily_data(root, status_label=None):
     folders = [
         f for f in root.iterdir()
@@ -58,18 +56,30 @@ def collect_daily_data(root, status_label=None):
             if status_label:
                 status_label.config(text=f"Đang xử lý ({i}/{len(folders)}): {folder.name}")
                 status_label.update_idletasks()
-            else:
-                print(f"Processing ({i}/{len(folders)}): {folder.name}")
+            logger.info(f"Processing folder ({i}/{len(folders)}): {folder.name}")
 
             data = get_data(folder)
             method = (data.get("method") or "Khác").strip().lower()
+            if method in ("air", "sea"):
+                method = "air - sea"
             grouped[method].append(data)
+            logger.debug(f"Folder '{folder.name}' -> method={method!r}, nvlCode={data.get('nvlCode')!r}, declareCode={data.get('declareCode')!r}")
 
-        except Exception as e:
-            print(f"❌ Error with folder: {folder}")
-            print(e)
+        except Exception:
+            logger.exception(f"Failed to process folder: {folder.name}")
 
-    return dict(grouped)
+    result = {
+        method: sorted(items, key=nvl_code_number)
+        for method, items in sorted(grouped.items())
+    }
+    logger.info("Grouped folders: " + ", ".join(f"{m} x{len(v)}" for m, v in result.items()))
+    return result
+
+
+def nvl_code_number(data):
+    nvlCode = data.get("nvlCode") or ""
+    match = re.search(r'\d+', nvlCode)
+    return int(match.group()) if match else float('inf')
 
 
 def export_excel(root, grouped, status_label=None):
@@ -85,138 +95,6 @@ def export_excel(root, grouped, status_label=None):
         status_label.config(text=f"✅ Đã lưu: {str(output_file)}")
     os.startfile(output_file)
 
-
-
-def show_gsheet_form(parent, grouped):
-    form = tk.Toplevel(parent)
-    form.title("Cài đặt Google Sheet")
-    form.geometry("520x370")
-    form.resizable(False, False)
-    form.grab_set()
-    form.focus_set()
-
-    cfg = {**GSHEET_DEFAULT_CONFIG, **load_gsheet_config()}
-
-    entries = {}
-    for label_text, key in [
-        ("Endpoint URL:", "endpoint"),
-        ("Link Sheet:", "sheetLink"),
-    ]:
-        row = tk.Frame(form)
-        row.pack(fill="x", padx=20, pady=6)
-        tk.Label(row, text=label_text, width=14, anchor="w").pack(side="left")
-        entry = tk.Entry(row, width=44)
-        entry.insert(0, cfg.get(key, ""))
-        entry.pack(side="left")
-        entries[key] = entry
-
-    mode_row = tk.Frame(form)
-    mode_row.pack(fill="x", padx=20, pady=6)
-    tk.Label(mode_row, text="Chế độ:", width=14, anchor="w").pack(side="left")
-    edit_mode_var = tk.StringVar(value=cfg.get("editMode", "highlight"))
-    ttk.Combobox(mode_row, textvariable=edit_mode_var,
-                 values=["normal", "highlight"], state="readonly", width=18).pack(side="left")
-
-    def reset_defaults():
-        for key, entry in entries.items():
-            entry.delete(0, tk.END)
-            entry.insert(0, GSHEET_DEFAULT_CONFIG.get(key, ""))
-        edit_mode_var.set(GSHEET_DEFAULT_CONFIG["editMode"])
-
-    status_lbl = tk.Label(form, text="", fg="blue")
-    status_lbl.pack(pady=4)
-
-    error_box = tk.Text(form, height=6, width=60, state="disabled", fg="red", relief="flat", bg="#fff8f8")
-    error_box.pack(padx=20, pady=4)
-
-    def show_errors(errors):
-        error_box.config(state="normal")
-        error_box.delete("1.0", tk.END)
-        error_box.insert(tk.END, "\n".join(errors))
-        error_box.config(state="disabled")
-
-    def on_submit():
-        endpoint   = entries["endpoint"].get().strip()
-        sheet_link = entries["sheetLink"].get().strip()
-        edit_mode  = edit_mode_var.get()
-
-        if not endpoint:
-            status_lbl.config(text="Endpoint không được để trống!", fg="red")
-            return
-
-        save_gsheet_config({
-            "endpoint": endpoint,
-            "sheetLink": sheet_link,
-            "editMode": edit_mode,
-        })
-
-        status_lbl.config(text="Đang gửi…", fg="blue")
-        show_errors([])
-        form.update_idletasks()
-
-        route_type_map = {"1": "XANH", "2": "VÀNG", "3": "ĐỎ"}
-
-        def _fmt_date(val):
-            if not val:
-                return val
-            try:
-                return datetime.strptime(val, "%d/%m/%Y %H:%M:%S").strftime("%d/%m/%Y")
-            except (ValueError, TypeError):
-                return val
-
-        def send():
-            data = {
-                method: [
-                    {
-                        **r,
-                        "routeType": route_type_map.get(str(r.get("routeType", "")), r.get("routeType", "")),
-                        "date": _fmt_date(r.get("date")),
-                    }
-                    for r in records
-                    if r.get("declareCode")
-                ]
-                for method, records in grouped.items()
-            }
-            body = {
-                "sheetLink": sheet_link,
-                "editMode": edit_mode,
-                "data": data,
-            }
-            # print(body)
-            try:
-                payload = json.dumps(body).encode("utf-8")
-                print(payload)
-                req = urllib.request.Request(
-                    endpoint, data=payload,
-                    headers={"Content-Type": "application/json"},
-                    method="POST",
-                )
-                with urllib.request.urlopen(req) as resp:
-                    raw = resp.read()
-                    print(raw)
-                    result = json.loads(raw)
-                    if result.get("status") == "ok":
-                        errors = result.get("errors", [])
-                        if errors:
-                            status_lbl.config(
-                                text=f"Hoàn tất với {len(errors)} lỗi:", fg="orange"
-                            )
-                            show_errors(errors)
-                        else:
-                            status_lbl.config(
-                                text=f"✅ Đã gửi {sum(len(v) for v in data.values())} bản ghi thành công!", fg="green"
-                            )
-                    else:
-                        status_lbl.config(text=f"Lỗi: {result.get('message')}", fg="red")
-            except Exception as exc:
-                status_lbl.config(text=f"Gửi thất bại: {exc}", fg="red")
-
-        threading.Thread(target=send, daemon=True).start()
-
-    btn_row = tk.Frame(form)
-    btn_row.pack(pady=6)
-    tk.Button(btn_row, text="Gửi", width=12, command=on_submit).pack(side="left", padx=8)
-    tk.Button(btn_row, text="Mặc định", width=12, command=reset_defaults).pack(side="left", padx=8)
 
 
 def re_index_folder(folders):
@@ -250,7 +128,7 @@ def run_app():
     root = tk.Tk()
     root.iconbitmap(get_resource_path("resources/logo.ico"))
     root.title("Daily Report Tool")
-    root.geometry("900x350")
+    root.geometry("1000x650")
 
     tk.Label(root, text="Selected Folder:").pack(pady=5)
 
@@ -319,24 +197,86 @@ def run_app():
             try:
                 export_excel(_state["root_path"], _state["grouped"], status_label)
             except Exception as e:
-                print(f"❌ Error exporting excel: {e}")
+                logger.exception("Failed to export Excel report")
                 status_label.config(text=f"❌ Lỗi xuất file: {e}", fg="red")
 
         threading.Thread(target=task, daemon=True).start()
 
-    def on_gsheet():
-        show_gsheet_form(root, _state["grouped"])
-
     tk.Button(action_frame, text="Xuất file Excel", width=18, command=on_excel).pack(side="left", padx=8)
-    tk.Button(action_frame, text="Gửi lên GGL Sheet", width=18, command=on_gsheet).pack(side="left", padx=8)
+
+    # Copyable results table — hidden until data is ready
+    table_columns = ["method", "nvlCode", "declareCode", "date", "routeType"]
+    table_headers = {
+        "method": "Loại hàng",
+        "nvlCode": "NVL",
+        "declareCode": "Số TK",
+        "date": "Ngày",
+        "routeType": "Luồng",
+    }
+
+    table_frame = tk.Frame(root)
+
+    tree = ttk.Treeview(table_frame, columns=table_columns, show="headings", height=12)
+    for col in table_columns:
+        tree.heading(col, text=table_headers[col])
+        tree.column(col, width=90, anchor="w")
+
+    vsb = ttk.Scrollbar(table_frame, orient="vertical", command=tree.yview)
+    hsb = ttk.Scrollbar(table_frame, orient="horizontal", command=tree.xview)
+    tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
+
+    tree.grid(row=0, column=0, sticky="nsew")
+    vsb.grid(row=0, column=1, sticky="ns")
+    hsb.grid(row=1, column=0, sticky="ew")
+    table_frame.grid_rowconfigure(0, weight=1)
+    table_frame.grid_columnconfigure(0, weight=1)
+
+    def on_cell_click(event):
+        if tree.identify_region(event.x, event.y) != "cell":
+            return
+        row_id = tree.identify_row(event.y)
+        col_id = tree.identify_column(event.x)
+        if not row_id or not col_id:
+            return
+        tree.selection_set(row_id)
+        tree.focus(row_id)
+
+        col_index = int(col_id.replace("#", "")) - 1
+        if not (0 <= col_index < len(table_columns)):
+            return
+        value = tree.set(row_id, table_columns[col_index])
+        root.clipboard_clear()
+        root.clipboard_append(str(value))
+        status_label.config(text=f"📋 Đã copy: {value}", fg="blue")
+
+    tree.bind("<Button-1>", on_cell_click)
+
+    def populate_table(grouped):
+        tree.delete(*tree.get_children())
+        for method, items in grouped.items():
+            for data in items:
+                if data.get("declareCode") is None:
+                    continue
+                row = [
+                    method.upper(),
+                    data.get("nvlCode", ""),
+                    data.get("declareCode", ""),
+                    format_date_only(data.get("date")),
+                    format_route_type(data.get("routeType"), data.get("date")),
+                ]
+                tree.insert("", "end", values=row)
 
     def show_actions(root_path, grouped):
         _state["root_path"] = root_path
         _state["grouped"] = grouped
         action_frame.pack(pady=6)
+        populate_table(grouped)
+        table_frame.pack(pady=6, padx=10, fill="both", expand=True)
 
     def hide_actions():
         action_frame.pack_forget()
+        table_frame.pack_forget()
+        tree.delete(*tree.get_children())
 
     def start_process():
         folder_path = folder_entry.get()
@@ -355,11 +295,11 @@ def run_app():
                     elif selected_type == "weekly":
                         from_date = from_entry.get()
                         to_date = to_entry.get()
-                        print(from_date, to_date)
+                        logger.debug(f"Weekly report range: {from_date} -> {to_date}")
                         if (validate_date(from_date, to_date, status_label, run_button)):
                             create_weekly_report(Path(folder_path), from_date, to_date, status_label)
                 except Exception as e:
-                    print(f"❌ Error running report: {e}")
+                    logger.exception("Failed to run report")
                     status_label.config(text=f"❌ Lỗi: {e}", fg="red")
                 finally:
                     run_button.config(state="normal")

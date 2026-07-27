@@ -23,25 +23,19 @@ def write_daily_report(template, grouped):
     )
     font_tnr = Font(name="Times New Roman", size=10)
 
-    first = True
-
     for method, items in grouped.items():
 
-        # ✅ Use template sheet for first group, copy for others
-        if first:
-            ws = wb.copy_worksheet(template_ws)
-            ws.title = str(method).upper()
-            first = False
-        else:
-            ws = wb.copy_worksheet(template_ws)
-            ws.title = str(method).upper()
+        valid_items = [data for data in items if data.get("declareCode") is not None]
+        if not valid_items:
+            continue
+
+        ws = wb.copy_worksheet(template_ws)
+        ws.title = str(method).upper()
 
         # optional: clear existing data rows (keep header)
         # ws.delete_rows(2, ws.max_row)
 
-        for i, data in enumerate(items, start=1):
-            if data.get("declareCode") == None:
-                continue
+        for i, data in enumerate(valid_items, start=1):
             date_val = None
             try:
                 date_str = data.get("date")
@@ -61,28 +55,28 @@ def write_daily_report(template, grouped):
 
             ws.append([
                 i,
-                data.get("month"),
+                # data.get("month"),
                 data.get("nvlCode"),
-                "DONE" if data.get("isDone") else "PENDING",
-                data.get("formCode"),
+                # "DONE" if data.get("isDone") else "PENDING",
+                # data.get("formCode"),
                 date_val,
-                data.get("bill"),
-                "HQ TELECOM",
+                # data.get("bill"),
+                # "HQ TELECOM",
                 data.get("declareCode"),
                 route_label,
-                data.get("typeCode"),
-                data.get("term"),
-                data.get("invoice"),
-                data.get("tms"),
-                time_str,
+                # data.get("typeCode"),
+                # data.get("term"),
+                # data.get("invoice"),
+                # data.get("tms"),
+                # time_str,
             ])
 
             row = ws.max_row
 
             if date_val:
-                ws.cell(row=row, column=6).number_format = "D/M/YYYY"
+                ws.cell(row=row, column=3).number_format = "dd/mm/yyyy"
 
-            for col in range(1, 16):
+            for col in range(1, 6):
                 cell = ws.cell(row=row, column=col)
                 cell.border = border
                 cell.font = font_tnr   # ✅ apply Times New Roman

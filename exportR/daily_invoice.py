@@ -1,4 +1,5 @@
 import re
+import logging
 from collections import Counter
 from datetime import datetime
 from modules import (
@@ -7,6 +8,8 @@ from modules import (
     find_excel_files,
     get_codes
 )
+
+logger = logging.getLogger("exportR." + __name__)
 
 switch = {
     '1': "AIR",
@@ -84,8 +87,8 @@ def get_data(daily_invoice_folder):
         
         try:
             values = find_values(f, patterns)
-        except:
-            print(f"Error with file: {f}")
+        except Exception:
+            logger.exception(f"Failed to read values from file: {f}")
             continue
             
         if values["declareCode"]:
@@ -94,8 +97,8 @@ def get_data(daily_invoice_folder):
             type_codes.append(values["typeCode"].strip())
         if values["routeType"]:
             route_types.append(values["routeType"].strip())
-        if values["term"]:
-            terms.append(values["term"].strip())
+        # if values["term"]:
+        #     terms.append(values["term"].strip())
         if values["date"]:
             dates.append(values["date"].strip())
         if values["invoice"]:
@@ -126,16 +129,18 @@ def get_data(daily_invoice_folder):
         try:
             month = datetime.strptime(date, "%d/%m/%Y %H:%M:%S").month
         except (ValueError, TypeError):
-            print("Error date: ", date)
+            logger.warning(f"Could not parse date {date!r} in folder: {folder}")
 
-    print("method ", method, method_str)
+    logger.debug(f"[{folder}] type-code method={method!r}, ship-by method={method_str!r}")
     if method:
         method = switch.get(method.strip(), method_str)
     else:
         method = method_str
 
-    print(method)
-    print(declareCode, declare_codes)
+    if method == "TRUCK" and typeCode:
+        method = method + "-" + typeCode
+
+    logger.debug(f"[{folder}] resolved method={method!r}, declareCode={declareCode!r} (candidates={declare_codes})")
     return {
         "nvlCode": nvlCode.replace(" ", ""),
         "bill": bill,
@@ -153,13 +158,13 @@ def get_data(daily_invoice_folder):
     }
 
 def filter_invoices(invoices):
-    print("invoices", invoices)
     has_10 = any(inv.startswith("10") for inv in invoices)
     has_30 = any(inv.startswith("30") for inv in invoices)
 
     if len(invoices) >= 2 and has_10 and has_30:
-        print("invoices", [inv for inv in invoices if not inv.startswith("30")])
-        return [inv for inv in invoices if not inv.startswith("30")]
+        filtered = [inv for inv in invoices if not inv.startswith("30")]
+        logger.debug(f"Invoice candidates {invoices} -> filtered out 30-prefixed dupes: {filtered}")
+        return filtered
 
     return invoices
 
