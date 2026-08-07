@@ -9,6 +9,7 @@ cmd = [
     "--add-data", "resources/daily_template.xlsx;resources",
     "--add-data", "resources/logo.ico;resources",
     "--add-data", "resources/template_weekly.xlsx;resources",
+    "--add-data", "resources/hs_code.json;resources",
     "--icon=resources/logo.ico",
     "main.py"
 ]

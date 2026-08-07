@@ -36,6 +36,7 @@ def run_hs_check(root_folder, status_label=None):
     files = find_excel_files(str(root_folder), pattern=r"^CARGOES_LIST")
 
     processed = 0
+    failed = 0
     total_highlighted = 0
 
     for f in files:
@@ -48,11 +49,20 @@ def run_hs_check(root_folder, status_label=None):
             processed += 1
             logger.info(f"Checked '{f}': highlighted {highlighted} cell(s)")
         except Exception:
+            failed += 1
             logger.exception(f"Failed to process file: {f}")
 
-    summary = f"✅ Done. Checked {processed} file(s), highlighted {total_highlighted} cell(s)."
-    if status_label:
-        status_label.config(text=summary)
+    if failed:
+        summary = (
+            f"⚠️ Done. Checked {processed} file(s), highlighted {total_highlighted} cell(s), "
+            f"{failed} file(s) lỗi — xem log."
+        )
+        if status_label:
+            status_label.config(text=summary, fg="red")
+    else:
+        summary = f"✅ Done. Checked {processed} file(s), highlighted {total_highlighted} cell(s)."
+        if status_label:
+            status_label.config(text=summary)
     logger.info(summary)
 
 
