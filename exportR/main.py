@@ -205,13 +205,14 @@ def run_app():
     tk.Button(action_frame, text="Xuất file Excel", width=18, command=on_excel).pack(side="left", padx=8)
 
     # Copyable results table — hidden until data is ready
-    table_columns = ["method", "nvlCode", "declareCode", "date", "routeType"]
+    table_columns = ["method", "nvlCode", "declareCode", "date", "routeType", "internalCode"]
     table_headers = {
         "method": "Loại hàng",
         "nvlCode": "NVL",
         "declareCode": "Số TK",
         "date": "Ngày",
         "routeType": "Luồng",
+        "internalCode": "Số QL nội bộ",
     }
 
     table_frame = tk.Frame(root)
@@ -263,6 +264,7 @@ def run_app():
                     data.get("declareCode", ""),
                     format_date_only(data.get("date")),
                     format_route_type(data.get("routeType"), data.get("date")),
+                    data.get("internalCode", ""),
                 ]
                 tree.insert("", "end", values=row)
 
@@ -290,6 +292,7 @@ def run_app():
                 try:
                     if selected_type == "daily":
                         grouped = collect_daily_data(Path(folder_path), status_label)
+                        # print(grouped)
                         status_label.config(text="✅ Đã xử lý xong. Chọn hành động tiếp theo.")
                         root.after(0, lambda: show_actions(Path(folder_path), grouped))
                     elif selected_type == "weekly":
