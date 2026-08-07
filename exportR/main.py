@@ -12,6 +12,7 @@ from collections import defaultdict
 from modules import write_daily_report
 from daily_invoice import get_data
 from weekly_report import create_weekly_report
+from hs_code_check import run_hs_check
 from log_config import setup_logging
 
 logger = setup_logging()
@@ -182,6 +183,9 @@ def run_app():
     tk.Radiobutton(frame, text="Weekly", variable=report_type, value="weekly",
                    command=on_type_change).pack(side="left", padx=10)
 
+    tk.Radiobutton(frame, text="HS Check", variable=report_type, value="hscheck",
+                   command=on_type_change).pack(side="left", padx=10)
+
     status_label = tk.Label(root, text="Status: Idle", fg="blue")
     status_label.pack(pady=10)
 
@@ -301,6 +305,9 @@ def run_app():
                         logger.debug(f"Weekly report range: {from_date} -> {to_date}")
                         if (validate_date(from_date, to_date, status_label, run_button)):
                             create_weekly_report(Path(folder_path), from_date, to_date, status_label)
+                    elif selected_type == "hscheck":
+                        status_label.config(text="🔍 Đang quét file CARGOES_LIST…")
+                        run_hs_check(Path(folder_path), status_label)
                 except Exception as e:
                     logger.exception("Failed to run report")
                     status_label.config(text=f"❌ Lỗi: {e}", fg="red")
