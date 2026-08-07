@@ -10,3 +10,838 @@
 2026-07-23 19:36:38 [INFO] exportR: Processing folder (10/11): 10.NVL - 9397 - E20260403054 - HPVN20260406006-5 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE
 2026-07-23 19:36:42 [INFO] exportR: Processing folder (11/11): 11.NVL - 9391 - E20260403054 - HPVN20260406006-6 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE
 2026-07-23 19:36:45 [INFO] exportR: Grouped folders: truck-e11 x11
+2026-08-04 23:39:46 [INFO] exportR: Processing folder (1/5): 1.NVL-8194 - FLK2604091411 - 2604T040 - 13.4.2026 - GC - 3PK - E11 - TRUCK
+2026-08-04 23:39:47 [INFO] exportR: Processing folder (2/5): 2.NVL-11653 - E20260411041 - ASUSVN20260413009 - 13.4.2026 - GC - 30PK - E11- TRUCK
+2026-08-04 23:39:50 [INFO] exportR: Processing folder (3/5): 3.NVL-11647- E20260418040 - VN20260419009-2 - 20.4.2026 - GC - 12PK - E11 - TRUCK - 3TK CHUNG XE
+2026-08-04 23:39:54 [INFO] exportR: Processing folder (4/5): 4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15
+2026-08-04 23:39:54 [ERROR] exportR.daily_invoice: Failed to read values from file: C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15\BC_5. NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15_194307.xlsx
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 97, in get_data
+    values = find_values(f, patterns)
+  File "D:\daste\autoR\exportR\modules\excel.py", line 6, in find_values
+    wb = load_workbook(filename, data_only=True)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 348, in load_workbook
+    reader.read()
+    ~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 289, in read
+    self.read_manifest()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 134, in read_manifest
+    src = self.archive.read(ARC_CONTENT_TYPES)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1681, in read
+    with self.open(name, "r", pwd) as fp:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1718, in open
+    zinfo = self.getinfo(name)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1646, in getinfo
+    raise KeyError(
+        'There is no item named %r in the archive' % name)
+KeyError: "There is no item named '[Content_Types].xml' in the archive"
+2026-08-04 23:39:55 [INFO] exportR: Processing folder (5/5): 5.NVL-13259-LTP202607230058-I2026072400236-0726RQDN31-RRD-E15
+2026-08-04 23:39:56 [INFO] exportR: Grouped folders: air - sea x1, truck x1, truck-e11 x1, truck-e15 x2
+2026-08-04 23:41:22 [INFO] exportR: Processing folder (1/5): 1.NVL-8194 - FLK2604091411 - 2604T040 - 13.4.2026 - GC - 3PK - E11 - TRUCK
+2026-08-04 23:41:23 [INFO] exportR: Processing folder (2/5): 2.NVL-11653 - E20260411041 - ASUSVN20260413009 - 13.4.2026 - GC - 30PK - E11- TRUCK
+2026-08-04 23:41:26 [INFO] exportR: Processing folder (3/5): 3.NVL-11647- E20260418040 - VN20260419009-2 - 20.4.2026 - GC - 12PK - E11 - TRUCK - 3TK CHUNG XE
+2026-08-04 23:41:30 [INFO] exportR: Processing folder (4/5): 4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15
+2026-08-04 23:41:30 [ERROR] exportR.daily_invoice: Failed to read values from file: C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15\BC_5. NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15_194307.xlsx
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 97, in get_data
+    values = find_values(f, patterns)
+  File "D:\daste\autoR\exportR\modules\excel.py", line 6, in find_values
+    wb = load_workbook(filename, data_only=True)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 348, in load_workbook
+    reader.read()
+    ~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 289, in read
+    self.read_manifest()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 134, in read_manifest
+    src = self.archive.read(ARC_CONTENT_TYPES)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1681, in read
+    with self.open(name, "r", pwd) as fp:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1718, in open
+    zinfo = self.getinfo(name)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1646, in getinfo
+    raise KeyError(
+        'There is no item named %r in the archive' % name)
+KeyError: "There is no item named '[Content_Types].xml' in the archive"
+2026-08-04 23:41:30 [INFO] exportR: Processing folder (5/5): 5.NVL-13259-LTP202607230058-I2026072400236-0726RQDN31-RRD-E15
+2026-08-04 23:41:31 [INFO] exportR: Grouped folders: air - sea x1, truck x1, truck-e11 x1, truck-e15 x2
+2026-08-04 23:42:48 [INFO] exportR: Processing folder (1/5): 1.NVL-8194 - FLK2604091411 - 2604T040 - 13.4.2026 - GC - 3PK - E11 - TRUCK
+2026-08-04 23:42:50 [INFO] exportR: Processing folder (2/5): 2.NVL-11653 - E20260411041 - ASUSVN20260413009 - 13.4.2026 - GC - 30PK - E11- TRUCK
+2026-08-04 23:42:53 [INFO] exportR: Processing folder (3/5): 3.NVL-11647- E20260418040 - VN20260419009-2 - 20.4.2026 - GC - 12PK - E11 - TRUCK - 3TK CHUNG XE
+2026-08-04 23:42:57 [INFO] exportR: Processing folder (4/5): 4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15
+2026-08-04 23:42:57 [ERROR] exportR.daily_invoice: Failed to read values from file: C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15\BC_5. NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15_194307.xlsx
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 97, in get_data
+    values = find_values(f, patterns)
+  File "D:\daste\autoR\exportR\modules\excel.py", line 6, in find_values
+    wb = load_workbook(filename, data_only=True)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 348, in load_workbook
+    reader.read()
+    ~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 289, in read
+    self.read_manifest()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 134, in read_manifest
+    src = self.archive.read(ARC_CONTENT_TYPES)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1681, in read
+    with self.open(name, "r", pwd) as fp:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1718, in open
+    zinfo = self.getinfo(name)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1646, in getinfo
+    raise KeyError(
+        'There is no item named %r in the archive' % name)
+KeyError: "There is no item named '[Content_Types].xml' in the archive"
+2026-08-04 23:42:58 [INFO] exportR: Processing folder (5/5): 5.NVL-13259-LTP202607230058-I2026072400236-0726RQDN31-RRD-E15
+2026-08-04 23:42:59 [INFO] exportR: Grouped folders: air - sea x1, truck x1, truck-e11 x1, truck-e15 x2
+2026-08-04 23:44:50 [INFO] exportR: Processing folder (1/5): 1.NVL-8194 - FLK2604091411 - 2604T040 - 13.4.2026 - GC - 3PK - E11 - TRUCK
+2026-08-04 23:44:51 [INFO] exportR: Processing folder (2/5): 2.NVL-11653 - E20260411041 - ASUSVN20260413009 - 13.4.2026 - GC - 30PK - E11- TRUCK
+2026-08-04 23:44:54 [INFO] exportR: Processing folder (3/5): 3.NVL-11647- E20260418040 - VN20260419009-2 - 20.4.2026 - GC - 12PK - E11 - TRUCK - 3TK CHUNG XE
+2026-08-04 23:44:58 [INFO] exportR: Processing folder (4/5): 4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15
+2026-08-04 23:44:58 [ERROR] exportR.daily_invoice: Failed to read values from file: C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15\BC_5. NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15_194307.xlsx
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 97, in get_data
+    values = find_values(f, patterns)
+  File "D:\daste\autoR\exportR\modules\excel.py", line 6, in find_values
+    wb = load_workbook(filename, data_only=True)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 348, in load_workbook
+    reader.read()
+    ~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 289, in read
+    self.read_manifest()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 134, in read_manifest
+    src = self.archive.read(ARC_CONTENT_TYPES)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1681, in read
+    with self.open(name, "r", pwd) as fp:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1718, in open
+    zinfo = self.getinfo(name)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1646, in getinfo
+    raise KeyError(
+        'There is no item named %r in the archive' % name)
+KeyError: "There is no item named '[Content_Types].xml' in the archive"
+2026-08-04 23:44:59 [INFO] exportR: Processing folder (5/5): 5.NVL-13259-LTP202607230058-I2026072400236-0726RQDN31-RRD-E15
+2026-08-04 23:45:01 [INFO] exportR: Grouped folders: air - sea x1, truck x1, truck-e11 x1, truck-e15 x2
+2026-08-04 23:47:23 [INFO] exportR: Processing folder (1/5): 1.NVL-8194 - FLK2604091411 - 2604T040 - 13.4.2026 - GC - 3PK - E11 - TRUCK
+2026-08-04 23:47:24 [INFO] exportR: Processing folder (2/5): 2.NVL-11653 - E20260411041 - ASUSVN20260413009 - 13.4.2026 - GC - 30PK - E11- TRUCK
+2026-08-04 23:47:27 [INFO] exportR: Processing folder (3/5): 3.NVL-11647- E20260418040 - VN20260419009-2 - 20.4.2026 - GC - 12PK - E11 - TRUCK - 3TK CHUNG XE
+2026-08-04 23:47:32 [INFO] exportR: Processing folder (4/5): 4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15
+2026-08-04 23:47:32 [ERROR] exportR.daily_invoice: Failed to read values from file: C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15\BC_5. NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15_194307.xlsx
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 97, in get_data
+    values = find_values(f, patterns)
+  File "D:\daste\autoR\exportR\modules\excel.py", line 6, in find_values
+    wb = load_workbook(filename, data_only=True)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 348, in load_workbook
+    reader.read()
+    ~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 289, in read
+    self.read_manifest()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 134, in read_manifest
+    src = self.archive.read(ARC_CONTENT_TYPES)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1681, in read
+    with self.open(name, "r", pwd) as fp:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1718, in open
+    zinfo = self.getinfo(name)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1646, in getinfo
+    raise KeyError(
+        'There is no item named %r in the archive' % name)
+KeyError: "There is no item named '[Content_Types].xml' in the archive"
+2026-08-04 23:47:32 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15\ToKhaiQDTQ___308665116230.xlsx
+2026-08-04 23:47:32 [INFO] exportR: Processing folder (5/5): 5.NVL-13259-LTP202607230058-I2026072400236-0726RQDN31-RRD-E15
+2026-08-04 23:47:34 [INFO] exportR: Grouped folders: air - sea x1, truck x1, truck-e11 x1, truck-e15 x2
+2026-08-04 23:55:11 [INFO] exportR: Processing folder (1/5): 1.NVL-8194 - FLK2604091411 - 2604T040 - 13.4.2026 - GC - 3PK - E11 - TRUCK
+2026-08-04 23:55:13 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\1.NVL-8194 - FLK2604091411 - 2604T040 - 13.4.2026 - GC - 3PK - E11 - TRUCK] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\06.05\1.NVL-8194 - FLK2604091411 - 2604T040 - 13.4.2026 - GC - 3PK - E11 - TRUCK\ToKhaiHQ7N_108144189050.xlsx
+2026-08-04 23:55:13 [INFO] exportR: Processing folder (2/5): 2.NVL-11653 - E20260411041 - ASUSVN20260413009 - 13.4.2026 - GC - 30PK - E11- TRUCK
+2026-08-04 23:55:16 [INFO] exportR: Processing folder (3/5): 3.NVL-11647- E20260418040 - VN20260419009-2 - 20.4.2026 - GC - 12PK - E11 - TRUCK - 3TK CHUNG XE
+2026-08-04 23:55:20 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\3.NVL-11647- E20260418040 - VN20260419009-2 - 20.4.2026 - GC - 12PK - E11 - TRUCK - 3TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\06.05\3.NVL-11647- E20260418040 - VN20260419009-2 - 20.4.2026 - GC - 12PK - E11 - TRUCK - 3TK CHUNG XE\ToKhaiHQ7N_QDTQ_108169468520.xlsx
+2026-08-04 23:55:20 [INFO] exportR: Processing folder (4/5): 4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15
+2026-08-04 23:55:20 [ERROR] exportR.daily_invoice: Failed to read values from file: C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15\BC_5. NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15_194307.xlsx
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 97, in get_data
+    values = find_values(f, patterns)
+  File "D:\daste\autoR\exportR\modules\excel.py", line 6, in find_values
+    wb = load_workbook(filename, data_only=True)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 348, in load_workbook
+    reader.read()
+    ~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 289, in read
+    self.read_manifest()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 134, in read_manifest
+    src = self.archive.read(ARC_CONTENT_TYPES)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1681, in read
+    with self.open(name, "r", pwd) as fp:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1718, in open
+    zinfo = self.getinfo(name)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1646, in getinfo
+    raise KeyError(
+        'There is no item named %r in the archive' % name)
+KeyError: "There is no item named '[Content_Types].xml' in the archive"
+2026-08-04 23:55:20 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30866511623' in file: C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15\ToKhaiHQ7N_QDTQ_108366717910.xlsx
+2026-08-04 23:55:20 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15\ToKhaiQDTQ___308665116230.xlsx
+2026-08-04 23:55:20 [INFO] exportR: Processing folder (5/5): 5.NVL-13259-LTP202607230058-I2026072400236-0726RQDN31-RRD-E15
+2026-08-04 23:55:21 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\5.NVL-13259-LTP202607230058-I2026072400236-0726RQDN31-RRD-E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30877158446' in file: C:\Users\min\Documents\06.05\5.NVL-13259-LTP202607230058-I2026072400236-0726RQDN31-RRD-E15\ToKhaiHQ7N_QDTQ_108466112860.xlsx
+2026-08-04 23:55:21 [INFO] exportR: Grouped folders: air - sea x1, truck x1, truck-e11 x1, truck-e15 x2
+2026-08-05 00:02:22 [INFO] exportR: Processing folder (1/5): 1.NVL-8194 - FLK2604091411 - 2604T040 - 13.4.2026 - GC - 3PK - E11 - TRUCK
+2026-08-05 00:02:23 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\1.NVL-8194 - FLK2604091411 - 2604T040 - 13.4.2026 - GC - 3PK - E11 - TRUCK] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\06.05\1.NVL-8194 - FLK2604091411 - 2604T040 - 13.4.2026 - GC - 3PK - E11 - TRUCK\ToKhaiHQ7N_108144189050.xlsx
+2026-08-05 00:02:23 [INFO] exportR: Processing folder (2/5): 2.NVL-11653 - E20260411041 - ASUSVN20260413009 - 13.4.2026 - GC - 30PK - E11- TRUCK
+2026-08-05 00:02:26 [INFO] exportR: Processing folder (3/5): 3.NVL-11647- E20260418040 - VN20260419009-2 - 20.4.2026 - GC - 12PK - E11 - TRUCK - 3TK CHUNG XE
+2026-08-05 00:02:30 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\3.NVL-11647- E20260418040 - VN20260419009-2 - 20.4.2026 - GC - 12PK - E11 - TRUCK - 3TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\06.05\3.NVL-11647- E20260418040 - VN20260419009-2 - 20.4.2026 - GC - 12PK - E11 - TRUCK - 3TK CHUNG XE\ToKhaiHQ7N_QDTQ_108169468520.xlsx
+2026-08-05 00:02:30 [INFO] exportR: Processing folder (4/5): 4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15
+2026-08-05 00:02:30 [ERROR] exportR.daily_invoice: Failed to read values from file: C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15\BC_5. NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15_194307.xlsx
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 97, in get_data
+    values = find_values(f, patterns)
+  File "D:\daste\autoR\exportR\modules\excel.py", line 6, in find_values
+    wb = load_workbook(filename, data_only=True)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 348, in load_workbook
+    reader.read()
+    ~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 289, in read
+    self.read_manifest()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 134, in read_manifest
+    src = self.archive.read(ARC_CONTENT_TYPES)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1681, in read
+    with self.open(name, "r", pwd) as fp:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1718, in open
+    zinfo = self.getinfo(name)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1646, in getinfo
+    raise KeyError(
+        'There is no item named %r in the archive' % name)
+KeyError: "There is no item named '[Content_Types].xml' in the archive"
+2026-08-05 00:02:31 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30866511623' in file: C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15\ToKhaiHQ7N_QDTQ_108366717910.xlsx
+2026-08-05 00:02:31 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15\ToKhaiQDTQ___308665116230.xlsx
+2026-08-05 00:02:31 [INFO] exportR: Processing folder (5/5): 5.NVL-13259-LTP202607230058-I2026072400236-0726RQDN31-RRD-E15
+2026-08-05 00:02:32 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\5.NVL-13259-LTP202607230058-I2026072400236-0726RQDN31-RRD-E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30877158446' in file: C:\Users\min\Documents\06.05\5.NVL-13259-LTP202607230058-I2026072400236-0726RQDN31-RRD-E15\ToKhaiHQ7N_QDTQ_108466112860.xlsx
+2026-08-05 00:02:32 [INFO] exportR: Grouped folders: air - sea x1, truck x1, truck-e11 x1, truck-e15 x2
+2026-08-05 00:05:02 [INFO] exportR: Processing folder (1/5): 1.NVL-8194 - FLK2604091411 - 2604T040 - 13.4.2026 - GC - 3PK - E11 - TRUCK
+2026-08-05 00:05:04 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\1.NVL-8194 - FLK2604091411 - 2604T040 - 13.4.2026 - GC - 3PK - E11 - TRUCK] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\06.05\1.NVL-8194 - FLK2604091411 - 2604T040 - 13.4.2026 - GC - 3PK - E11 - TRUCK\ToKhaiHQ7N_108144189050.xlsx
+2026-08-05 00:05:04 [INFO] exportR: Processing folder (2/5): 2.NVL-11653 - E20260411041 - ASUSVN20260413009 - 13.4.2026 - GC - 30PK - E11- TRUCK
+2026-08-05 00:05:07 [INFO] exportR: Processing folder (3/5): 3.NVL-11647- E20260418040 - VN20260419009-2 - 20.4.2026 - GC - 12PK - E11 - TRUCK - 3TK CHUNG XE
+2026-08-05 00:05:11 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\3.NVL-11647- E20260418040 - VN20260419009-2 - 20.4.2026 - GC - 12PK - E11 - TRUCK - 3TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\06.05\3.NVL-11647- E20260418040 - VN20260419009-2 - 20.4.2026 - GC - 12PK - E11 - TRUCK - 3TK CHUNG XE\ToKhaiHQ7N_QDTQ_108169468520.xlsx
+2026-08-05 00:05:11 [INFO] exportR: Processing folder (4/5): 4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15
+2026-08-05 00:05:11 [ERROR] exportR.daily_invoice: Failed to read values from file: C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15\BC_5. NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15_194307.xlsx
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 97, in get_data
+    values = find_values(f, patterns)
+  File "D:\daste\autoR\exportR\modules\excel.py", line 6, in find_values
+    wb = load_workbook(filename, data_only=True)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 348, in load_workbook
+    reader.read()
+    ~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 289, in read
+    self.read_manifest()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 134, in read_manifest
+    src = self.archive.read(ARC_CONTENT_TYPES)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1681, in read
+    with self.open(name, "r", pwd) as fp:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1718, in open
+    zinfo = self.getinfo(name)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1646, in getinfo
+    raise KeyError(
+        'There is no item named %r in the archive' % name)
+KeyError: "There is no item named '[Content_Types].xml' in the archive"
+2026-08-05 00:05:12 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30866511623' in file: C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15\ToKhaiHQ7N_QDTQ_108366717910.xlsx
+2026-08-05 00:05:12 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15\ToKhaiQDTQ___308665116230.xlsx
+2026-08-05 00:05:12 [INFO] exportR: Processing folder (5/5): 5.NVL-13259-LTP202607230058-I2026072400236-0726RQDN31-RRD-E15
+2026-08-05 00:05:13 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\5.NVL-13259-LTP202607230058-I2026072400236-0726RQDN31-RRD-E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30877158446' in file: C:\Users\min\Documents\06.05\5.NVL-13259-LTP202607230058-I2026072400236-0726RQDN31-RRD-E15\ToKhaiHQ7N_QDTQ_108466112860.xlsx
+2026-08-05 00:05:13 [INFO] exportR: Grouped folders: air - sea x1, truck x1, truck-e11 x1, truck-e15 x2
+2026-08-05 00:10:36 [INFO] exportR: Processing folder (1/5): 1.NVL-8194 - FLK2604091411 - 2604T040 - 13.4.2026 - GC - 3PK - E11 - TRUCK
+2026-08-05 00:10:37 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\1.NVL-8194 - FLK2604091411 - 2604T040 - 13.4.2026 - GC - 3PK - E11 - TRUCK] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\06.05\1.NVL-8194 - FLK2604091411 - 2604T040 - 13.4.2026 - GC - 3PK - E11 - TRUCK\ToKhaiHQ7N_108144189050.xlsx
+2026-08-05 00:10:37 [INFO] exportR: Processing folder (2/5): 2.NVL-11653 - E20260411041 - ASUSVN20260413009 - 13.4.2026 - GC - 30PK - E11- TRUCK
+2026-08-05 00:10:40 [INFO] exportR: Processing folder (3/5): 3.NVL-11647- E20260418040 - VN20260419009-2 - 20.4.2026 - GC - 12PK - E11 - TRUCK - 3TK CHUNG XE
+2026-08-05 00:10:44 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\3.NVL-11647- E20260418040 - VN20260419009-2 - 20.4.2026 - GC - 12PK - E11 - TRUCK - 3TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\06.05\3.NVL-11647- E20260418040 - VN20260419009-2 - 20.4.2026 - GC - 12PK - E11 - TRUCK - 3TK CHUNG XE\ToKhaiHQ7N_QDTQ_108169468520.xlsx
+2026-08-05 00:10:44 [INFO] exportR: Processing folder (4/5): 4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15
+2026-08-05 00:10:44 [ERROR] exportR.daily_invoice: Failed to read values from file: C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15\BC_5. NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15_194307.xlsx
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 97, in get_data
+    values = find_values(f, patterns)
+  File "D:\daste\autoR\exportR\modules\excel.py", line 6, in find_values
+    wb = load_workbook(filename, data_only=True)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 348, in load_workbook
+    reader.read()
+    ~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 289, in read
+    self.read_manifest()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 134, in read_manifest
+    src = self.archive.read(ARC_CONTENT_TYPES)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1681, in read
+    with self.open(name, "r", pwd) as fp:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1718, in open
+    zinfo = self.getinfo(name)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1646, in getinfo
+    raise KeyError(
+        'There is no item named %r in the archive' % name)
+KeyError: "There is no item named '[Content_Types].xml' in the archive"
+2026-08-05 00:10:45 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30866511623' in file: C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15\ToKhaiHQ7N_QDTQ_108366717910.xlsx
+2026-08-05 00:10:45 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15\ToKhaiQDTQ___308665116230.xlsx
+2026-08-05 00:10:45 [INFO] exportR: Processing folder (5/5): 5.NVL-13259-LTP202607230058-I2026072400236-0726RQDN31-RRD-E15
+2026-08-05 00:10:46 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\06.05\5.NVL-13259-LTP202607230058-I2026072400236-0726RQDN31-RRD-E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30877158446' in file: C:\Users\min\Documents\06.05\5.NVL-13259-LTP202607230058-I2026072400236-0726RQDN31-RRD-E15\ToKhaiHQ7N_QDTQ_108466112860.xlsx
+2026-08-05 00:10:46 [INFO] exportR: Grouped folders: air - sea x1, truck x1, truck-e11 x1, truck-e15 x2
+2026-08-07 00:18:40 [INFO] exportR: Processing folder (1/2): 1.04
+2026-08-07 00:18:41 [ERROR] exportR.daily_invoice: Failed to read values from file: C:\Users\min\Documents\week\1.04\BC_06.04_194835.xlsx
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 97, in get_data
+    values = find_values(f, patterns)
+  File "D:\daste\autoR\exportR\modules\excel.py", line 6, in find_values
+    wb = load_workbook(filename, data_only=True)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 348, in load_workbook
+    reader.read()
+    ~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 289, in read
+    self.read_manifest()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 134, in read_manifest
+    src = self.archive.read(ARC_CONTENT_TYPES)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1681, in read
+    with self.open(name, "r", pwd) as fp:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1718, in open
+    zinfo = self.getinfo(name)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1646, in getinfo
+    raise KeyError(
+        'There is no item named %r in the archive' % name)
+KeyError: "There is no item named '[Content_Types].xml' in the archive"
+2026-08-07 00:18:42 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\1.NVL - 9365 - E20260403058-osso-1234  - LENOVOVN20260406003 - 6.4.2026 - GC - 2PK - E11- TRUCK\ToKhaiHQ7N_QDTQ_108123085930.xlsx
+2026-08-07 00:18:49 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\10.NVL - 9397 - E20260403054 - HPVN20260406006-5 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\ToKhaiHQ7N_QDTQ_108124682040.xlsx
+2026-08-07 00:18:55 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\11.NVL - 9391 - E20260403054 - HPVN20260406006-6 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\ToKhaiHQ7N_QDTQ_108124683000.xlsx
+2026-08-07 00:18:56 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\2.NVL - 9367 - HQHJ2026040301 - 6.4.2026 - GC - 3PK - E11- TRUCK\ToKhaiHQ7N_QDTQ_108123132130.xlsx
+2026-08-07 00:18:58 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\3.NVL - 9371 - YHYAF20260404BS-02-BSC260404APHQ2 - 20PK - E11- TRUCK\ToKhaiHQ7N_QDTQ_108123247520.xlsx
+2026-08-07 00:18:59 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\4.NVL - 9372 - YHYAF20260404BS-01 - BSC260404APHQ1 - 6.4.2026 - GC - 22PK - E11- TRUCK\ToKhaiHQ7N_QDTQ_108123274930.xlsx
+2026-08-07 00:19:01 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\5.NVL-9373-FLK2604021250-MD20260402001-06.04.2026-GC\ToKhaiHQ7N_QDTQ_108123294900.xlsx
+2026-08-07 00:19:10 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\6.NVL - 9386 - E20260403054 - HPVN20260406006-1 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\ToKhaiHQ7N_QDTQ_108124673750.xlsx
+2026-08-07 00:19:17 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\7.NVL - 9387 - E20260403054-HPVN20260406006-2-6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\ToKhaiHQ7N_108124674450.xlsx
+2026-08-07 00:19:21 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\7.NVL - 9387 - E20260403054-HPVN20260406006-2-6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\ToKhaiHQ7N_QDTQ_108124674450.xlsx
+2026-08-07 00:19:28 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\8.NVL - 9388 - E20260403054 - HPVN20260406006-3 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\ToKhaiHQ7N_108124675040.xlsx
+2026-08-07 00:19:32 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\8.NVL - 9388 - E20260403054 - HPVN20260406006-3 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\ToKhaiHQ7N_QDTQ_108124675040.xlsx
+2026-08-07 00:19:40 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\9.NVL - 9389 - E20260403054 - HPVN20260406006-4 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\ToKhaiHQ7N_108124681010.xlsx
+2026-08-07 00:19:43 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\9.NVL - 9389 - E20260403054 - HPVN20260406006-4 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\ToKhaiHQ7N_QDTQ_108124681010.xlsx
+2026-08-07 00:19:44 [ERROR] exportR: Failed to process folder: 1.04
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\main.py", line 61, in collect_daily_data
+    data = get_data(folder)
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 159, in get_data
+    "nvlCode": nvlCode.replace(" ", ""),
+               ^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'replace'
+2026-08-07 00:19:44 [INFO] exportR: Processing folder (2/2): 2.8
+2026-08-07 00:19:49 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE\ToKhaiHQ7N_QDTQ_108503854060.xlsx
+2026-08-07 00:19:51 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE\ToKhaiHQ7N_QDTQ_108503859920.xlsx
+2026-08-07 00:19:52 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881970670' in file: C:\Users\min\Documents\week\2.8\3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15\ToKhaiHQ7N_QDTQ_108505517960.xlsx
+2026-08-07 00:19:52 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108310879460\ToKhaiHQ7N_QDTQ_108310879460.xlsx
+2026-08-07 00:19:53 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108348611010\ToKhaiHQ7N_QDTQ_108348611010.xlsx
+2026-08-07 00:19:53 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108419018410\ToKhaiHQ7N_QDTQ_108419018410.xlsx
+2026-08-07 00:19:53 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108472374250\ToKhaiHQ7N_QDTQ_108472374250.xlsx
+2026-08-07 00:19:54 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882107214' in file: C:\Users\min\Documents\week\2.8\5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15\ToKhaiHQ7N_QDTQ_108505678520.xlsx
+2026-08-07 00:19:55 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881426534' in file: C:\Users\min\Documents\week\2.8\6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15\ToKhaiHQ7N_QDTQ_108506967810.xlsx
+2026-08-07 00:19:57 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882005773' in file: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15\ToKhaiHQ7N_QDTQ_108506787320.xlsx
+2026-08-07 00:19:58 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15\ToKhaiHQ7X_QDTQ_308820057730.xlsx
+2026-08-07 00:19:58 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881996776' in file: C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15\ToKhaiHQ7N_108505672330.xlsx
+2026-08-07 00:19:59 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15\ToKhaiQDTQ___308819967760.xlsx
+2026-08-07 00:20:03 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882370101' in file: C:\Users\min\Documents\week\2.8\9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP\ToKhaiHQ7N_QDTQ_108507029960.xlsx
+2026-08-07 00:20:03 [WARNING] exportR.daily_invoice: Could not parse date '06/08/2026 09:00:12;06/08/2026 09:03:19;06/08/2026 10:54:28;05/06/2026 09:16:56;17/06/2026 11:32:28;09/07/2026 13:37:58;27/07/2026 15:56:21;06/08/2026 11:21:17;06/08/2026 15:20:36;06/08/2026 14:53:15;06/08/2026 10:27:01;06/08/2026 11:38:28;06/08/2026 15:23:21' in folder: C:\Users\min\Documents\week\2.8
+2026-08-07 00:20:03 [ERROR] exportR: Failed to process folder: 2.8
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\main.py", line 61, in collect_daily_data
+    data = get_data(folder)
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 159, in get_data
+    "nvlCode": nvlCode.replace(" ", ""),
+               ^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'replace'
+2026-08-07 00:20:03 [INFO] exportR: Grouped folders: 
+2026-08-07 00:20:15 [ERROR] exportR: Failed to export Excel report
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\main.py", line 198, in task
+    export_excel(_state["root_path"], _state["grouped"], status_label)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\daste\autoR\exportR\main.py", line 93, in export_excel
+    wb.save(output_file)
+    ~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\workbook\workbook.py", line 386, in save
+    save_workbook(self, filename)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\writer\excel.py", line 294, in save_workbook
+    writer.save()
+    ~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\writer\excel.py", line 275, in save
+    self.write_data()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\writer\excel.py", line 89, in write_data
+    archive.writestr(ARC_WORKBOOK, writer.write())
+                                   ~~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\workbook\_writer.py", line 150, in write
+    self.write_views()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\workbook\_writer.py", line 137, in write_views
+    active = get_active_sheet(self.wb)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\workbook\_writer.py", line 35, in get_active_sheet
+    raise IndexError("At least one sheet must be visible")
+IndexError: At least one sheet must be visible
+2026-08-07 00:20:34 [INFO] exportR: Processing folder (1/10): 1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE
+2026-08-07 00:20:40 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE\ToKhaiHQ7N_QDTQ_108503854060.xlsx
+2026-08-07 00:20:41 [INFO] exportR: Processing folder (2/10): 2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE
+2026-08-07 00:20:43 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE\ToKhaiHQ7N_QDTQ_108503859920.xlsx
+2026-08-07 00:20:43 [INFO] exportR: Processing folder (3/10): 3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15
+2026-08-07 00:20:44 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881970670' in file: C:\Users\min\Documents\week\2.8\3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15\ToKhaiHQ7N_QDTQ_108505517960.xlsx
+2026-08-07 00:20:44 [INFO] exportR: Processing folder (4/10): 4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15
+2026-08-07 00:20:44 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108310879460\ToKhaiHQ7N_QDTQ_108310879460.xlsx
+2026-08-07 00:20:45 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108348611010\ToKhaiHQ7N_QDTQ_108348611010.xlsx
+2026-08-07 00:20:45 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108419018410\ToKhaiHQ7N_QDTQ_108419018410.xlsx
+2026-08-07 00:20:45 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108472374250\ToKhaiHQ7N_QDTQ_108472374250.xlsx
+2026-08-07 00:20:45 [ERROR] exportR: Failed to process folder: 4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\main.py", line 61, in collect_daily_data
+    data = get_data(folder)
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 140, in get_data
+    nvlCode, bill = get_codes(daily_invoice_folder.name, invoice)
+                    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\daste\autoR\exportR\modules\folder.py", line 16, in get_codes
+    pattern = rf"-\s*{re.escape(invoice)}"
+                      ~~~~~~~~~^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\re\__init__.py", line 312, in escape
+    pattern = str(pattern, 'latin1')
+TypeError: decoding to str: need a bytes-like object, NoneType found
+2026-08-07 00:20:45 [INFO] exportR: Processing folder (5/10): 5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15
+2026-08-07 00:20:46 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882107214' in file: C:\Users\min\Documents\week\2.8\5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15\ToKhaiHQ7N_QDTQ_108505678520.xlsx
+2026-08-07 00:20:46 [INFO] exportR: Processing folder (6/10): 6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15
+2026-08-07 00:20:47 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881426534' in file: C:\Users\min\Documents\week\2.8\6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15\ToKhaiHQ7N_QDTQ_108506967810.xlsx
+2026-08-07 00:20:47 [INFO] exportR: Processing folder (7/10): 7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15
+2026-08-07 00:20:48 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882005773' in file: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15\ToKhaiHQ7N_QDTQ_108506787320.xlsx
+2026-08-07 00:20:49 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15\ToKhaiHQ7X_QDTQ_308820057730.xlsx
+2026-08-07 00:20:49 [WARNING] exportR.daily_invoice: Could not parse date '06/08/2026 14:53:15;06/08/2026 10:27:01' in folder: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15
+2026-08-07 00:20:49 [INFO] exportR: Processing folder (8/10): 8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15
+2026-08-07 00:20:49 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881996776' in file: C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15\ToKhaiHQ7N_108505672330.xlsx
+2026-08-07 00:20:50 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15\ToKhaiQDTQ___308819967760.xlsx
+2026-08-07 00:20:50 [INFO] exportR: Processing folder (9/10): 9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP
+2026-08-07 00:20:54 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882370101' in file: C:\Users\min\Documents\week\2.8\9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP\ToKhaiHQ7N_QDTQ_108507029960.xlsx
+2026-08-07 00:20:54 [INFO] exportR: Processing folder (10/10): 10.New folder
+2026-08-07 00:20:54 [ERROR] exportR: Failed to process folder: 10.New folder
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\main.py", line 61, in collect_daily_data
+    data = get_data(folder)
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 140, in get_data
+    nvlCode, bill = get_codes(daily_invoice_folder.name, invoice)
+                    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\daste\autoR\exportR\modules\folder.py", line 16, in get_codes
+    pattern = rf"-\s*{re.escape(invoice)}"
+                      ~~~~~~~~~^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\re\__init__.py", line 312, in escape
+    pattern = str(pattern, 'latin1')
+TypeError: decoding to str: need a bytes-like object, NoneType found
+2026-08-07 00:20:54 [INFO] exportR: Grouped folders: truck-e11 x2, truck-e15 x6
+2026-08-07 00:30:11 [INFO] exportR: Processing folder (1/10): 1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE
+2026-08-07 00:30:18 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE\ToKhaiHQ7N_QDTQ_108503854060.xlsx
+2026-08-07 00:30:18 [INFO] exportR: Processing folder (2/10): 2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE
+2026-08-07 00:30:19 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE\ToKhaiHQ7N_QDTQ_108503859920.xlsx
+2026-08-07 00:30:19 [INFO] exportR: Processing folder (3/10): 3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15
+2026-08-07 00:30:20 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881970670' in file: C:\Users\min\Documents\week\2.8\3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15\ToKhaiHQ7N_QDTQ_108505517960.xlsx
+2026-08-07 00:30:20 [INFO] exportR: Processing folder (4/10): 4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15
+2026-08-07 00:30:20 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108310879460\ToKhaiHQ7N_QDTQ_108310879460.xlsx
+2026-08-07 00:30:21 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108348611010\ToKhaiHQ7N_QDTQ_108348611010.xlsx
+2026-08-07 00:30:21 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108419018410\ToKhaiHQ7N_QDTQ_108419018410.xlsx
+2026-08-07 00:30:21 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108472374250\ToKhaiHQ7N_QDTQ_108472374250.xlsx
+2026-08-07 00:30:21 [ERROR] exportR: Failed to process folder: 4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\main.py", line 61, in collect_daily_data
+    data = get_data(folder)
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 141, in get_data
+    nvlCode, bill = get_codes(daily_invoice_folder.name, invoice)
+                    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\daste\autoR\exportR\modules\folder.py", line 16, in get_codes
+    pattern = rf"-\s*{re.escape(invoice)}"
+                      ~~~~~~~~~^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\re\__init__.py", line 312, in escape
+    pattern = str(pattern, 'latin1')
+TypeError: decoding to str: need a bytes-like object, NoneType found
+2026-08-07 00:30:21 [INFO] exportR: Processing folder (5/10): 5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15
+2026-08-07 00:30:22 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882107214' in file: C:\Users\min\Documents\week\2.8\5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15\ToKhaiHQ7N_QDTQ_108505678520.xlsx
+2026-08-07 00:30:22 [INFO] exportR: Processing folder (6/10): 6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15
+2026-08-07 00:30:23 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881426534' in file: C:\Users\min\Documents\week\2.8\6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15\ToKhaiHQ7N_QDTQ_108506967810.xlsx
+2026-08-07 00:30:23 [INFO] exportR: Processing folder (7/10): 7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15
+2026-08-07 00:30:24 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882005773' in file: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15\ToKhaiHQ7N_QDTQ_108506787320.xlsx
+2026-08-07 00:30:25 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15\ToKhaiHQ7X_QDTQ_308820057730.xlsx
+2026-08-07 00:30:25 [WARNING] exportR.daily_invoice: Could not parse date '06/08/2026 14:53:15;06/08/2026 10:27:01' in folder: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15
+2026-08-07 00:30:25 [INFO] exportR: Processing folder (8/10): 8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15
+2026-08-07 00:30:25 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881996776' in file: C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15\ToKhaiHQ7N_108505672330.xlsx
+2026-08-07 00:30:26 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15\ToKhaiQDTQ___308819967760.xlsx
+2026-08-07 00:30:26 [INFO] exportR: Processing folder (9/10): 9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP
+2026-08-07 00:30:30 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882370101' in file: C:\Users\min\Documents\week\2.8\9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP\ToKhaiHQ7N_QDTQ_108507029960.xlsx
+2026-08-07 00:30:30 [INFO] exportR: Processing folder (10/10): 10.New folder
+2026-08-07 00:30:30 [ERROR] exportR: Failed to process folder: 10.New folder
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\main.py", line 61, in collect_daily_data
+    data = get_data(folder)
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 141, in get_data
+    nvlCode, bill = get_codes(daily_invoice_folder.name, invoice)
+                    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\daste\autoR\exportR\modules\folder.py", line 16, in get_codes
+    pattern = rf"-\s*{re.escape(invoice)}"
+                      ~~~~~~~~~^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\re\__init__.py", line 312, in escape
+    pattern = str(pattern, 'latin1')
+TypeError: decoding to str: need a bytes-like object, NoneType found
+2026-08-07 00:30:30 [INFO] exportR: Grouped folders: truck-e11 x2, truck-e15 x6
+2026-08-07 00:30:58 [ERROR] exportR: Failed to export Excel report
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\main.py", line 198, in task
+    export_excel(_state["root_path"], _state["grouped"], status_label)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\daste\autoR\exportR\main.py", line 93, in export_excel
+    wb.save(output_file)
+    ~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\workbook\workbook.py", line 386, in save
+    save_workbook(self, filename)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\writer\excel.py", line 294, in save_workbook
+    writer.save()
+    ~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\writer\excel.py", line 275, in save
+    self.write_data()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\writer\excel.py", line 89, in write_data
+    archive.writestr(ARC_WORKBOOK, writer.write())
+                                   ~~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\workbook\_writer.py", line 150, in write
+    self.write_views()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\workbook\_writer.py", line 137, in write_views
+    active = get_active_sheet(self.wb)
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\workbook\_writer.py", line 35, in get_active_sheet
+    raise IndexError("At least one sheet must be visible")
+IndexError: At least one sheet must be visible
+2026-08-07 00:31:58 [INFO] exportR: Processing folder (1/10): 1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE
+2026-08-07 00:32:05 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE\ToKhaiHQ7N_QDTQ_108503854060.xlsx
+2026-08-07 00:32:05 [INFO] exportR: Processing folder (2/10): 2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE
+2026-08-07 00:32:08 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE\ToKhaiHQ7N_QDTQ_108503859920.xlsx
+2026-08-07 00:32:08 [INFO] exportR: Processing folder (3/10): 3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15
+2026-08-07 00:32:08 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881970670' in file: C:\Users\min\Documents\week\2.8\3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15\ToKhaiHQ7N_QDTQ_108505517960.xlsx
+2026-08-07 00:32:08 [INFO] exportR: Processing folder (4/10): 4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15
+2026-08-07 00:32:09 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108310879460\ToKhaiHQ7N_QDTQ_108310879460.xlsx
+2026-08-07 00:32:09 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108348611010\ToKhaiHQ7N_QDTQ_108348611010.xlsx
+2026-08-07 00:32:09 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108419018410\ToKhaiHQ7N_QDTQ_108419018410.xlsx
+2026-08-07 00:32:10 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108472374250\ToKhaiHQ7N_QDTQ_108472374250.xlsx
+2026-08-07 00:32:10 [ERROR] exportR: Failed to process folder: 4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\main.py", line 61, in collect_daily_data
+    data = get_data(folder)
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 141, in get_data
+    nvlCode, bill = get_codes(daily_invoice_folder.name, invoice)
+                    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\daste\autoR\exportR\modules\folder.py", line 16, in get_codes
+    pattern = rf"-\s*{re.escape(invoice)}"
+                      ~~~~~~~~~^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\re\__init__.py", line 312, in escape
+    pattern = str(pattern, 'latin1')
+TypeError: decoding to str: need a bytes-like object, NoneType found
+2026-08-07 00:32:10 [INFO] exportR: Processing folder (5/10): 5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15
+2026-08-07 00:32:10 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882107214' in file: C:\Users\min\Documents\week\2.8\5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15\ToKhaiHQ7N_QDTQ_108505678520.xlsx
+2026-08-07 00:32:10 [INFO] exportR: Processing folder (6/10): 6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15
+2026-08-07 00:32:11 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881426534' in file: C:\Users\min\Documents\week\2.8\6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15\ToKhaiHQ7N_QDTQ_108506967810.xlsx
+2026-08-07 00:32:11 [INFO] exportR: Processing folder (7/10): 7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15
+2026-08-07 00:32:13 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882005773' in file: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15\ToKhaiHQ7N_QDTQ_108506787320.xlsx
+2026-08-07 00:32:13 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15\ToKhaiHQ7X_QDTQ_308820057730.xlsx
+2026-08-07 00:32:13 [WARNING] exportR.daily_invoice: Could not parse date '06/08/2026 14:53:15;06/08/2026 10:27:01' in folder: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15
+2026-08-07 00:32:13 [INFO] exportR: Processing folder (8/10): 8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15
+2026-08-07 00:32:14 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881996776' in file: C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15\ToKhaiHQ7N_108505672330.xlsx
+2026-08-07 00:32:14 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15\ToKhaiQDTQ___308819967760.xlsx
+2026-08-07 00:32:15 [INFO] exportR: Processing folder (9/10): 9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP
+2026-08-07 00:32:18 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882370101' in file: C:\Users\min\Documents\week\2.8\9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP\ToKhaiHQ7N_QDTQ_108507029960.xlsx
+2026-08-07 00:32:18 [INFO] exportR: Processing folder (10/10): 10.New folder
+2026-08-07 00:32:18 [ERROR] exportR: Failed to process folder: 10.New folder
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\main.py", line 61, in collect_daily_data
+    data = get_data(folder)
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 141, in get_data
+    nvlCode, bill = get_codes(daily_invoice_folder.name, invoice)
+                    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\daste\autoR\exportR\modules\folder.py", line 16, in get_codes
+    pattern = rf"-\s*{re.escape(invoice)}"
+                      ~~~~~~~~~^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\re\__init__.py", line 312, in escape
+    pattern = str(pattern, 'latin1')
+TypeError: decoding to str: need a bytes-like object, NoneType found
+2026-08-07 00:32:18 [INFO] exportR: Grouped folders: truck-e11 x2, truck-e15 x6
+2026-08-07 00:36:46 [INFO] exportR: Processing folder (1/10): 1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE
+2026-08-07 00:36:53 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE\ToKhaiHQ7N_QDTQ_108503854060.xlsx
+2026-08-07 00:36:54 [INFO] exportR: Processing folder (2/10): 2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE
+2026-08-07 00:36:56 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE\ToKhaiHQ7N_QDTQ_108503859920.xlsx
+2026-08-07 00:36:56 [INFO] exportR: Processing folder (3/10): 3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15
+2026-08-07 00:36:56 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881970670' in file: C:\Users\min\Documents\week\2.8\3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15\ToKhaiHQ7N_QDTQ_108505517960.xlsx
+2026-08-07 00:36:56 [INFO] exportR: Processing folder (4/10): 4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15
+2026-08-07 00:36:57 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108310879460\ToKhaiHQ7N_QDTQ_108310879460.xlsx
+2026-08-07 00:36:57 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108348611010\ToKhaiHQ7N_QDTQ_108348611010.xlsx
+2026-08-07 00:36:57 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108419018410\ToKhaiHQ7N_QDTQ_108419018410.xlsx
+2026-08-07 00:36:58 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108472374250\ToKhaiHQ7N_QDTQ_108472374250.xlsx
+2026-08-07 00:36:58 [ERROR] exportR: Failed to process folder: 4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\main.py", line 61, in collect_daily_data
+    data = get_data(folder)
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 141, in get_data
+    nvlCode, bill = get_codes(daily_invoice_folder.name, invoice)
+                    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\daste\autoR\exportR\modules\folder.py", line 16, in get_codes
+    pattern = rf"-\s*{re.escape(invoice)}"
+                      ~~~~~~~~~^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\re\__init__.py", line 312, in escape
+    pattern = str(pattern, 'latin1')
+TypeError: decoding to str: need a bytes-like object, NoneType found
+2026-08-07 00:36:58 [INFO] exportR: Processing folder (5/10): 5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15
+2026-08-07 00:36:59 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882107214' in file: C:\Users\min\Documents\week\2.8\5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15\ToKhaiHQ7N_QDTQ_108505678520.xlsx
+2026-08-07 00:36:59 [INFO] exportR: Processing folder (6/10): 6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15
+2026-08-07 00:37:00 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881426534' in file: C:\Users\min\Documents\week\2.8\6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15\ToKhaiHQ7N_QDTQ_108506967810.xlsx
+2026-08-07 00:37:00 [INFO] exportR: Processing folder (7/10): 7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15
+2026-08-07 00:37:01 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882005773' in file: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15\ToKhaiHQ7N_QDTQ_108506787320.xlsx
+2026-08-07 00:37:02 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15\ToKhaiHQ7X_QDTQ_308820057730.xlsx
+2026-08-07 00:37:02 [WARNING] exportR.daily_invoice: Could not parse date '06/08/2026 14:53:15;06/08/2026 10:27:01' in folder: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15
+2026-08-07 00:37:02 [INFO] exportR: Processing folder (8/10): 8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15
+2026-08-07 00:37:02 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881996776' in file: C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15\ToKhaiHQ7N_108505672330.xlsx
+2026-08-07 00:37:03 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15\ToKhaiQDTQ___308819967760.xlsx
+2026-08-07 00:37:03 [INFO] exportR: Processing folder (9/10): 9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP
+2026-08-07 00:37:07 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882370101' in file: C:\Users\min\Documents\week\2.8\9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP\ToKhaiHQ7N_QDTQ_108507029960.xlsx
+2026-08-07 00:37:07 [INFO] exportR: Processing folder (10/10): 10.New folder
+2026-08-07 00:37:07 [ERROR] exportR: Failed to process folder: 10.New folder
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\main.py", line 61, in collect_daily_data
+    data = get_data(folder)
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 141, in get_data
+    nvlCode, bill = get_codes(daily_invoice_folder.name, invoice)
+                    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\daste\autoR\exportR\modules\folder.py", line 16, in get_codes
+    pattern = rf"-\s*{re.escape(invoice)}"
+                      ~~~~~~~~~^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\re\__init__.py", line 312, in escape
+    pattern = str(pattern, 'latin1')
+TypeError: decoding to str: need a bytes-like object, NoneType found
+2026-08-07 00:37:07 [INFO] exportR: Grouped folders: truck-e11 x2, truck-e15 x6
+2026-08-07 00:37:38 [INFO] exportR: Processing folder (1/9): 1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE
+2026-08-07 00:37:46 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE\ToKhaiHQ7N_QDTQ_108503854060.xlsx
+2026-08-07 00:37:46 [INFO] exportR: Processing folder (2/9): 2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE
+2026-08-07 00:37:48 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE\ToKhaiHQ7N_QDTQ_108503859920.xlsx
+2026-08-07 00:37:48 [INFO] exportR: Processing folder (3/9): 3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15
+2026-08-07 00:37:49 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881970670' in file: C:\Users\min\Documents\week\2.8\3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15\ToKhaiHQ7N_QDTQ_108505517960.xlsx
+2026-08-07 00:37:49 [INFO] exportR: Processing folder (4/9): 4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15
+2026-08-07 00:37:49 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108310879460\ToKhaiHQ7N_QDTQ_108310879460.xlsx
+2026-08-07 00:37:50 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108348611010\ToKhaiHQ7N_QDTQ_108348611010.xlsx
+2026-08-07 00:37:50 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108419018410\ToKhaiHQ7N_QDTQ_108419018410.xlsx
+2026-08-07 00:37:50 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108472374250\ToKhaiHQ7N_QDTQ_108472374250.xlsx
+2026-08-07 00:37:50 [ERROR] exportR: Failed to process folder: 4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\main.py", line 61, in collect_daily_data
+    data = get_data(folder)
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 141, in get_data
+    nvlCode, bill = get_codes(daily_invoice_folder.name, invoice)
+                    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\daste\autoR\exportR\modules\folder.py", line 16, in get_codes
+    pattern = rf"-\s*{re.escape(invoice)}"
+                      ~~~~~~~~~^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\re\__init__.py", line 312, in escape
+    pattern = str(pattern, 'latin1')
+TypeError: decoding to str: need a bytes-like object, NoneType found
+2026-08-07 00:37:50 [INFO] exportR: Processing folder (5/9): 5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15
+2026-08-07 00:37:51 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882107214' in file: C:\Users\min\Documents\week\2.8\5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15\ToKhaiHQ7N_QDTQ_108505678520.xlsx
+2026-08-07 00:37:51 [INFO] exportR: Processing folder (6/9): 6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15
+2026-08-07 00:37:52 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881426534' in file: C:\Users\min\Documents\week\2.8\6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15\ToKhaiHQ7N_QDTQ_108506967810.xlsx
+2026-08-07 00:37:52 [INFO] exportR: Processing folder (7/9): 7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15
+2026-08-07 00:37:53 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882005773' in file: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15\ToKhaiHQ7N_QDTQ_108506787320.xlsx
+2026-08-07 00:37:54 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15\ToKhaiHQ7X_QDTQ_308820057730.xlsx
+2026-08-07 00:37:54 [WARNING] exportR.daily_invoice: Could not parse date '06/08/2026 14:53:15;06/08/2026 10:27:01' in folder: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15
+2026-08-07 00:37:54 [INFO] exportR: Processing folder (8/9): 8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15
+2026-08-07 00:37:54 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881996776' in file: C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15\ToKhaiHQ7N_108505672330.xlsx
+2026-08-07 00:37:55 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15\ToKhaiQDTQ___308819967760.xlsx
+2026-08-07 00:37:55 [INFO] exportR: Processing folder (9/9): 9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP
+2026-08-07 00:37:59 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882370101' in file: C:\Users\min\Documents\week\2.8\9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP\ToKhaiHQ7N_QDTQ_108507029960.xlsx
+2026-08-07 00:37:59 [INFO] exportR: Grouped folders: truck-e11 x2, truck-e15 x6
+2026-08-07 00:40:01 [INFO] exportR: Processing folder (1/9): 1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE
+2026-08-07 00:40:07 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE\ToKhaiHQ7N_QDTQ_108503854060.xlsx
+2026-08-07 00:40:08 [INFO] exportR: Processing folder (2/9): 2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE
+2026-08-07 00:40:09 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE\ToKhaiHQ7N_QDTQ_108503859920.xlsx
+2026-08-07 00:40:09 [INFO] exportR: Processing folder (3/9): 3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15
+2026-08-07 00:40:10 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881970670' in file: C:\Users\min\Documents\week\2.8\3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15\ToKhaiHQ7N_QDTQ_108505517960.xlsx
+2026-08-07 00:40:10 [INFO] exportR: Processing folder (4/9): 4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15
+2026-08-07 00:40:11 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108310879460\ToKhaiHQ7N_QDTQ_108310879460.xlsx
+2026-08-07 00:40:11 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108348611010\ToKhaiHQ7N_QDTQ_108348611010.xlsx
+2026-08-07 00:40:11 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108419018410\ToKhaiHQ7N_QDTQ_108419018410.xlsx
+2026-08-07 00:40:11 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108472374250\ToKhaiHQ7N_QDTQ_108472374250.xlsx
+2026-08-07 00:40:11 [ERROR] exportR: Failed to process folder: 4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\main.py", line 61, in collect_daily_data
+    data = get_data(folder)
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 141, in get_data
+    nvlCode, bill = get_codes(daily_invoice_folder.name, invoice)
+                    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\daste\autoR\exportR\modules\folder.py", line 16, in get_codes
+    pattern = rf"-\s*{re.escape(invoice)}"
+                      ~~~~~~~~~^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\re\__init__.py", line 312, in escape
+    pattern = str(pattern, 'latin1')
+TypeError: decoding to str: need a bytes-like object, NoneType found
+2026-08-07 00:40:11 [INFO] exportR: Processing folder (5/9): 5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15
+2026-08-07 00:40:12 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882107214' in file: C:\Users\min\Documents\week\2.8\5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15\ToKhaiHQ7N_QDTQ_108505678520.xlsx
+2026-08-07 00:40:12 [INFO] exportR: Processing folder (6/9): 6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15
+2026-08-07 00:40:13 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881426534' in file: C:\Users\min\Documents\week\2.8\6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15\ToKhaiHQ7N_QDTQ_108506967810.xlsx
+2026-08-07 00:40:13 [INFO] exportR: Processing folder (7/9): 7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15
+2026-08-07 00:40:15 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882005773' in file: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15\ToKhaiHQ7N_QDTQ_108506787320.xlsx
+2026-08-07 00:40:15 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15\ToKhaiHQ7X_QDTQ_308820057730.xlsx
+2026-08-07 00:40:15 [WARNING] exportR.daily_invoice: Could not parse date '06/08/2026 14:53:15;06/08/2026 10:27:01' in folder: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15
+2026-08-07 00:40:15 [INFO] exportR: Processing folder (8/9): 8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15
+2026-08-07 00:40:16 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881996776' in file: C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15\ToKhaiHQ7N_108505672330.xlsx
+2026-08-07 00:40:16 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15\ToKhaiQDTQ___308819967760.xlsx
+2026-08-07 00:40:16 [INFO] exportR: Processing folder (9/9): 9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP
+2026-08-07 00:40:20 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882370101' in file: C:\Users\min\Documents\week\2.8\9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP\ToKhaiHQ7N_QDTQ_108507029960.xlsx
+2026-08-07 00:40:20 [INFO] exportR: Grouped folders: truck-e11 x2, truck-e15 x6
+2026-08-07 00:41:04 [INFO] exportR: Processing folder (1/9): 1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE
+2026-08-07 00:41:11 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE\ToKhaiHQ7N_QDTQ_108503854060.xlsx
+2026-08-07 00:41:11 [INFO] exportR: Processing folder (2/9): 2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE
+2026-08-07 00:41:13 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE\ToKhaiHQ7N_QDTQ_108503859920.xlsx
+2026-08-07 00:41:13 [INFO] exportR: Processing folder (3/9): 3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15
+2026-08-07 00:41:13 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881970670' in file: C:\Users\min\Documents\week\2.8\3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15\ToKhaiHQ7N_QDTQ_108505517960.xlsx
+2026-08-07 00:41:13 [INFO] exportR: Processing folder (4/9): 4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15
+2026-08-07 00:41:14 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108310879460\ToKhaiHQ7N_QDTQ_108310879460.xlsx
+2026-08-07 00:41:14 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108348611010\ToKhaiHQ7N_QDTQ_108348611010.xlsx
+2026-08-07 00:41:14 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108419018410\ToKhaiHQ7N_QDTQ_108419018410.xlsx
+2026-08-07 00:41:15 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108472374250\ToKhaiHQ7N_QDTQ_108472374250.xlsx
+2026-08-07 00:41:15 [ERROR] exportR: Failed to process folder: 4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\main.py", line 61, in collect_daily_data
+    data = get_data(folder)
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 141, in get_data
+    nvlCode, bill = get_codes(daily_invoice_folder.name, invoice)
+                    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\daste\autoR\exportR\modules\folder.py", line 16, in get_codes
+    pattern = rf"-\s*{re.escape(invoice)}"
+                      ~~~~~~~~~^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\re\__init__.py", line 312, in escape
+    pattern = str(pattern, 'latin1')
+TypeError: decoding to str: need a bytes-like object, NoneType found
+2026-08-07 00:41:15 [INFO] exportR: Processing folder (5/9): 5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15
+2026-08-07 00:41:15 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882107214' in file: C:\Users\min\Documents\week\2.8\5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15\ToKhaiHQ7N_QDTQ_108505678520.xlsx
+2026-08-07 00:41:16 [INFO] exportR: Processing folder (6/9): 6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15
+2026-08-07 00:41:16 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881426534' in file: C:\Users\min\Documents\week\2.8\6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15\ToKhaiHQ7N_QDTQ_108506967810.xlsx
+2026-08-07 00:41:16 [INFO] exportR: Processing folder (7/9): 7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15
+2026-08-07 00:41:18 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882005773' in file: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15\ToKhaiHQ7N_QDTQ_108506787320.xlsx
+2026-08-07 00:41:19 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15\ToKhaiHQ7X_QDTQ_308820057730.xlsx
+2026-08-07 00:41:19 [WARNING] exportR.daily_invoice: Could not parse date '06/08/2026 14:53:15;06/08/2026 10:27:01' in folder: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15
+2026-08-07 00:41:19 [INFO] exportR: Processing folder (8/9): 8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15
+2026-08-07 00:41:19 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881996776' in file: C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15\ToKhaiHQ7N_108505672330.xlsx
+2026-08-07 00:41:20 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15\ToKhaiQDTQ___308819967760.xlsx
+2026-08-07 00:41:20 [INFO] exportR: Processing folder (9/9): 9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP
+2026-08-07 00:41:24 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882370101' in file: C:\Users\min\Documents\week\2.8\9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP\ToKhaiHQ7N_QDTQ_108507029960.xlsx
+2026-08-07 00:41:24 [INFO] exportR: Grouped folders: truck-e11 x2, truck-e15 x6
+2026-08-07 00:43:38 [INFO] exportR: Processing folder (1/9): 1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE
+2026-08-07 00:43:45 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE\ToKhaiHQ7N_QDTQ_108503854060.xlsx
+2026-08-07 00:43:45 [INFO] exportR: Processing folder (2/9): 2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE
+2026-08-07 00:43:47 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE\ToKhaiHQ7N_QDTQ_108503859920.xlsx
+2026-08-07 00:43:48 [INFO] exportR: Processing folder (3/9): 3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15
+2026-08-07 00:43:48 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881970670' in file: C:\Users\min\Documents\week\2.8\3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15\ToKhaiHQ7N_QDTQ_108505517960.xlsx
+2026-08-07 00:43:48 [INFO] exportR: Processing folder (4/9): 4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15
+2026-08-07 00:43:49 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108310879460\ToKhaiHQ7N_QDTQ_108310879460.xlsx
+2026-08-07 00:43:49 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108348611010\ToKhaiHQ7N_QDTQ_108348611010.xlsx
+2026-08-07 00:43:49 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108419018410\ToKhaiHQ7N_QDTQ_108419018410.xlsx
+2026-08-07 00:43:50 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108472374250\ToKhaiHQ7N_QDTQ_108472374250.xlsx
+2026-08-07 00:43:50 [ERROR] exportR: Failed to process folder: 4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\main.py", line 61, in collect_daily_data
+    data = get_data(folder)
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 142, in get_data
+    nvlCode, bill = get_codes(daily_invoice_folder.name, invoice)
+                    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\daste\autoR\exportR\modules\folder.py", line 16, in get_codes
+    pattern = rf"-\s*{re.escape(invoice)}"
+                      ~~~~~~~~~^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\re\__init__.py", line 312, in escape
+    pattern = str(pattern, 'latin1')
+TypeError: decoding to str: need a bytes-like object, NoneType found
+2026-08-07 00:43:50 [INFO] exportR: Processing folder (5/9): 5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15
+2026-08-07 00:43:50 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882107214' in file: C:\Users\min\Documents\week\2.8\5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15\ToKhaiHQ7N_QDTQ_108505678520.xlsx
+2026-08-07 00:43:50 [INFO] exportR: Processing folder (6/9): 6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15
+2026-08-07 00:43:51 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881426534' in file: C:\Users\min\Documents\week\2.8\6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15\ToKhaiHQ7N_QDTQ_108506967810.xlsx
+2026-08-07 00:43:51 [INFO] exportR: Processing folder (7/9): 7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15
+2026-08-07 00:43:53 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882005773' in file: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15\ToKhaiHQ7N_QDTQ_108506787320.xlsx
+2026-08-07 00:43:53 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15\ToKhaiHQ7X_QDTQ_308820057730.xlsx
+2026-08-07 00:43:53 [WARNING] exportR.daily_invoice: Could not parse date '06/08/2026 14:53:15;06/08/2026 10:27:01' in folder: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15
+2026-08-07 00:43:53 [INFO] exportR: Processing folder (8/9): 8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15
+2026-08-07 00:43:54 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881996776' in file: C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15\ToKhaiHQ7N_108505672330.xlsx
+2026-08-07 00:43:54 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15\ToKhaiQDTQ___308819967760.xlsx
+2026-08-07 00:43:55 [INFO] exportR: Processing folder (9/9): 9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP
+2026-08-07 00:43:58 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882370101' in file: C:\Users\min\Documents\week\2.8\9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP\ToKhaiHQ7N_QDTQ_108507029960.xlsx
+2026-08-07 00:43:58 [INFO] exportR: Grouped folders: truck-e11 x2, truck-e15 x6
+2026-08-07 00:47:09 [INFO] exportR: Processing folder (1/9): 1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE
+2026-08-07 00:47:16 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\1.NVL-14557-E20260803068-LENOVOVN20260805003-1-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE\ToKhaiHQ7N_QDTQ_108503854060.xlsx
+2026-08-07 00:47:16 [INFO] exportR: Processing folder (2/9): 2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE
+2026-08-07 00:47:18 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\2.NVL-14558-E20260803068-LENOVOVN20260805003-2-5.8.2026-GC-10PK-E11-TRUCK-2TK CHUNG XE\ToKhaiHQ7N_QDTQ_108503859920.xlsx
+2026-08-07 00:47:18 [INFO] exportR: Processing folder (3/9): 3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15
+2026-08-07 00:47:19 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881970670' in file: C:\Users\min\Documents\week\2.8\3.NVL-13381 HĐGC LTP202608050031 I2026080600019 VDJ-HQ20260805 DRAGON E15\ToKhaiHQ7N_QDTQ_108505517960.xlsx
+2026-08-07 00:47:19 [INFO] exportR: Processing folder (4/9): 4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15
+2026-08-07 00:47:19 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108310879460\ToKhaiHQ7N_QDTQ_108310879460.xlsx
+2026-08-07 00:47:19 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108348611010\ToKhaiHQ7N_QDTQ_108348611010.xlsx
+2026-08-07 00:47:20 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108419018410\ToKhaiHQ7N_QDTQ_108419018410.xlsx
+2026-08-07 00:47:20 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\2.8\4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15\TKN\108472374250\ToKhaiHQ7N_QDTQ_108472374250.xlsx
+2026-08-07 00:47:20 [ERROR] exportR: Failed to process folder: 4.NVL-13379 HĐGC  Inoice AcerFLRQ260805 KHO NGOẠI QUAN E15
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\main.py", line 61, in collect_daily_data
+    data = get_data(folder)
+  File "D:\daste\autoR\exportR\daily_invoice.py", line 141, in get_data
+    nvlCode, bill = get_codes(daily_invoice_folder.name, invoice)
+                    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\daste\autoR\exportR\modules\folder.py", line 16, in get_codes
+    pattern = rf"-\s*{re.escape(invoice)}"
+                      ~~~~~~~~~^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\re\__init__.py", line 312, in escape
+    pattern = str(pattern, 'latin1')
+TypeError: decoding to str: need a bytes-like object, NoneType found
+2026-08-07 00:47:20 [INFO] exportR: Processing folder (5/9): 5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15
+2026-08-07 00:47:21 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882107214' in file: C:\Users\min\Documents\week\2.8\5.NVL-13384 HĐGC LTP202608060013 I2026080600101 CHIKA-26080501 THU DO E15\ToKhaiHQ7N_QDTQ_108505678520.xlsx
+2026-08-07 00:47:21 [INFO] exportR: Processing folder (6/9): 6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15
+2026-08-07 00:47:21 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881426534' in file: C:\Users\min\Documents\week\2.8\6.NVL-13383 HĐGC LTP202608050067 I2026080600114 743 SUNWAY E15\ToKhaiHQ7N_QDTQ_108506967810.xlsx
+2026-08-07 00:47:22 [INFO] exportR: Processing folder (7/9): 7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15
+2026-08-07 00:47:23 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882005773' in file: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15\ToKhaiHQ7N_QDTQ_108506787320.xlsx
+2026-08-07 00:47:23 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15\ToKhaiHQ7X_QDTQ_308820057730.xlsx
+2026-08-07 00:47:24 [WARNING] exportR.daily_invoice: Could not parse date '06/08/2026 14:53:15;06/08/2026 10:27:01' in folder: C:\Users\min\Documents\week\2.8\7.NVL-13385 HĐGC LTP202608060005 I2026080600126 HQ-26080504 JUTENG E15
+2026-08-07 00:47:24 [INFO] exportR: Processing folder (8/9): 8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15
+2026-08-07 00:47:24 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881996776' in file: C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15\ToKhaiHQ7N_108505672330.xlsx
+2026-08-07 00:47:25 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\2.8\8.NVL-13382 HDDGC LTP202608050037 I2026080600044 HQ260802 YONGJI E15\ToKhaiQDTQ___308819967760.xlsx
+2026-08-07 00:47:25 [INFO] exportR: Processing folder (9/9): 9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP
+2026-08-07 00:47:28 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\2.8\9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30882370101' in file: C:\Users\min\Documents\week\2.8\9.NVL-13386 HĐGC LTP202608060029 I2026080600205 SY-HQ2608-06 SEIYO E15 GẤP\ToKhaiHQ7N_QDTQ_108507029960.xlsx
+2026-08-07 00:47:28 [INFO] exportR: Grouped folders: truck-e11 x2, truck-e15 x6
+2026-08-07 12:56:57 [INFO] exportR: Processing folder (1/11): 1.NVL - 9365 - E20260403058-osso-1234  - LENOVOVN20260406003 - 6.4.2026 - GC - 2PK - E11- TRUCK
+2026-08-07 12:56:58 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04\1.NVL - 9365 - E20260403058-osso-1234  - LENOVOVN20260406003 - 6.4.2026 - GC - 2PK - E11- TRUCK] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\1.NVL - 9365 - E20260403058-osso-1234  - LENOVOVN20260406003 - 6.4.2026 - GC - 2PK - E11- TRUCK\ToKhaiHQ7N_QDTQ_108123085930.xlsx
+2026-08-07 12:56:58 [INFO] exportR: Processing folder (2/11): 2.NVL-13392 HĐGC LTP202608050029 I2026080700110 00000696 SINGHOME E15
+2026-08-07 12:56:59 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04\2.NVL-13392 HĐGC LTP202608050029 I2026080700110 00000696 SINGHOME E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&NKTC#&30881574035' in file: C:\Users\min\Documents\week\1.04\2.NVL-13392 HĐGC LTP202608050029 I2026080700110 00000696 SINGHOME E15\ToKhaiHQ7N_QDTQ_108509503650.xlsx
+2026-08-07 12:56:59 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04\2.NVL-13392 HĐGC LTP202608050029 I2026080700110 00000696 SINGHOME E15] Found 'Số quản lý của nội bộ doanh nghiệp' = '#&XKTC' in file: C:\Users\min\Documents\week\1.04\2.NVL-13392 HĐGC LTP202608050029 I2026080700110 00000696 SINGHOME E15\ToKhaiHQ7X_QDTQ_308815740350.xlsx
+2026-08-07 12:56:59 [WARNING] exportR.daily_invoice: Could not parse date '07/08/2026 11:20:55;04/08/2026 15:56:57' in folder: C:\Users\min\Documents\week\1.04\2.NVL-13392 HĐGC LTP202608050029 I2026080700110 00000696 SINGHOME E15
+2026-08-07 12:56:59 [INFO] exportR: Processing folder (3/11): 3.NVL - 9371 - YHYAF20260404BS-02-BSC260404APHQ2 - 20PK - E11- TRUCK
+2026-08-07 12:57:00 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04\3.NVL - 9371 - YHYAF20260404BS-02-BSC260404APHQ2 - 20PK - E11- TRUCK] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\3.NVL - 9371 - YHYAF20260404BS-02-BSC260404APHQ2 - 20PK - E11- TRUCK\ToKhaiHQ7N_QDTQ_108123247520.xlsx
+2026-08-07 12:57:00 [INFO] exportR: Processing folder (4/11): 4.NVL - 9372 - YHYAF20260404BS-01 - BSC260404APHQ1 - 6.4.2026 - GC - 22PK - E11- TRUCK
+2026-08-07 12:57:01 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04\4.NVL - 9372 - YHYAF20260404BS-01 - BSC260404APHQ1 - 6.4.2026 - GC - 22PK - E11- TRUCK] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\4.NVL - 9372 - YHYAF20260404BS-01 - BSC260404APHQ1 - 6.4.2026 - GC - 22PK - E11- TRUCK\ToKhaiHQ7N_QDTQ_108123274930.xlsx
+2026-08-07 12:57:01 [INFO] exportR: Processing folder (5/11): 5.NVL-9373-FLK2604021250-MD20260402001-06.04.2026-GC
+2026-08-07 12:57:02 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04\5.NVL-9373-FLK2604021250-MD20260402001-06.04.2026-GC] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\5.NVL-9373-FLK2604021250-MD20260402001-06.04.2026-GC\ToKhaiHQ7N_QDTQ_108123294900.xlsx
+2026-08-07 12:57:02 [INFO] exportR: Processing folder (6/11): 6.NVL - 9386 - E20260403054 - HPVN20260406006-1 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE
+2026-08-07 12:57:06 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04\6.NVL - 9386 - E20260403054 - HPVN20260406006-1 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\6.NVL - 9386 - E20260403054 - HPVN20260406006-1 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\ToKhaiHQ7N_QDTQ_108124673750.xlsx
+2026-08-07 12:57:07 [INFO] exportR: Processing folder (7/11): 7.NVL - 9387 - E20260403054-HPVN20260406006-2-6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE
+2026-08-07 12:57:11 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04\7.NVL - 9387 - E20260403054-HPVN20260406006-2-6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\7.NVL - 9387 - E20260403054-HPVN20260406006-2-6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\ToKhaiHQ7N_108124674450.xlsx
+2026-08-07 12:57:13 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04\7.NVL - 9387 - E20260403054-HPVN20260406006-2-6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\7.NVL - 9387 - E20260403054-HPVN20260406006-2-6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\ToKhaiHQ7N_QDTQ_108124674450.xlsx
+2026-08-07 12:57:13 [INFO] exportR: Processing folder (8/11): 8.NVL - 9388 - E20260403054 - HPVN20260406006-3 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE
+2026-08-07 12:57:18 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04\8.NVL - 9388 - E20260403054 - HPVN20260406006-3 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\8.NVL - 9388 - E20260403054 - HPVN20260406006-3 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\ToKhaiHQ7N_108124675040.xlsx
+2026-08-07 12:57:20 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04\8.NVL - 9388 - E20260403054 - HPVN20260406006-3 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\8.NVL - 9388 - E20260403054 - HPVN20260406006-3 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\ToKhaiHQ7N_QDTQ_108124675040.xlsx
+2026-08-07 12:57:20 [INFO] exportR: Processing folder (9/11): 9.NVL - 9389 - E20260403054 - HPVN20260406006-4 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE
+2026-08-07 12:57:25 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04\9.NVL - 9389 - E20260403054 - HPVN20260406006-4 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\9.NVL - 9389 - E20260403054 - HPVN20260406006-4 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\ToKhaiHQ7N_108124681010.xlsx
+2026-08-07 12:57:27 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04\9.NVL - 9389 - E20260403054 - HPVN20260406006-4 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\9.NVL - 9389 - E20260403054 - HPVN20260406006-4 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\ToKhaiHQ7N_QDTQ_108124681010.xlsx
+2026-08-07 12:57:27 [INFO] exportR: Processing folder (10/11): 10.NVL - 9397 - E20260403054 - HPVN20260406006-5 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE
+2026-08-07 12:57:31 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04\10.NVL - 9397 - E20260403054 - HPVN20260406006-5 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\10.NVL - 9397 - E20260403054 - HPVN20260406006-5 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\ToKhaiHQ7N_QDTQ_108124682040.xlsx
+2026-08-07 12:57:31 [INFO] exportR: Processing folder (11/11): 11.NVL - 9391 - E20260403054 - HPVN20260406006-6 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE
+2026-08-07 12:57:35 [INFO] exportR.daily_invoice: [C:\Users\min\Documents\week\1.04\11.NVL - 9391 - E20260403054 - HPVN20260406006-6 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE] Found 'Số quản lý của nội bộ doanh nghiệp' = 'Số quản lý người sử dụng' in file: C:\Users\min\Documents\week\1.04\11.NVL - 9391 - E20260403054 - HPVN20260406006-6 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\ToKhaiHQ7N_QDTQ_108124683000.xlsx
+2026-08-07 12:57:35 [INFO] exportR: Grouped folders: truck-e11 x10, truck-e15 x1

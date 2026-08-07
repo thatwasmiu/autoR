@@ -6,7 +6,7 @@ from modules import (
     get_workbook,
     find_values,
     find_excel_files,
-    get_codes
+    get_codes,
 )
 
 logger = logging.getLogger("exportR." + __name__)
@@ -32,6 +32,14 @@ patterns = {
         "files": [r"ToKhai.*_\d+"],
         "sheets": None
     },
+    "internalCode": {
+        "kw": "Số quản lý của nội bộ doanh nghiệp",
+        # "regex": r"[A-Z0-9]+",
+        "regex": None,
+        "files": [r"ToKhai.*_\d+"],
+        "sheets": None,
+        "merged": True
+    },
     "routeType": {
         "kw": "Mã phân loại kiểm tra",
         "regex": r"\d",
@@ -47,7 +55,7 @@ patterns = {
     "date": {
         "kw": "Ngày đăng ký",
         "regex": None,
-        "files": [r"ToKhai.*_\d+"],
+        "files": [r"ToKhai.*"],
         "sheets": None
     },
     "invoice": {
@@ -76,6 +84,7 @@ def get_data(daily_invoice_folder):
 
     declare_codes = []
     type_codes = []
+    internal_codes = []
     route_types = []
     terms = []
     dates = []
@@ -95,6 +104,9 @@ def get_data(daily_invoice_folder):
             declare_codes.append(values["declareCode"].strip())
         if values["typeCode"]:
             type_codes.append(values["typeCode"].strip())
+        if values["internalCode"]:
+            logger.info(f"[{folder}] Found 'Số quản lý của nội bộ doanh nghiệp' = {values['internalCode'].strip()!r} in file: {f}")
+            internal_codes.append(values["internalCode"].strip())
         if values["routeType"]:
             route_types.append(values["routeType"].strip())
         # if values["term"]:
@@ -115,6 +127,9 @@ def get_data(daily_invoice_folder):
 
     declareCode = pick_value(filter_invoices(declare_codes), folder, r"[A-Za-z0-9]+")
     typeCode = pick_value(type_codes, folder, r"[A-Za-z0-9]+")
+    internalCode = pick_value(internal_codes, folder, r"\b3\d*\b") if typeCode == "E15" else None
+    if internalCode:
+        internalCode = internalCode + "0"
     routeType = pick_value(route_types, folder, r"[A-Za-z0-9]+")
     term = pick_value(terms, folder, r'^\s*[^-]+\s*-\s*([^-]+)\s*-', 1)
     date = pick_value(dates, folder, r'\b(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4} ([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\b')
@@ -147,6 +162,7 @@ def get_data(daily_invoice_folder):
         "invoice": invoice,
         "declareCode": declareCode,
         "typeCode": typeCode,
+        "internalCode": internalCode,
         "routeType": routeType,
         "term": term,
         "date": date,

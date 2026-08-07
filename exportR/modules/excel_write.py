@@ -1,3 +1,4 @@
+from copy import copy
 from openpyxl import load_workbook
 from datetime import datetime, time
 from openpyxl.styles import Border, Side
@@ -35,6 +36,16 @@ def write_daily_report(template, grouped):
         # optional: clear existing data rows (keep header)
         # ws.delete_rows(2, ws.max_row)
 
+        if "E15" in ws.title:
+            route_header = ws.cell(row=3, column=5)  # "线"
+            internal_header = ws.cell(row=3, column=6)
+            internal_header.value = "Số tờ khai xuất"
+            internal_header.font = copy(route_header.font)
+            internal_header.fill = copy(route_header.fill)
+            internal_header.border = copy(route_header.border)
+            internal_header.alignment = copy(route_header.alignment)
+            ws.column_dimensions['F'].width = 20
+
         for i, data in enumerate(valid_items, start=1):
             date_val = None
             try:
@@ -69,6 +80,7 @@ def write_daily_report(template, grouped):
                 # data.get("invoice"),
                 # data.get("tms"),
                 # time_str,
+                data.get("internalCode"),
             ])
 
             row = ws.max_row
@@ -76,7 +88,7 @@ def write_daily_report(template, grouped):
             if date_val:
                 ws.cell(row=row, column=3).number_format = "dd/mm/yyyy"
 
-            for col in range(1, 6):
+            for col in range(1, 7):
                 cell = ws.cell(row=row, column=col)
                 cell.border = border
                 cell.font = font_tnr   # ✅ apply Times New Roman

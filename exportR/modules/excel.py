@@ -17,7 +17,8 @@ def find_values(filename, patterns):
             "keyword": kw,
             "pattern": re.compile(p, re.IGNORECASE) if p else None,
             "files": files,
-            "sheets": sheets
+            "sheets": sheets,
+            "merged": cfg.get("merged", False)
         }
 
     results = {k: None for k in patterns}
@@ -29,6 +30,20 @@ def find_values(filename, patterns):
 
     for ws in wb.worksheets:
         sheet_name = ws.title
+
+        # A merged cell only stores its value on the top-left (anchor) cell;
+        # every other cell in the range reads back as None from openpyxl.
+        # Map every coordinate in each merged range to that range's value so
+        # the column scan below can't land on a "None" cell inside a merge
+        # and skip past the real value.
+        merged_lookup = {}
+        for merged_range in ws.merged_cells.ranges:
+            anchor_value = ws.cell(row=merged_range.min_row, column=merged_range.min_col).value
+            if anchor_value is None:
+                continue
+            for r in range(merged_range.min_row, merged_range.max_row + 1):
+                for c in range(merged_range.min_col, merged_range.max_col + 1):
+                    merged_lookup[(r, c)] = anchor_value
 
         for key, cfg in compiled.items():
             # skip if already found
@@ -72,8 +87,11 @@ def find_values(filename, patterns):
                     # print(text)
 
                     if keyword in text:
-                        for col in range(cell.column + 1, cell.column + 8):
+                        extra_cols = 30 if cfg["merged"] else 8 
+                        for col in range(cell.column + 1, cell.column + extra_cols):
                             val = ws.cell(row=cell.row, column=col).value
+                            if val is None and cfg["merged"]:
+                                val = merged_lookup.get((cell.row, col))
                             if not val:
                                 continue
 

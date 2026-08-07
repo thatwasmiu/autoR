@@ -1,12 +1,13 @@
 import logging
 import sys
+import tempfile
 from pathlib import Path
 
 
 def _log_dir():
-    # next to the .exe when frozen, next to this file when run from source
+    # %TEMP% when frozen (built exe), next to this file when run from source
     if hasattr(sys, "_MEIPASS"):
-        return Path(sys.executable).resolve().parent
+        return Path(tempfile.gettempdir())
     return Path(__file__).resolve().parent
 
 

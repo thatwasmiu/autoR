@@ -1,0 +1,48 @@
+2026-07-27 20:12:57 [INFO] CTU Printer started
+2026-07-27 20:13:09 [INFO] Starting worker thread for folder: C:/Users/min/Documents/10. NVL-13056 HĐGC LTP202607070046 I2026070700314 SY-HQ2607-07 SEIYO E15
+2026-07-27 20:13:09 [INFO] Batch start: 1 file(s) found under C:\Users\min\Documents\10. NVL-13056 HĐGC LTP202607070046 I2026070700314 SY-HQ2607-07 SEIYO E15
+2026-07-27 20:13:12 [ERROR] [1/1] 合同_发票_箱单_I2026070700314.xlsx: failed
+Traceback (most recent call last):
+  File "D:\daste\autoR\ctu\main.py", line 104, in print_pdf
+    all_sheets = [sheet.Name for sheet in wb.Worksheets]
+                                          ^^^^^^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\win32com\client\dynamic.py", line 631, in __getattr__
+    raise AttributeError(f"{self._username_}.{attr}")
+AttributeError: Open.Worksheets
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\daste\autoR\ctu\main.py", line 72, in excel_to_pdf_batch
+    output_pdf = print_pdf(excel, file)
+  File "D:\daste\autoR\ctu\main.py", line 138, in print_pdf
+    wb.Close(False)
+    ^^^^^^^^
+  File "C:\Users\min\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\win32com\client\dynamic.py", line 631, in __getattr__
+    raise AttributeError(f"{self._username_}.{attr}")
+AttributeError: Open.Close
+2026-07-27 20:13:12 [INFO] Batch done: 0/1 succeeded
+2026-07-27 20:13:49 [INFO] Starting worker thread for folder: C:/Users/min/Documents/10. NVL-13056 HĐGC LTP202607070046 I2026070700314 SY-HQ2607-07 SEIYO E15
+2026-07-27 20:13:51 [INFO] Batch start: 1 file(s) found under C:\Users\min\Documents\10. NVL-13056 HĐGC LTP202607070046 I2026070700314 SY-HQ2607-07 SEIYO E15
+2026-07-27 20:13:52 [ERROR] [1/1] 合同_发票_箱单_I2026070700314.xlsx: failed
+Traceback (most recent call last):
+  File "D:\daste\autoR\ctu\main.py", line 72, in excel_to_pdf_batch
+    output_pdf = print_pdf(excel, file)
+  File "D:\daste\autoR\ctu\main.py", line 126, in print_pdf
+    wb.Worksheets.Select()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "<COMObject <unknown>>", line 2, in Select
+pywintypes.com_error: (-2147352567, 'Exception occurred.', (0, None, None, None, 0, -2147467259), None)
+2026-07-27 20:13:52 [INFO] Batch done: 0/1 succeeded
+2026-07-27 20:16:09 [INFO] CTU Printer started
+2026-07-27 20:16:15 [INFO] Starting worker thread for folder: C:/Users/min/Documents/10. NVL-13056 HĐGC LTP202607070046 I2026070700314 SY-HQ2607-07 SEIYO E15
+2026-07-27 20:16:17 [INFO] Batch start: 1 file(s) found under C:\Users\min\Documents\10. NVL-13056 HĐGC LTP202607070046 I2026070700314 SY-HQ2607-07 SEIYO E15
+2026-07-27 20:16:18 [INFO] 合同_发票_箱单_I2026070700314.xlsx: skipping hidden sheet(s) for export: ['Sheet1']
+2026-07-27 20:16:24 [INFO] [1/1] 合同_发票_箱单_I2026070700314.xlsx: OK (3 pages)
+2026-07-27 20:16:24 [INFO] Batch done: 1/1 succeeded
+2026-07-27 20:16:47 [INFO] CTU Printer started
+2026-07-27 20:16:54 [INFO] Starting worker thread for folder: C:/Users/min/Documents/10. NVL-13056 HĐGC LTP202607070046 I2026070700314 SY-HQ2607-07 SEIYO E15
+2026-07-27 20:16:55 [INFO] Batch start: 1 file(s) found under C:\Users\min\Documents\10. NVL-13056 HĐGC LTP202607070046 I2026070700314 SY-HQ2607-07 SEIYO E15
+2026-07-27 20:16:57 [INFO] 合同_发票_箱单_I2026070700314.xlsx: skipping hidden sheet(s) for export: ['Sheet1']
+2026-07-27 20:16:59 [INFO] [1/1] 合同_发票_箱单_I2026070700314.xlsx: OK (3 pages)
+2026-07-27 20:16:59 [INFO] Batch done: 1/1 succeeded

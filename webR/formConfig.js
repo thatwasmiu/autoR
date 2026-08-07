@@ -1,8 +1,8 @@
 /** Default form configs: target (soc1), type (soc2), runs */
 const AUTO_R_DEFAULT_FORM_CONFIGS = [
-  { target: '0', type: '0', runs: 10 },
-  { target: '0', type: '1', runs: 10 },
-  { target: '0', type: '2', runs: 10 },
+  { target: '0', type: '0', runs: 30 },
+  { target: '0', type: '1', runs: 0},
+  { target: '0', type: '2', runs: 0},
 ];
 
 function parseFormConfigsJson(text) {

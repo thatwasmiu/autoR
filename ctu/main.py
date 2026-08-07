@@ -4,12 +4,47 @@ import tkinter as tk
 from tkinter import ttk
 import sys
 import os
+import tempfile
+import logging
+from logging.handlers import RotatingFileHandler
 from tkinter import filedialog
 import threading
 from PyPDF2 import PdfReader
 from tkinter import messagebox
 
 # pyinstaller --clean --onefile --noconsole --name "CTU Printer" --add-data "resources/logo.ico;resources" --icon=resources/logo.ico main.py
+
+def _log_file_path():
+    # %TEMP% when frozen (built exe), next to the script when run from source.
+    if getattr(sys, "frozen", False):
+        base_dir = tempfile.gettempdir()
+    else:
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(base_dir, "ctu_printer.log")
+
+
+def _setup_logging():
+    logger = logging.getLogger("ctu_printer")
+    logger.setLevel(logging.INFO)
+
+    handler = RotatingFileHandler(
+        _log_file_path(), maxBytes=1_000_000, backupCount=3, encoding="utf-8"
+    )
+    handler.setFormatter(logging.Formatter(
+        "%(asctime)s [%(levelname)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+    ))
+    logger.addHandler(handler)
+
+    # Also echo to console when run from source (no console when frozen w/ --noconsole).
+    if not getattr(sys, "frozen", False):
+        stream_handler = logging.StreamHandler()
+        stream_handler.setFormatter(handler.formatter)
+        logger.addHandler(stream_handler)
+
+    return logger
+
+
+log = _setup_logging()
 
 def excel_to_pdf_batch(root, status_label=None, tree_insert_callback=None):
     import os
@@ -27,26 +62,34 @@ def excel_to_pdf_batch(root, status_label=None, tree_insert_callback=None):
     results = []  # store (excel_file, pdf_file)
 
     total = len(files)
+    log.info(f"Batch start: {total} file(s) found under {root}")
 
     for idx, file in enumerate(files, 1):
         if status_label:
             status_label.config(text=f"Processing ({idx}/{total}): {file.name}")
             status_label.update_idletasks()
 
-        output_pdf = print_pdf(excel, file)
         try:
+            output_pdf = print_pdf(excel, file)
             reader = PdfReader(output_pdf)
             page_count = len(reader.pages)
             status = f"OK Page: {page_count}"
-            results.append((str(file), str(output_pdf), status))
-            # ✅ update UI table
-            if tree_insert_callback:
-                tree_insert_callback(str(file), str(output_pdf), status)
+            log.info(f"[{idx}/{total}] {file.name}: OK ({page_count} pages)")
         except Exception as e:
-            print(f"Failed to read PDF: {e}, file ")
+            output_pdf = ""
+            status = f"ERROR: {e}"
+            log.exception(f"[{idx}/{total}] {file.name}: failed")
+
+        results.append((str(file), str(output_pdf), status))
+        # ✅ update UI table
+        if tree_insert_callback:
+            tree_insert_callback(str(file), str(output_pdf), status)
 
 
     excel.Quit()
+
+    ok_count = sum(1 for _, _, status in results if status.startswith("OK"))
+    log.info(f"Batch done: {ok_count}/{total} succeeded")
 
     if status_label:
         status_label.config(text="✅ Done")
@@ -57,9 +100,8 @@ def print_pdf(excel, file):
 
     output_pdf = file.with_name("CIPL.pdf")
 
+    wb = excel.Workbooks.Open(str(file))
     try:
-        wb = excel.Workbooks.Open(str(file))
-
         all_sheets = [sheet.Name for sheet in wb.Worksheets]
 
         ordered = []
@@ -82,7 +124,14 @@ def print_pdf(excel, file):
         for i, name in enumerate(ordered):
             wb.Worksheets(name).Move(Before=wb.Worksheets(i + 1))
 
-        wb.Worksheets.Select()
+        # xlSheetVisible == -1; hidden sheets raise a COM error if included in Select()
+        visible = [name for name in ordered if wb.Worksheets(name).Visible == -1]
+        if not visible:
+            visible = ordered
+        if len(visible) < len(ordered):
+            log.info(f"{file.name}: skipping hidden sheet(s) for export: "
+                      f"{[n for n in ordered if n not in visible]}")
+        wb.Worksheets(visible).Select()
         wb.ActiveSheet.ExportAsFixedFormat(
             Type=0,
             Filename=str(output_pdf),
@@ -92,11 +141,12 @@ def print_pdf(excel, file):
             OpenAfterPublish=False
         )
 
-        wb.Close(False)
         return output_pdf
-
-    except Exception as e:
-        status = f"ERROR: {e}" 
+    finally:
+        try:
+            wb.Close(False)
+        except Exception:
+            log.warning(f"Could not close workbook for {file.name}", exc_info=True)
 
 def choose_folder(entry):
     folder = filedialog.askdirectory()
@@ -105,6 +155,7 @@ def choose_folder(entry):
         entry.insert(0, folder)
 
 def run_app():
+    log.info("CTU Printer started")
     root = tk.Tk()
     root.iconbitmap(get_resource_path("resources/logo.ico"))
     root.title("CTU Printer")
@@ -180,6 +231,8 @@ def run_app():
             excel = win32com.client.Dispatch("Excel.Application")
             excel.Visible = False
 
+            log.info(f"Retry start: {excel_path}")
+
             try:
                 output_pdf = print_pdf(excel, Path(excel_path))
             except PermissionError:
@@ -188,7 +241,9 @@ def run_app():
                 if not retry:
                     excel.Quit()
                     tree.item(item_id, values=(os.path.basename(excel_path), pdf_path, "Cancelled"))
+                    log.info(f"Retry cancelled by user: {excel_path}")
                     return
+                output_pdf = print_pdf(excel, Path(excel_path))
 
             try:
                 reader = PdfReader(output_pdf)
@@ -197,16 +252,18 @@ def run_app():
                 tree.item(item_id, values=(os.path.basename(excel_path), output_pdf, status))
                 row_data[item_id] = (excel_path, output_pdf)
                 excel.Quit()
+                log.info(f"Retry OK: {excel_path} ({page_count} pages)")
             except Exception as e:
-                print(f"Failed to read PDF: {e}")
-                print()
+                status = f"ERROR: {e}"
+                tree.item(item_id, values=(os.path.basename(excel_path), "", status))
+                log.exception(f"Retry failed reading PDF for {excel_path}")
 
         except Exception as e:
             tree.item(item_id, values=(os.path.basename(excel_path), "", f"ERROR"))
-            print(e)
+            log.exception(f"Retry failed for {excel_path}")
         finally:
             if excel:
-                excel.Quit()    
+                excel.Quit()
 
     tk.Button(root, text="Retry Selected", command=retry_selected).pack(pady=5)
 
@@ -231,14 +288,20 @@ def run_app():
                 )
                 row_data[item_id] = (excel_path, pdf_path)
 
-            excel_to_pdf_batch(
-                Path(folder_path),
-                status_label=status_label,
-                tree_insert_callback=insert_row  # ✅ use callback
-            )
+            try:
+                excel_to_pdf_batch(
+                    Path(folder_path),
+                    status_label=status_label,
+                    tree_insert_callback=insert_row  # ✅ use callback
+                )
+            except Exception:
+                log.exception(f"Worker thread crashed for folder {folder_path}")
+                if status_label:
+                    status_label.config(text="❌ Error — see ctu_printer.log")
+            finally:
+                run_button.config(state="normal")
 
-            run_button.config(state="normal")
-
+        log.info(f"Starting worker thread for folder: {folder_path}")
         if status_label:
             status_label.config(text=f"Start worker thread!!!")
         threading.Thread(target=task, daemon=True).start()
