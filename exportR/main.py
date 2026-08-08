@@ -9,7 +9,7 @@ from tkcalendar import DateEntry
 import threading
 from collections import defaultdict
 
-from modules import write_daily_report
+from modules import write_daily_report, run_ctu_batch
 from daily_invoice import get_data
 from weekly_report import create_weekly_report
 from hs_code_check import run_hs_check
@@ -186,6 +186,9 @@ def run_app():
     tk.Radiobutton(frame, text="HS Check", variable=report_type, value="hscheck",
                    command=on_type_change).pack(side="left", padx=10)
 
+    tk.Radiobutton(frame, text="CTU", variable=report_type, value="ctu",
+                   command=on_type_change).pack(side="left", padx=10)
+
     status_label = tk.Label(root, text="Status: Idle", fg="blue")
     status_label.pack(pady=10)
 
@@ -308,6 +311,9 @@ def run_app():
                     elif selected_type == "hscheck":
                         status_label.config(text="🔍 Đang quét file CARGOES_LIST…")
                         run_hs_check(Path(folder_path), status_label)
+                    elif selected_type == "ctu":
+                        status_label.config(text="🖨️ Đang in CTU…")
+                        run_ctu_batch(Path(folder_path), status_label)
                 except Exception as e:
                     logger.exception("Failed to run report")
                     status_label.config(text=f"❌ Lỗi: {e}", fg="red")
