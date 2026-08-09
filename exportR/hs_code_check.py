@@ -31,7 +31,7 @@ def highlight_cargoes_file(file_path, hs_codes):
     return highlighted
 
 
-def run_hs_check(root_folder, status_label=None):
+def run_hs_check(root_folder, status_label=None, row_callback=None):
     hs_codes = load_hs_codes(get_resource_path(HS_CODE_FILE))
     files = find_excel_files(str(root_folder), pattern=r"^CARGOES_LIST")
 
@@ -48,6 +48,8 @@ def run_hs_check(root_folder, status_label=None):
             total_highlighted += highlighted
             processed += 1
             logger.info(f"Checked '{f}': highlighted {highlighted} cell(s)")
+            if highlighted and row_callback:
+                row_callback(str(f), highlighted)
         except Exception:
             failed += 1
             logger.exception(f"Failed to process file: {f}")

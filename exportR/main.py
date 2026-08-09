@@ -11,7 +11,7 @@ from collections import defaultdict
 
 from modules import write_daily_report, run_ctu_batch
 from daily_invoice import get_data
-from weekly_report import create_weekly_report
+# from weekly_report import create_weekly_report
 from hs_code_check import run_hs_check
 from log_config import setup_logging
 
@@ -141,7 +141,7 @@ def run_app():
     # ✅ Report type selection
     report_type = tk.StringVar(value="daily")
 
-    tk.Label(root, text="Select Report Type:").pack(pady=5)
+    tk.Label(root, text="Chọn chức năng:").pack(pady=5)
 
     frame = tk.Frame(root)
     frame.pack()
@@ -180,8 +180,8 @@ def run_app():
     tk.Radiobutton(frame, text="Daily", variable=report_type, value="daily",
                    command=on_type_change).pack(side="left", padx=10)
 
-    tk.Radiobutton(frame, text="Weekly", variable=report_type, value="weekly",
-                   command=on_type_change).pack(side="left", padx=10)
+    # tk.Radiobutton(frame, text="Weekly", variable=report_type, value="weekly",
+    #                command=on_type_change).pack(side="left", padx=10)
 
     tk.Radiobutton(frame, text="HS Check", variable=report_type, value="hscheck",
                    command=on_type_change).pack(side="left", padx=10)
@@ -192,7 +192,7 @@ def run_app():
     status_label = tk.Label(root, text="Status: Idle", fg="blue")
     status_label.pack(pady=10)
 
-    run_button = tk.Button(root, text="Run Report")
+    run_button = tk.Button(root, text="Thực hiện")
     run_button.pack(pady=10)
 
     # Action buttons — hidden until data is ready
@@ -259,6 +259,86 @@ def run_app():
 
     tree.bind("<Button-1>", on_cell_click)
 
+    # CTU print results table — hidden until a CTU batch finishes
+    ctu_frame = tk.Frame(root)
+    ctu_columns = ("excel", "pdf", "status")
+    ctu_tree = ttk.Treeview(ctu_frame, columns=ctu_columns, show="headings", height=12)
+    ctu_tree.heading("excel", text="Excel File")
+    ctu_tree.heading("pdf", text="PDF File")
+    ctu_tree.heading("status", text="Status")
+    ctu_tree.column("excel", width=320, anchor="w")
+    ctu_tree.column("pdf", width=320, anchor="w")
+    ctu_tree.column("status", width=150, anchor="w")
+
+    ctu_vsb = ttk.Scrollbar(ctu_frame, orient="vertical", command=ctu_tree.yview)
+    ctu_tree.configure(yscrollcommand=ctu_vsb.set)
+    ctu_tree.grid(row=0, column=0, sticky="nsew")
+    ctu_vsb.grid(row=0, column=1, sticky="ns")
+    ctu_frame.grid_rowconfigure(0, weight=1)
+    ctu_frame.grid_columnconfigure(0, weight=1)
+
+    ctu_row_data = {}
+
+    def open_ctu_file(event):
+        item = ctu_tree.identify_row(event.y)
+        column = ctu_tree.identify_column(event.x)
+        if not item:
+            return
+        data = ctu_row_data.get(item)
+        if not data:
+            return
+        excel_path, pdf_path = data
+        if column == "#1" and os.path.exists(excel_path):
+            os.startfile(excel_path)
+        elif column == "#2" and pdf_path and os.path.exists(pdf_path):
+            os.startfile(pdf_path)
+
+    ctu_tree.bind("<Double-Button-1>", open_ctu_file)
+
+    def insert_ctu_row(excel_path, pdf_path, status):
+        item_id = ctu_tree.insert(
+            "", "end", values=(os.path.basename(excel_path), pdf_path, status)
+        )
+        ctu_row_data[item_id] = (excel_path, pdf_path)
+
+    # HS Check results table — hidden until a check finishes; lists highlighted files
+    hs_frame = tk.Frame(root)
+    hs_columns = ("file", "highlighted")
+    hs_tree = ttk.Treeview(hs_frame, columns=hs_columns, show="headings", height=10)
+    hs_tree.heading("file", text="File")
+    hs_tree.heading("highlighted", text="Số ô highlight")
+    hs_tree.column("file", width=500, anchor="w")
+    hs_tree.column("highlighted", width=120, anchor="center")
+
+    hs_vsb = ttk.Scrollbar(hs_frame, orient="vertical", command=hs_tree.yview)
+    hs_tree.configure(yscrollcommand=hs_vsb.set)
+    hs_tree.grid(row=0, column=0, sticky="nsew")
+    hs_vsb.grid(row=0, column=1, sticky="ns")
+
+    hs_open_button = tk.Button(hs_frame, text="📂 Mở file")
+
+    def hs_open_selected():
+        selection = hs_tree.selection()
+        if not selection:
+            return
+        file_path = hs_row_data.get(selection[0])
+        if file_path and os.path.exists(file_path):
+            os.startfile(file_path)
+
+    hs_open_button.config(command=hs_open_selected)
+    hs_open_button.grid(row=1, column=0, columnspan=2, pady=6)
+
+    hs_frame.grid_rowconfigure(0, weight=1)
+    hs_frame.grid_columnconfigure(0, weight=1)
+
+    hs_row_data = {}
+
+    def insert_hs_row(file_path, highlighted_count):
+        item_id = hs_tree.insert(
+            "", "end", values=(os.path.basename(file_path), highlighted_count)
+        )
+        hs_row_data[item_id] = file_path
+
     def populate_table(grouped):
         tree.delete(*tree.get_children())
         for method, items in grouped.items():
@@ -286,6 +366,18 @@ def run_app():
         action_frame.pack_forget()
         table_frame.pack_forget()
         tree.delete(*tree.get_children())
+        ctu_frame.pack_forget()
+        ctu_tree.delete(*ctu_tree.get_children())
+        ctu_row_data.clear()
+        hs_frame.pack_forget()
+        hs_tree.delete(*hs_tree.get_children())
+        hs_row_data.clear()
+
+    def show_ctu_results():
+        ctu_frame.pack(pady=6, padx=10, fill="both", expand=True)
+
+    def show_hs_results():
+        hs_frame.pack(pady=6, padx=10, fill="both", expand=True)
 
     def start_process():
         folder_path = folder_entry.get()
@@ -302,18 +394,20 @@ def run_app():
                         # print(grouped)
                         status_label.config(text="✅ Đã xử lý xong. Chọn hành động tiếp theo.")
                         root.after(0, lambda: show_actions(Path(folder_path), grouped))
-                    elif selected_type == "weekly":
-                        from_date = from_entry.get()
-                        to_date = to_entry.get()
-                        logger.debug(f"Weekly report range: {from_date} -> {to_date}")
-                        if (validate_date(from_date, to_date, status_label, run_button)):
-                            create_weekly_report(Path(folder_path), from_date, to_date, status_label)
+                    # elif selected_type == "weekly":
+                    #     from_date = from_entry.get()
+                    #     to_date = to_entry.get()
+                    #     logger.debug(f"Weekly report range: {from_date} -> {to_date}")
+                    #     if (validate_date(from_date, to_date, status_label, run_button)):
+                    #         create_weekly_report(Path(folder_path), from_date, to_date, status_label)
                     elif selected_type == "hscheck":
                         status_label.config(text="🔍 Đang quét file CARGOES_LIST…")
-                        run_hs_check(Path(folder_path), status_label)
+                        root.after(0, show_hs_results)
+                        run_hs_check(Path(folder_path), status_label, row_callback=insert_hs_row)
                     elif selected_type == "ctu":
                         status_label.config(text="🖨️ Đang in CTU…")
-                        run_ctu_batch(Path(folder_path), status_label)
+                        root.after(0, show_ctu_results)
+                        run_ctu_batch(Path(folder_path), status_label, row_callback=insert_ctu_row)
                 except Exception as e:
                     logger.exception("Failed to run report")
                     status_label.config(text=f"❌ Lỗi: {e}", fg="red")

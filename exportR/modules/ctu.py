@@ -48,7 +48,7 @@ def print_pdf(excel, file):
     return output_pdf
 
 
-def run_ctu_batch(root_folder, status_label=None):
+def run_ctu_batch(root_folder, status_label=None, row_callback=None):
     root_folder = Path(root_folder)
     files = [
         f for f in root_folder.rglob("*.xls*")
@@ -69,12 +69,18 @@ def run_ctu_batch(root_folder, status_label=None):
                 status_label.update_idletasks()
             try:
                 output_pdf = print_pdf(excel, file)
-                PdfReader(output_pdf)  # validates the export produced a readable PDF
+                page_count = len(PdfReader(output_pdf).pages)
                 processed += 1
-                logger.info(f"Printed '{file}' -> '{output_pdf}'")
-            except Exception:
+                status = f"OK Page: {page_count}"
+                logger.info(f"Printed '{file}' -> '{output_pdf}' ({page_count} pages)")
+            except Exception as e:
+                output_pdf = ""
                 failed += 1
+                status = f"ERROR: {e}"
                 logger.exception(f"Failed to print CTU file: {file}")
+
+            if row_callback:
+                row_callback(str(file), str(output_pdf), status)
     finally:
         excel.Quit()
 

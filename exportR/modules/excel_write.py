@@ -36,7 +36,8 @@ def write_daily_report(template, grouped):
         # optional: clear existing data rows (keep header)
         # ws.delete_rows(2, ws.max_row)
 
-        if "E15" in ws.title:
+        is_e15 = "E15" in ws.title
+        if is_e15:
             route_header = ws.cell(row=3, column=5)  # "线"
             internal_header = ws.cell(row=3, column=6)
             internal_header.value = "Số tờ khai xuất"
@@ -64,7 +65,7 @@ def write_daily_report(template, grouped):
             if route_code in ("1", "2") and date_val and date_val.time() > time(17, 0):
                 route_label = f"{route_label} OT"
 
-            ws.append([
+            row_values = [
                 i,
                 # data.get("month"),
                 data.get("nvlCode"),
@@ -80,15 +81,19 @@ def write_daily_report(template, grouped):
                 # data.get("invoice"),
                 # data.get("tms"),
                 # time_str,
-                data.get("internalCode"),
-            ])
+            ]
+            if is_e15:
+                row_values.append(data.get("internalCode"))
+
+            ws.append(row_values)
 
             row = ws.max_row
 
             if date_val:
                 ws.cell(row=row, column=3).number_format = "dd/mm/yyyy"
 
-            for col in range(1, 7):
+            last_col = 6 if is_e15 else 5
+            for col in range(1, last_col + 1):
                 cell = ws.cell(row=row, column=col)
                 cell.border = border
                 cell.font = font_tnr   # ✅ apply Times New Roman
