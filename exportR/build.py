@@ -5,7 +5,7 @@ cmd = [
     "--clean",
     "--onefile",
     "--noconsole",
-    "--name", "eportR",
+    "--name", "Poppico",
     "--add-data", "resources/daily_template.xlsx;resources",
     "--add-data", "resources/logo.ico;resources",
     "--add-data", "resources/template_weekly.xlsx;resources",
