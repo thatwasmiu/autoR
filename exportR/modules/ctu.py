@@ -12,7 +12,7 @@ def print_pdf(excel, file):
 
     wb = excel.Workbooks.Open(str(file))
 
-    all_sheets = [sheet.Name for sheet in wb.Worksheets]
+    all_sheets = [sheet.Name for sheet in wb.Worksheets if sheet.Visible == -1]
 
     ordered = []
     if "INVForm" in all_sheets:
@@ -34,7 +34,7 @@ def print_pdf(excel, file):
     for i, name in enumerate(ordered):
         wb.Worksheets(name).Move(Before=wb.Worksheets(i + 1))
 
-    wb.Worksheets.Select()
+    wb.Worksheets(ordered).Select()
     wb.ActiveSheet.ExportAsFixedFormat(
         Type=0,
         Filename=str(output_pdf),
