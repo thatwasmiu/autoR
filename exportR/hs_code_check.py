@@ -1,14 +1,11 @@
-import os
-import sys
 import logging
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
 
-from modules import find_excel_files, load_hs_codes, normalize_code
+from modules import find_excel_files, load_active_hs_codes, normalize_code
 
 logger = logging.getLogger("exportR." + __name__)
 
-HS_CODE_FILE = "resources/hs_code.json"
 HIGHLIGHT_FILL = PatternFill(start_color="ADD8E6", end_color="ADD8E6", fill_type="solid")
 
 
@@ -32,7 +29,7 @@ def highlight_cargoes_file(file_path, hs_codes):
 
 
 def run_hs_check(root_folder, status_label=None, row_callback=None):
-    hs_codes = load_hs_codes(get_resource_path(HS_CODE_FILE))
+    hs_codes = load_active_hs_codes()
     files = find_excel_files(str(root_folder), pattern=r"^CARGOES_LIST")
 
     processed = 0
@@ -66,9 +63,3 @@ def run_hs_check(root_folder, status_label=None, row_callback=None):
         if status_label:
             status_label.config(text=summary)
     logger.info(summary)
-
-
-def get_resource_path(filename):
-    if hasattr(sys, '_MEIPASS'):
-        return os.path.join(sys._MEIPASS, filename)
-    return os.path.join(os.path.abspath("."), filename)

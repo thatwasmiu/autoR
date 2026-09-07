@@ -4,12 +4,21 @@ import os
 from pathlib import Path
 from datetime import datetime, timedelta, time
 import tkinter as tk
-from tkinter import filedialog, ttk
+from tkinter import filedialog, ttk, simpledialog
 from tkcalendar import DateEntry
 import threading
 from collections import defaultdict
 
-from modules import write_daily_report, run_ctu_batch
+from modules import (
+    write_daily_report,
+    run_ctu_batch,
+    describe_hs_codes,
+    list_active_hs_codes,
+    get_sheet_url,
+    set_sheet_url,
+    sync_hs_codes_from_sheet,
+    reset_hs_codes,
+)
 from daily_invoice import get_data
 # from weekly_report import create_weekly_report
 from hs_code_check import run_hs_check
@@ -155,6 +164,9 @@ def run_app():
     # ✅ Week selector (placed BEFORE Run button)
     week_frame = tk.Frame(root)
 
+    # ✅ HS code source row (shown only for HS Check)
+    hs_config_frame = tk.Frame(root)
+
     from_frame = tk.Frame(week_frame)
     from_frame.pack(side="left", padx=10)
 
@@ -176,6 +188,11 @@ def run_app():
             week_frame.pack(before=status_label, pady=5)  # ✅ force position above button
         else:
             week_frame.pack_forget()
+
+        if report_type.get() == "hscheck":
+            hs_config_frame.pack(before=status_label, pady=5)
+        else:
+            hs_config_frame.pack_forget()
             
     tk.Radiobutton(frame, text="Daily", variable=report_type, value="daily",
                    command=on_type_change).pack(side="left", padx=10)
@@ -194,6 +211,125 @@ def run_app():
 
     run_button = tk.Button(root, text="Thực hiện")
     run_button.pack(pady=10)
+
+    # Nguồn mã HS: cấu hình đi kèm app hoặc bản đồng bộ từ Google Sheet
+    hs_source_label = tk.Label(hs_config_frame, text="", fg="gray")
+    hs_source_label.pack(pady=2)
+
+    hs_button_frame = tk.Frame(hs_config_frame)
+    hs_button_frame.pack()
+
+    def refresh_hs_source():
+        info = describe_hs_codes()
+        if info["source"] == "sheet":
+            text = f"Mã HS: Google Sheet — {info['count']} mã (đồng bộ {info['synced_at']})"
+        else:
+            text = f"Mã HS: cấu hình trong máy — {info['count']} mã"
+        hs_source_label.config(text=text)
+
+    def on_sync_hs():
+        url = get_sheet_url()
+        if not url:
+            url = simpledialog.askstring(
+                "Đồng bộ từ Sheet",
+                "Dán URL web app Google Sheet (.../exec):",
+                parent=root,
+            )
+            if not url or not url.strip():
+                return
+            url = url.strip()
+
+        hs_sync_button.config(state="disabled")
+        hs_reset_button.config(state="disabled")
+        status_label.config(text="🔄 Đang đồng bộ mã HS từ Sheet…", fg="blue")
+
+        def task():
+            try:
+                codes = sync_hs_codes_from_sheet(url)
+                set_sheet_url(url)
+                logger.info(f"Synced {len(codes)} HS code(s) from sheet")
+                message = f"✅ Đã đồng bộ {len(codes)} mã HS từ Sheet."
+                color = "blue"
+            except Exception as e:
+                logger.exception("Failed to sync HS codes from sheet")
+                message = f"❌ Lỗi đồng bộ mã HS: {e}"
+                color = "red"
+
+            def done():
+                status_label.config(text=message, fg=color)
+                refresh_hs_source()
+                hs_sync_button.config(state="normal")
+                hs_reset_button.config(state="normal")
+
+            root.after(0, done)
+
+        threading.Thread(target=task, daemon=True).start()
+
+    def on_reset_hs():
+        try:
+            removed = reset_hs_codes()
+        except OSError as e:
+            logger.exception("Failed to reset HS codes")
+            status_label.config(text=f"❌ Không xoá được bản đồng bộ: {e}", fg="red")
+            return
+        refresh_hs_source()
+        status_label.config(
+            text="↩️ Đã quay về cấu hình mã HS trong máy." if removed
+            else "ℹ️ Đang dùng cấu hình mã HS trong máy.",
+            fg="blue",
+        )
+
+    def on_view_hs():
+        info = describe_hs_codes()
+        codes = list_active_hs_codes()
+
+        top = tk.Toplevel(root)
+        top.title("Danh sách mã HS")
+        top.geometry("340x480")
+        top.transient(root)
+        try:
+            top.iconbitmap(get_resource_path("resources/logo.ico"))
+        except tk.TclError:
+            pass
+
+        source = (f"Google Sheet — đồng bộ {info['synced_at']}"
+                  if info["source"] == "sheet" else "Cấu hình trong máy")
+        tk.Label(top, text=f"{source} — {len(codes)} mã").pack(pady=8)
+
+        list_frame = tk.Frame(top)
+        list_frame.pack(fill="both", expand=True, padx=10)
+        hs_list_scroll = tk.Scrollbar(list_frame, orient="vertical")
+        hs_listbox = tk.Listbox(list_frame, selectmode="extended",
+                                yscrollcommand=hs_list_scroll.set)
+        hs_list_scroll.config(command=hs_listbox.yview)
+        hs_list_scroll.pack(side="right", fill="y")
+        hs_listbox.pack(side="left", fill="both", expand=True)
+        for code in codes:
+            hs_listbox.insert(tk.END, code)
+
+        def copy_all():
+            root.clipboard_clear()
+            root.clipboard_append("\n".join(codes))
+            status_label.config(text=f"📋 Đã copy {len(codes)} mã HS.", fg="blue")
+
+        popup_buttons = tk.Frame(top)
+        popup_buttons.pack(pady=8)
+        tk.Button(popup_buttons, text="📋 Copy tất cả", width=14,
+                  command=copy_all).pack(side="left", padx=6)
+        tk.Button(popup_buttons, text="Đóng", width=10,
+                  command=top.destroy).pack(side="left", padx=6)
+
+    hs_view_button = tk.Button(hs_button_frame, text="📋 Xem danh sách mã HS",
+                               width=22, command=on_view_hs)
+    hs_view_button.pack(side="left", padx=8)
+    hs_sync_button = tk.Button(hs_button_frame, text="🔄 Đồng bộ từ Sheet",
+                               width=22, command=on_sync_hs)
+    hs_sync_button.pack(side="left", padx=8)
+    hs_reset_button = tk.Button(hs_button_frame, text="↩️ Reset về cấu hình trong máy",
+                                width=28, command=on_reset_hs)
+    hs_reset_button.pack(side="left", padx=8)
+
+    refresh_hs_source()
 
     # Action buttons — hidden until data is ready
     action_frame = tk.Frame(root)
@@ -301,43 +437,56 @@ def run_app():
         )
         ctu_row_data[item_id] = (excel_path, pdf_path)
 
-    # HS Check results table — hidden until a check finishes; lists highlighted files
+    # HS Check results — mỗi file 1 dòng kèm nút mở file
     hs_frame = tk.Frame(root)
-    hs_columns = ("file", "highlighted")
-    hs_tree = ttk.Treeview(hs_frame, columns=hs_columns, show="headings", height=10)
-    hs_tree.heading("file", text="File")
-    hs_tree.heading("highlighted", text="Số ô highlight")
-    hs_tree.column("file", width=500, anchor="w")
-    hs_tree.column("highlighted", width=120, anchor="center")
 
-    hs_vsb = ttk.Scrollbar(hs_frame, orient="vertical", command=hs_tree.yview)
-    hs_tree.configure(yscrollcommand=hs_vsb.set)
-    hs_tree.grid(row=0, column=0, sticky="nsew")
-    hs_vsb.grid(row=0, column=1, sticky="ns")
+    hs_header = tk.Frame(hs_frame)
+    hs_header.grid(row=0, column=0, sticky="ew")
+    tk.Label(hs_header, text="File", width=60, anchor="w").pack(side="left")
+    tk.Label(hs_header, text="Số ô highlight", width=14, anchor="center").pack(side="left")
 
-    hs_open_button = tk.Button(hs_frame, text="📂 Mở file")
-
-    def hs_open_selected():
-        selection = hs_tree.selection()
-        if not selection:
-            return
-        file_path = hs_row_data.get(selection[0])
-        if file_path and os.path.exists(file_path):
-            os.startfile(file_path)
-
-    hs_open_button.config(command=hs_open_selected)
-    hs_open_button.grid(row=1, column=0, columnspan=2, pady=6)
-
-    hs_frame.grid_rowconfigure(0, weight=1)
+    hs_canvas = tk.Canvas(hs_frame, height=240, highlightthickness=0)
+    hs_scroll = tk.Scrollbar(hs_frame, orient="vertical", command=hs_canvas.yview)
+    hs_canvas.configure(yscrollcommand=hs_scroll.set)
+    hs_canvas.grid(row=1, column=0, sticky="nsew")
+    hs_scroll.grid(row=1, column=1, sticky="ns")
+    hs_frame.grid_rowconfigure(1, weight=1)
     hs_frame.grid_columnconfigure(0, weight=1)
 
-    hs_row_data = {}
+    hs_rows = tk.Frame(hs_canvas)
+    hs_rows_window = hs_canvas.create_window((0, 0), window=hs_rows, anchor="nw")
+    hs_rows.bind("<Configure>",
+                 lambda e: hs_canvas.configure(scrollregion=hs_canvas.bbox("all")))
+    hs_canvas.bind("<Configure>",
+                   lambda e: hs_canvas.itemconfigure(hs_rows_window, width=e.width))
+
+    def on_hs_wheel(event):
+        hs_canvas.yview_scroll(int(-event.delta / 120), "units")
+
+    hs_canvas.bind("<Enter>", lambda e: hs_canvas.bind_all("<MouseWheel>", on_hs_wheel))
+    hs_canvas.bind("<Leave>", lambda e: hs_canvas.unbind_all("<MouseWheel>"))
+
+    def open_hs_file(file_path):
+        if os.path.exists(file_path):
+            os.startfile(file_path)
+        else:
+            status_label.config(text=f"❌ Không tìm thấy file: {file_path}", fg="red")
+
+    def add_hs_row(file_path, highlighted_count):
+        row = tk.Frame(hs_rows)
+        row.pack(fill="x", pady=1)
+        tk.Label(row, text=os.path.basename(file_path), width=60, anchor="w").pack(side="left")
+        tk.Label(row, text=str(highlighted_count), width=14, anchor="center").pack(side="left")
+        tk.Button(row, text="📂 Mở file", width=12,
+                  command=lambda p=file_path: open_hs_file(p)).pack(side="left", padx=6)
+
+    def clear_hs_rows():
+        for child in hs_rows.winfo_children():
+            child.destroy()
 
     def insert_hs_row(file_path, highlighted_count):
-        item_id = hs_tree.insert(
-            "", "end", values=(os.path.basename(file_path), highlighted_count)
-        )
-        hs_row_data[item_id] = file_path
+        root.after(0, lambda: add_hs_row(file_path, highlighted_count))
+
 
     def populate_table(grouped):
         tree.delete(*tree.get_children())
@@ -370,8 +519,7 @@ def run_app():
         ctu_tree.delete(*ctu_tree.get_children())
         ctu_row_data.clear()
         hs_frame.pack_forget()
-        hs_tree.delete(*hs_tree.get_children())
-        hs_row_data.clear()
+        clear_hs_rows()
 
     def show_ctu_results():
         ctu_frame.pack(pady=6, padx=10, fill="both", expand=True)

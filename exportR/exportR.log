@@ -1005,3 +1005,67 @@ TypeError: decoding to str: need a bytes-like object, NoneType found
 2026-08-09 21:10:06 [INFO] exportR.modules.ctu: Printed 'C:\Users\min\Documents\week\1.04\8.NVL - 9388 - E20260403054 - HPVN20260406006-3 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\合同_发票_箱单_I2026040600094_HPVN20260406006-3.xlsx' -> 'C:\Users\min\Documents\week\1.04\8.NVL - 9388 - E20260403054 - HPVN20260406006-3 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\CIPL.pdf' (3 pages)
 2026-08-09 21:10:06 [INFO] exportR.modules.ctu: Printed 'C:\Users\min\Documents\week\1.04\9.NVL - 9389 - E20260403054 - HPVN20260406006-4 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\合同_发票_箱单_I2026040600095-HPVN20260406006-4.xlsx' -> 'C:\Users\min\Documents\week\1.04\9.NVL - 9389 - E20260403054 - HPVN20260406006-4 - 6.4.2026 - GC - 5PK - E11- TRUCK  6TK CHUNG XE\CIPL.pdf' (3 pages)
 2026-08-09 21:10:06 [INFO] exportR.modules.ctu: ✅ Done. Printed 11 file(s).
+2026-08-12 19:47:57 [INFO] exportR.modules.ctu: Printed 'C:\Users\min\Documents\week\10.8\1.NVL-8249-STB26004412-INV2607181-7.8.2026-GC-20PP-E11-SEA\合同_发票_箱单_I2026080700151_INV2607181.xlsx' -> 'C:\Users\min\Documents\week\10.8\1.NVL-8249-STB26004412-INV2607181-7.8.2026-GC-20PP-E11-SEA\CIPL.pdf' (3 pages)
+2026-08-12 19:47:59 [INFO] exportR.modules.ctu: Printed 'C:\Users\min\Documents\week\10.8\2.NVL-13415 HĐGC LTP202608080023 I2026081000067 00004443 YUHUA E15\合同_发票_箱单_I2026081000067.xlsx' -> 'C:\Users\min\Documents\week\10.8\2.NVL-13415 HĐGC LTP202608080023 I2026081000067 00004443 YUHUA E15\CIPL.pdf' (3 pages)
+2026-08-12 19:48:00 [INFO] exportR.modules.ctu: Printed 'C:\Users\min\Documents\week\10.8\3.NVL-13416 HĐGC LTP202608080030 I2026081000094 VDJ-HQ20260808 DRAGON E15\合同_发票_箱单_I2026081000094.xlsx' -> 'C:\Users\min\Documents\week\10.8\3.NVL-13416 HĐGC LTP202608080030 I2026081000094 VDJ-HQ20260808 DRAGON E15\CIPL.pdf' (3 pages)
+2026-08-12 19:48:01 [INFO] exportR.modules.ctu: Printed 'C:\Users\min\Documents\week\10.8\4.NVL-13412 HĐGC LTP202608100010 I2026081000104 HQ260803 YONGJI E15\合同_发票_箱单_I2026081000104.xlsx' -> 'C:\Users\min\Documents\week\10.8\4.NVL-13412 HĐGC LTP202608100010 I2026081000104 HQ260803 YONGJI E15\CIPL.pdf' (3 pages)
+2026-08-12 19:48:02 [ERROR] exportR.modules.ctu: Failed to print CTU file: C:\Users\min\Documents\week\10.8\5.NVL-13419 HĐGC LTP202608100021 I2026081000142 RRD-RQ-20260810 KNQ RRD GẤP E15\合同_发票_箱单_I2026081000142.xlsx
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\modules\ctu.py", line 71, in run_ctu_batch
+    output_pdf = print_pdf(excel, file)
+  File "D:\daste\autoR\exportR\modules\ctu.py", line 37, in print_pdf
+    wb.Worksheets.Select()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "<COMObject <unknown>>", line 2, in Select
+pywintypes.com_error: (-2147352567, 'Exception occurred.', (0, None, None, None, 0, -2147467259), None)
+2026-08-12 19:48:03 [INFO] exportR.modules.ctu: Printed 'C:\Users\min\Documents\week\10.8\6. NVL-14649-E20260807089-LENOVOVN20260810001-10.8.2026-GC-30PK-E11-TRUCK\合同_发票_箱单_I2026081000313_LENOVOVN20260810001.xlsx' -> 'C:\Users\min\Documents\week\10.8\6. NVL-14649-E20260807089-LENOVOVN20260810001-10.8.2026-GC-30PK-E11-TRUCK\CIPL.pdf' (3 pages)
+2026-08-12 19:48:03 [ERROR] exportR.modules.ctu: Failed to print CTU file: C:\Users\min\Documents\week\10.8\7. NVL-13428 LTP202608100067 I2026081000402 HQ-26081008 JUTENG\合同_发票_箱单_I2026081000402.xlsx
+Traceback (most recent call last):
+  File "D:\daste\autoR\exportR\modules\ctu.py", line 71, in run_ctu_batch
+    output_pdf = print_pdf(excel, file)
+  File "D:\daste\autoR\exportR\modules\ctu.py", line 37, in print_pdf
+    wb.Worksheets.Select()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "<COMObject <unknown>>", line 2, in Select
+pywintypes.com_error: (-2147352567, 'Exception occurred.', (0, None, None, None, 0, -2147467259), None)
+2026-08-12 19:48:03 [INFO] exportR.modules.ctu: ⚠️ Done. Printed 5 file(s), 2 file(s) lỗi — xem log.
+2026-08-12 19:49:39 [INFO] exportR.modules.ctu: Printed 'C:\Users\min\Documents\week\10.8\1.NVL-8249-STB26004412-INV2607181-7.8.2026-GC-20PP-E11-SEA\合同_发票_箱单_I2026080700151_INV2607181.xlsx' -> 'C:\Users\min\Documents\week\10.8\1.NVL-8249-STB26004412-INV2607181-7.8.2026-GC-20PP-E11-SEA\CIPL.pdf' (3 pages)
+2026-08-12 19:49:40 [INFO] exportR.modules.ctu: Printed 'C:\Users\min\Documents\week\10.8\2.NVL-13415 HĐGC LTP202608080023 I2026081000067 00004443 YUHUA E15\合同_发票_箱单_I2026081000067.xlsx' -> 'C:\Users\min\Documents\week\10.8\2.NVL-13415 HĐGC LTP202608080023 I2026081000067 00004443 YUHUA E15\CIPL.pdf' (3 pages)
+2026-08-12 19:49:41 [INFO] exportR.modules.ctu: Printed 'C:\Users\min\Documents\week\10.8\3.NVL-13416 HĐGC LTP202608080030 I2026081000094 VDJ-HQ20260808 DRAGON E15\合同_发票_箱单_I2026081000094.xlsx' -> 'C:\Users\min\Documents\week\10.8\3.NVL-13416 HĐGC LTP202608080030 I2026081000094 VDJ-HQ20260808 DRAGON E15\CIPL.pdf' (3 pages)
+2026-08-12 19:49:42 [INFO] exportR.modules.ctu: Printed 'C:\Users\min\Documents\week\10.8\4.NVL-13412 HĐGC LTP202608100010 I2026081000104 HQ260803 YONGJI E15\合同_发票_箱单_I2026081000104.xlsx' -> 'C:\Users\min\Documents\week\10.8\4.NVL-13412 HĐGC LTP202608100010 I2026081000104 HQ260803 YONGJI E15\CIPL.pdf' (3 pages)
+2026-08-12 19:49:43 [INFO] exportR.modules.ctu: Printed 'C:\Users\min\Documents\week\10.8\5.NVL-13419 HĐGC LTP202608100021 I2026081000142 RRD-RQ-20260810 KNQ RRD GẤP E15\合同_发票_箱单_I2026081000142.xlsx' -> 'C:\Users\min\Documents\week\10.8\5.NVL-13419 HĐGC LTP202608100021 I2026081000142 RRD-RQ-20260810 KNQ RRD GẤP E15\CIPL.pdf' (3 pages)
+2026-08-12 19:49:44 [INFO] exportR.modules.ctu: Printed 'C:\Users\min\Documents\week\10.8\6. NVL-14649-E20260807089-LENOVOVN20260810001-10.8.2026-GC-30PK-E11-TRUCK\合同_发票_箱单_I2026081000313_LENOVOVN20260810001.xlsx' -> 'C:\Users\min\Documents\week\10.8\6. NVL-14649-E20260807089-LENOVOVN20260810001-10.8.2026-GC-30PK-E11-TRUCK\CIPL.pdf' (3 pages)
+2026-08-12 19:49:45 [INFO] exportR.modules.ctu: Printed 'C:\Users\min\Documents\week\10.8\7. NVL-13428 LTP202608100067 I2026081000402 HQ-26081008 JUTENG\合同_发票_箱单_I2026081000402.xlsx' -> 'C:\Users\min\Documents\week\10.8\7. NVL-13428 LTP202608100067 I2026081000402 HQ-26081008 JUTENG\CIPL.pdf' (3 pages)
+2026-08-12 19:49:45 [INFO] exportR.modules.ctu: ✅ Done. Printed 7 file(s).
+2026-09-07 19:55:03 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\1.NVL-8249-STB26004412-INV2607181-7.8.2026-GC-20PP-E11-SEA\CARGOES_LIST_I2026080700151_1786078034012.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:03 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\2.NVL-13415 HĐGC LTP202608080023 I2026081000067 00004443 YUHUA E15\CARGOES_LIST_I2026081000067_1786327304867.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:03 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\3.NVL-13416 HĐGC LTP202608080030 I2026081000094 VDJ-HQ20260808 DRAGON E15\CARGOES_LIST_I2026081000094_1786329530446.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:03 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\4.NVL-13412 HĐGC LTP202608100010 I2026081000104 HQ260803 YONGJI E15\CARGOES_LIST_I2026081000104_1786330219319.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:03 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\5.NVL-13419 HĐGC LTP202608100021 I2026081000142 RRD-RQ-20260810 KNQ RRD GẤP E15\CARGOES_LIST_I2026081000142_1786333198647.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:03 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\6. NVL-14649-E20260807089-LENOVOVN20260810001-10.8.2026-GC-30PK-E11-TRUCK\CARGOES_LIST_I2026081000313_1786347646885.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:03 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\7. NVL-13428 LTP202608100067 I2026081000402 HQ-26081008 JUTENG\CARGOES_LIST_I2026081000402_1786354162603.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:03 [INFO] exportR.hs_code_check: ✅ Done. Checked 7 file(s), highlighted 0 cell(s).
+2026-09-07 19:55:10 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\1.NVL-8249-STB26004412-INV2607181-7.8.2026-GC-20PP-E11-SEA\CARGOES_LIST_I2026080700151_1786078034012.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:10 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\2.NVL-13415 HĐGC LTP202608080023 I2026081000067 00004443 YUHUA E15\CARGOES_LIST_I2026081000067_1786327304867.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:10 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\3.NVL-13416 HĐGC LTP202608080030 I2026081000094 VDJ-HQ20260808 DRAGON E15\CARGOES_LIST_I2026081000094_1786329530446.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:10 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\4.NVL-13412 HĐGC LTP202608100010 I2026081000104 HQ260803 YONGJI E15\CARGOES_LIST_I2026081000104_1786330219319.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:10 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\5.NVL-13419 HĐGC LTP202608100021 I2026081000142 RRD-RQ-20260810 KNQ RRD GẤP E15\CARGOES_LIST_I2026081000142_1786333198647.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:10 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\6. NVL-14649-E20260807089-LENOVOVN20260810001-10.8.2026-GC-30PK-E11-TRUCK\CARGOES_LIST_I2026081000313_1786347646885.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:10 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\7. NVL-13428 LTP202608100067 I2026081000402 HQ-26081008 JUTENG\CARGOES_LIST_I2026081000402_1786354162603.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:10 [INFO] exportR.hs_code_check: ✅ Done. Checked 7 file(s), highlighted 0 cell(s).
+2026-09-07 19:55:10 [INFO] exportR: Synced 21 HS code(s) from sheet
+2026-09-07 19:55:16 [INFO] exportR: Synced 21 HS code(s) from sheet
+2026-09-07 19:55:18 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\1.NVL-8249-STB26004412-INV2607181-7.8.2026-GC-20PP-E11-SEA\CARGOES_LIST_I2026080700151_1786078034012.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:18 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\2.NVL-13415 HĐGC LTP202608080023 I2026081000067 00004443 YUHUA E15\CARGOES_LIST_I2026081000067_1786327304867.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:18 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\3.NVL-13416 HĐGC LTP202608080030 I2026081000094 VDJ-HQ20260808 DRAGON E15\CARGOES_LIST_I2026081000094_1786329530446.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:18 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\4.NVL-13412 HĐGC LTP202608100010 I2026081000104 HQ260803 YONGJI E15\CARGOES_LIST_I2026081000104_1786330219319.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:18 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\5.NVL-13419 HĐGC LTP202608100021 I2026081000142 RRD-RQ-20260810 KNQ RRD GẤP E15\CARGOES_LIST_I2026081000142_1786333198647.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:18 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\6. NVL-14649-E20260807089-LENOVOVN20260810001-10.8.2026-GC-30PK-E11-TRUCK\CARGOES_LIST_I2026081000313_1786347646885.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:18 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\week\10.8\7. NVL-13428 LTP202608100067 I2026081000402 HQ-26081008 JUTENG\CARGOES_LIST_I2026081000402_1786354162603.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:18 [INFO] exportR.hs_code_check: ✅ Done. Checked 7 file(s), highlighted 0 cell(s).
+2026-09-07 19:55:32 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\06.05\1.NVL-8194 - FLK2604091411 - 2604T040 - 13.4.2026 - GC - 3PK - E11 - TRUCK\CARGOES_LIST_I2026041300012_1776044187441.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:32 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\06.05\2.NVL-11653 - E20260411041 - ASUSVN20260413009 - 13.4.2026 - GC - 30PK - E11- TRUCK\CARGOES_LIST_I2026041300249_1776063604531.xlsx': highlighted 1 cell(s)
+2026-09-07 19:55:32 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\06.05\3.NVL-11647- E20260418040 - VN20260419009-2 - 20.4.2026 - GC - 12PK - E11 - TRUCK - 3TK CHUNG XE\CARGOES_LIST_I2026042000334_1776675481381.xlsx': highlighted 2 cell(s)
+2026-09-07 19:55:32 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\06.05\4.NVL-12900  LTP202606220087 I2026062300086 HQ260604 YONGJI E15\CARGOES_LIST_I2026062300086_1782180103211.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:32 [INFO] exportR.hs_code_check: Checked 'C:\Users\min\Documents\06.05\5.NVL-13259-LTP202607230058-I2026072400236-0726RQDN31-RRD-E15\CARGOES_LIST_I2026072400236_1784866908077.xlsx': highlighted 0 cell(s)
+2026-09-07 19:55:32 [INFO] exportR.hs_code_check: ✅ Done. Checked 5 file(s), highlighted 3 cell(s).
