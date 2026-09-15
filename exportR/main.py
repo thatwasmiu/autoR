@@ -32,14 +32,63 @@ ROUTE_LABELS = {'1': "Xanh", '2': "Vàng", '3': "Đỏ"}
 
 def format_route_type(route_code, date_str):
     label = ROUTE_LABELS.get(route_code, route_code or "")
-    if route_code in ("1", "2") and date_str:
-        try:
-            date_val = datetime.strptime(date_str, "%d/%m/%Y %H:%M:%S")
-            if date_val.time() > time(17, 0):
-                label = f"{label} OT"
-        except (ValueError, TypeError):
-            pass
+    try:
+        date_val = datetime.strptime(date_str, "%d/%m/%Y %H:%M:%S")
+    except (ValueError, TypeError):
+        return label
+    if route_code in ("1", "2") and date_val.time() > time(17, 0):
+        label = f"{label} OT"
     return label
+
+
+FLAME_TIPS = [" ( ", "  )", " ) ", "(  "]
+CANDLES = 5
+CAKE_WIDTH = CANDLES * 5
+
+
+TULIP = [
+    r" _  _ ",
+    r"( \/ )",
+    r" \  / ",
+    r"  \/  ",
+    r"  ||  ",
+    r"\ || /",
+    r" \||/ ",
+]
+TULIP_PETAL_ROWS = 4
+TULIP_COLORS = ["#e03131", "#f06595", "#f59f00", "#ae3ec9"]
+
+
+def cake_frame(tick):
+    """1 khung hình: list các dòng, mỗi dòng là list (đoạn chữ, tag).
+    Bánh kem ở giữa (lửa nến lay động lệch nhịp), 2 bên là hoa tulip trên bãi cỏ."""
+    tips = "".join(" " + FLAME_TIPS[(tick + k * k) % len(FLAME_TIPS)] + " " for k in range(CANDLES))
+    cake = [
+        (" " + tips, "flame"),
+        (" " + " (_) " * CANDLES, "flame"),
+        (" " + "  |  " * CANDLES, "candle"),
+        (" " + "__|__" * CANDLES, "cake"),
+        ("|" + "~" * CAKE_WIDTH + "|", "cake"),
+        ("|" + "Sinh Nhật".center(CAKE_WIDTH) + "|", "cake"),
+        ("|" + "Vui Vẻ <3 <3".center(CAKE_WIDTH) + "|", "cake"),
+        ("|" + "_" * CAKE_WIDTH + "|", "cake"),
+    ]
+
+    def tulip(idx, row):
+        r = row - (len(cake) - len(TULIP))  # hoa đứng sát đáy, ngang chân bánh
+        if r < 0:
+            return (" " * len(TULIP[0]), "space")
+        return (TULIP[r], f"tulip{idx}" if r < TULIP_PETAL_ROWS else "stem")
+
+    rows = [
+        [tulip(0, row), (" ", "space"), tulip(1, row), ("  ", "space"),
+         (line.ljust(CAKE_WIDTH + 2), tag),
+         ("  ", "space"), tulip(2, row), (" ", "space"), tulip(3, row)]
+        for row, (line, tag) in enumerate(cake)
+    ]
+    width = sum(len(text) for text, _ in rows[0])
+    rows.append([("^" * width, "stem")])
+    return rows
 
 
 def format_date_only(date_str):
@@ -183,6 +232,42 @@ def run_app():
     to_entry.set_date(end_of_week) 
     to_entry.pack(pady=2)
 
+    # 🎂 Bánh kem SNVV — hiện ngay trong cửa sổ chính, thay chỗ nút "Thực hiện"
+    first = cake_frame(0)
+    cake_art = tk.Text(root, font=("Consolas", 16),
+                       width=sum(len(text) for text, _ in first[0]), height=len(first),
+                       bd=0, highlightthickness=0, bg=root.cget("bg"), cursor="arrow")
+    cake_art.tag_configure("candle", foreground="#4dabf7")
+    cake_art.tag_configure("cake", foreground="#d6336c")
+    cake_art.tag_configure("stem", foreground="#2f9e44")
+    for i, color in enumerate(TULIP_COLORS):
+        cake_art.tag_configure(f"tulip{i}", foreground=color)
+    cake_state = {"after_id": None}
+
+    def animate_cake(tick=0):
+        cake_art.config(state="normal")
+        cake_art.delete("1.0", "end")
+        rows = cake_frame(tick)
+        for i, row in enumerate(rows):
+            for text, tag in row:
+                cake_art.insert("end", text, tag)
+            if i < len(rows) - 1:
+                cake_art.insert("end", "\n")
+        cake_art.tag_configure("flame", foreground=("#ff6a00", "#ffb300")[tick % 2])
+        cake_art.config(state="disabled")
+        cake_state["after_id"] = root.after(180, animate_cake, tick + 1)
+
+    def show_cake():
+        cake_art.pack(after=status_label, pady=10)
+        if cake_state["after_id"] is None:
+            animate_cake()
+
+    def hide_cake():
+        cake_art.pack_forget()
+        if cake_state["after_id"] is not None:
+            root.after_cancel(cake_state["after_id"])
+            cake_state["after_id"] = None
+
     def on_type_change():
         if report_type.get() == "weekly":
             week_frame.pack(before=status_label, pady=5)  # ✅ force position above button
@@ -193,7 +278,17 @@ def run_app():
             hs_config_frame.pack(before=status_label, pady=5)
         else:
             hs_config_frame.pack_forget()
-            
+
+        if report_type.get() == "snvv":
+            hide_actions()
+            run_button.pack_forget()
+            status_label.config(text="🎂 Sinh Nhật Vui Vẻ <3 <3", fg="red")
+            show_cake()
+        elif not run_button.winfo_manager():
+            hide_cake()
+            run_button.pack(after=status_label, pady=10)
+            status_label.config(text="Status: Idle", fg="blue")
+
     tk.Radiobutton(frame, text="Daily", variable=report_type, value="daily",
                    command=on_type_change).pack(side="left", padx=10)
 
@@ -205,6 +300,11 @@ def run_app():
 
     tk.Radiobutton(frame, text="CTU", variable=report_type, value="ctu",
                    command=on_type_change).pack(side="left", padx=10)
+
+    # 🎂 Chỉ hiện vào ngày 11/10
+    if (today.day, today.month) == (11, 10):
+        tk.Radiobutton(frame, text="SNVV", variable=report_type, value="snvv",
+                       command=on_type_change).pack(side="left", padx=10)
 
     status_label = tk.Label(root, text="Status: Idle", fg="blue")
     status_label.pack(pady=10)
@@ -441,9 +541,13 @@ def run_app():
     hs_frame = tk.Frame(root)
 
     hs_header = tk.Frame(hs_frame)
-    hs_header.grid(row=0, column=0, sticky="ew")
+    hs_header.grid(row=0, column=0)
     tk.Label(hs_header, text="File", width=60, anchor="w").pack(side="left")
     tk.Label(hs_header, text="Số ô highlight", width=14, anchor="center").pack(side="left")
+    # Spacer khớp độ rộng cột nút "Mở file" để header thẳng hàng với các dòng
+    probe = tk.Button(hs_header, text="📂 Mở file", width=12)
+    tk.Frame(hs_header, width=probe.winfo_reqwidth() + 12, height=1).pack(side="left")
+    probe.destroy()
 
     hs_canvas = tk.Canvas(hs_frame, height=240, highlightthickness=0)
     hs_scroll = tk.Scrollbar(hs_frame, orient="vertical", command=hs_canvas.yview)
@@ -474,7 +578,7 @@ def run_app():
 
     def add_hs_row(file_path, highlighted_count):
         row = tk.Frame(hs_rows)
-        row.pack(fill="x", pady=1)
+        row.pack(pady=1)
         tk.Label(row, text=os.path.basename(file_path), width=60, anchor="w").pack(side="left")
         tk.Label(row, text=str(highlighted_count), width=14, anchor="center").pack(side="left")
         tk.Button(row, text="📂 Mở file", width=12,
